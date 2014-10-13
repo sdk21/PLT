@@ -1,0 +1,254 @@
+%%% Macros
+
+\def\>{\rangle}
+\def\be{\begin{equation}}
+\def\ee{\end{equation}}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\inset}{\hspace*{0.5in}}
+
+\newcommand{\COS}[1]{{\cos\left(#1\right)}}
+\newcommand{\SIN}[1]{{\sin\left(#1\right)}}
+\newcommand{\EXP}[1]{{e^{#1}}}
+
+\newcommand{\Real}{{\sf R\hspace*{-0.9ex}%
+    \rule{0.15ex}{1.5ex}\hspace*{0.9ex}}}
+\newcommand{\Natural}{{\sf N\hspace*{-1.0ex}%
+    \rule{0.15ex}{1.3ex}\hspace*{1.0ex}}}
+\newcommand{\Q}{{\sf Q\hspace*{-1.1ex}%
+    \rule{0.15ex}{1.5ex}\hspace*{1.1ex}}}
+\newcommand{\Complex}{{\sf C\hspace*{-0.9ex}%
+    \rule{0.15ex}{1.3ex}\hspace*{0.9ex}}}
+
+\newcommand{\zpo}{\left(\ket{0} + \ket{1}\right)}
+\newcommand{\zmo}{\left(\ket{0} - \ket{1}\right)}
+
+\newcommand{\norm}[1]{\parallel #1 \parallel}
+
+%%%% other macros
+\def\dotproduct[#1,#2]{
+\langle #1 | #2 \rangle
+}
+
+%%%% Matrix macros
+\def\twoket[#1,#2]{
+\left[
+\begin{array}{r}
+	#1 \\
+	#2
+\end{array}
+\right]
+}
+
+\def\twobra[#1,#2]{
+\left[ #1, #2 \right]
+}
+
+\def\fourket[#1,#2,#3,#4]{
+\left[
+\begin{array}{r}
+	#1 \\
+	#2 \\
+	#3 \\
+	#4
+\end{array}
+\right]
+}
+
+\def\fourbra[#1,#2,#3,#4]{
+\left[ #1, #2, #3, #4 \right]
+}
+
+\def\eightket[#1,#2,#3,#4,#5,#6,#7,#8]{
+\left[
+\begin{array}{r}
+	#1 \\
+	#2 \\
+	#3 \\
+	#4 \\
+	#5 \\
+	#6 \\
+	#7 \\
+	#8
+\end{array}
+\right]
+}
+
+
+\def\twobytwomatrix[#1,#2,#3,#4]{
+\left[
+\begin{array}{rr}
+	#1 & #2 \\
+	#3 & #4
+\end{array}
+\right]
+}
+
+
+\newcommand{\Xgatematrix}{
+\twobytwomatrix[0,1,1,0]
+}
+
+\newcommand{\Igatematrix}{
+\twobytwomatrix[1,0,0,1]
+}
+
+\newcommand{\Zgatematrix}{
+\twobytwomatrix[1,0,0,-1]
+}
+
+\newcommand{\Ygatematrix}{
+\twobytwomatrix[0,-i,i,0]
+}
+
+\newcommand{\Tgatematrix}{
+\twobytwomatrix[1,0,0,\EXP{i\pi/4}]
+}
+
+
+\newcommand{\itwo}{
+{1\over\sqrt{2}}
+}
+
+\newcommand{\onehalf}{
+{1\over{2}}
+}
+
+\newcommand{\eprpair}{
+\itwo\left(\ket{00} + \ket{11}\right)
+}
+
+\newcommand{\Hgatematrix}{
+\itwo \twobytwomatrix[1,1,1,-1]
+}
+
+\newcommand{\CNotmatrix}{
+\left[
+\begin{array}{rrrr}
+	1 & 0 & 0 & 0 \\
+	0 & 1 & 0 & 0 \\
+	0 & 0 & 0 & 1 \\
+	0 & 0 & 1 & 0
+\end{array}
+\right]
+}
+
+\newcommand{\horizbar}{\rule{\linewidth}{.5mm}}
+\newcommand{\app}[1]{{\sc #1}}
+ 
+\renewcommand{\em}{\it}
+ 
+\newcommand{\BigO}[1]{${\cal O}(#1)$}
+\newcommand{\BigOmega}[1]{$\Omega(#1)$}
+\newcommand{\BigTheta}[1]{$\Theta(#1)$}
+ 
+\newcommand{\ceiling}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\faM}{\lfloor \alpha M \rfloor}
+\newcommand{\C}[2]{{#1 \choose #2}}
+ 
+\newcommand{\comment}[1]{}
+
+
+\newcommand{\ignore}[1]{}
+\input{remark}
+\remarktrue
+%\newcommand{\remark}[1]{#1}
+
+
+%%%%% SINGLE FIGURE
+\def\cfigure[#1,#2,#3]{
+\begin{figure}
+\vspace*{0.35in}
+\begin{center}
+
+\epsfxsize=2.5in\
+\epsfbox{#1}\
+ 
+\vspace*{-3mm}\caption[]{#2
+} \label{#3}
+ 
+\vspace*{-5mm}
+\end{center}
+%\horizbar
+\vspace*{4mm}
+\end{figure}}
+
+%%%%% Single programmable size figure
+\def\wpfigure[#1,#2,#3,#4]{
+\begin{figure}[ht]
+\vspace*{4mm}
+\begin{center}
+
+\epsfxsize=#4\
+\epsfbox{#1}\
+
+\vspace*{-3mm}\caption[]{#2
+} \label{#3}
+
+\vspace*{-5mm}
+\end{center}
+%\horizbar
+\end{figure}}
+
+%%%%% SINGLE WIDE FIGURE
+\def\wcfigure[#1,#2,#3]{
+\begin{figure*}
+\vspace*{4mm}
+\begin{center}
+
+\epsfxsize=5in\
+\epsfbox{#1}\
+
+\vspace*{-3mm}\caption[]{#2
+} \label{#3}
+
+\vspace*{-5mm}
+\end{center}
+%\horizbar
+\end{figure*}}
+
+%%%%% SINGLE WIDE BUT Y-CONSTRAINED FIGURE
+\def\wycfigure[#1,#2,#3]{
+\begin{figure*}
+\vspace*{4mm}
+\begin{center}
+
+\epsfysize=3.0in\
+\epsfbox{#1}\
+
+\vspace*{-3mm}\caption[]{#2
+} \label{#3}
+
+\vspace*{5mm}
+\end{center}
+%\horizbar
+\end{figure*}}
+
+%%%%%% DOUBLE FIGURE
+\def\dcfigure[#1,#2,#3,#4,#5,#6]{
+{
+\begin{figure*}
+\vspace*{0.2in}\
+\begin{center}
+\begin{minipage}{3in}{
+\epsfxsize=3in\
+\epsfbox{#1}
+\vspace*{-3mm}\caption[]{#2} \label{#3} \
+}\end{minipage}\hspace*{0.5in}\
+\begin{minipage}{3in}{
+\epsfxsize=3in\
+\epsfbox{#4}
+\vspace*{-3mm}\caption[]{#5}\label{#6} \
+}\end{minipage}
+\end{center}
+\vspace*{-0.4in}\
+\end{figure*}
+}
+}
+
+\def\key#1{
+\dimen0=\columnwidth
+\advance\dimen0 by -1in
+\hspace*{0.5in}
+\fbox{\parbox[b]{\dimen0}{{\bf Key: \\} \protect #1}}
+}
