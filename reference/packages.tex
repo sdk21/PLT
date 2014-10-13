@@ -11,6 +11,7 @@
 
 %% Math
 \usepackage{amsfonts,amsmath,amssymb, amsthm, mathtools}
+\usepackage{thm-restate}
 \usepackage{dsfont} % For the indicator symbol
 
 % Algorithm environment
@@ -19,6 +20,12 @@
 % Colors (with names)
 \usepackage[usenames,dvipsnames,table]{xcolor}
 
+% Quotes: \blockquote command
+\usepackage{csquotes}
+
+% Relative sizes for text
+\usepackage{relsize}
+
 % Bibliography
 %\usepackage[numbers]{natbib}
 
@@ -26,10 +33,22 @@
 \usepackage{multirow}
 \usepackage{chngpage} % allows for temporary adjustment of side margins
 
+% For the commands such as \capitalisewords
+\usepackage{mfirstuc}
+
 % Graphics
 \usepackage{tikz}
 \usetikzlibrary{arrows}
 \usetikzlibrary{calc,decorations.pathmorphing,patterns}
+
+% For indexing
+\ifnum\withindex=1
+  \usepackage{makeidx}
+  \usepackage{ifthen}
+  \newcommand\indexed[2][]{\ifthenelse{\equal{#1}{}}{#2\index{#2}}{#2\index{#1}}}
+  \makeindex %%%% Enable indexing
+\fi
+%%\usepackage{showidx} % To debug; does not play well with hyperref
 
 % References and links
 \usepackage[backref,colorlinks,citecolor=blue,bookmarks=true]{hyperref}
@@ -49,3 +68,7 @@
 \ifnum\withnotes=1
   \usepackage[colorinlistoftodos,textsize=scriptsize]{todonotes}
 \fi
+
+% For testing and draft: to remove afterwards
+\usepackage[english]{babel}
+\usepackage{blindtext}

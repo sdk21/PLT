@@ -1,0 +1,41 @@
+\documentclass[11pt]{report}
+
+\def\withcolors{1}
+\def\withnotes{1}
+\def\withindex{1}
+\def\withbiblioconversion{1} % long names for the journals
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{packages}
+\input{preamble}
+
+\newcommand{\QL}{\textsf{QLang}\xspace}
+\title{\QL: Qubit Language\\ \Large(Reference Manual)}
+\author{
+  Christopher Campbell
+  \and Cl\'ement Canonne
+  \and Sankalpa Khadka
+  \and Winnie Narang
+  \and Jonathan Wong
+}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+\chapter{Lexical conventions}
+\input{sec-lexicalconventions}
+\chapter{Syntax notation}
+\chapter{What's in a Name?}
+\chapter{Objects and lvalues}
+\chapter{Conversions}
+\chapter{Expressions}
+\chapter{Declarations}
+\chapter{Statements}
+\chapter{External definitions}
+\chapter{Scope rules}
+\chapter{Compiler control lines}
+\dots
+
+\end{document}

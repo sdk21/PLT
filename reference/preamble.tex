@@ -67,7 +67,7 @@
   \newcommand{\todonote}[2][]{\ignore{#2}}
   \newcommand{\marginnote}[1]{\ignore{#1}}
 \fi
-\newcommand{\ignore}[1]{}
+\newcommand{\ignore}[1]{\leavevmode\unskip} % eat unnecessary spaces before
 \newcommand{\cmargin}[1]{\marginnote{\ccolor{#1}}} % Clement
 
 % Shortcuts
@@ -162,7 +162,7 @@
 \newcommand{\norminf}[1]{{\norm{#1}}_\infty}
 \newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
 \newcommand{\dabs}[1]{\lvert #1 \rvert}
-\newcommand{\dotprod}[2]{ \left\langle #1 \mid \xspace #2 \right\rangle } 			% <a,b>
+\newcommand{\dotprod}[2]{ \left\langle #1,\xspace #2 \right\rangle } 			% <a,b>
 \newcommand{\ip}[2]{\dotprod{#1}{#2}} 			% shortcut
 
 % Ceiling and floor
@@ -176,6 +176,23 @@
 \newcommand{\Z}{\ensuremath{\mathbb{Z}}\xspace}
 \newcommand{\N}{\ensuremath{\mathbb{N}}\xspace}
 \newcommand{\cont}[1]{\ensuremath{\mathcal{C}^{#1}}}
+
+% Oracles and variants
+\newcommand{\ICOND}{{\sf INTCOND}\xspace}
+\newcommand{\EVAL}{{\sf EVAL}\xspace}
+\newcommand{\CDFEVAL}{{\sf CEVAL}\xspace}
+\newcommand{\STAT}{{\sf STAT}\xspace}
+\newcommand{\SAMP}{{\sf SAMP}\xspace}
+\newcommand{\COND}{{\sf COND}\xspace}
+\newcommand{\PCOND}{{\sf PAIRCOND}\xspace}
+\newcommand{\ORACLE}{{\sf ORACLE}\xspace}
+
+%% Terminology
+\newcommand{\pdfsamp}{dual\xspace}
+\newcommand{\cdfsamp}{cumulative dual\xspace}
+\newcommand{\Pdfsamp}{\expandafter\capitalisewords\expandafter{\pdfsamp}}
+\newcommand{\Cdfsamp}{\expandafter\capitalisewords\expandafter{\cdfsamp}}
+
 % L_p norms
 \newcommand{\lp}[1][1]{\ell_{#1}}
 
@@ -193,9 +210,9 @@
 
 %% Roman numerals
 \makeatletter
-  \newcommand{\rom}[1]{\romannumeral #1}
-  \newcommand{\Rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
-  \newcommand{\century}[2][th]{\Rom{#2}\textsuperscript{#1}}
+\newcommand{\rom}[1]{\romannumeral #1}
+\newcommand{\Rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\newcommand{\century}[2][th]{\Rom{#2}\textsuperscript{#1}}
 \makeatother
 
 % Hyperref and \autoref{} -- names
@@ -257,3 +274,31 @@
 %   \x
 %   }
 % \makeatother
+
+% Acknowledgements
+\makeatletter
+\newcommand\ackname{Acknowledgements}
+\if@titlepage
+  \newenvironment{acknowledgements}{%
+      \titlepage
+      \null\vfil
+      \@beginparpenalty\@lowpenalty
+      \begin{center}%
+        \bfseries \ackname
+        \@endparpenalty\@M
+      \end{center}}%
+     {\par\vfil\null\endtitlepage}
+\else
+  \newenvironment{acknowledgements}{%
+      \if@twocolumn
+        \section*{\abstractname}%
+      \else
+        \small
+        \begin{center}%
+          {\bfseries \ackname\vspace{-.5em}\vspace{\z@}}%
+        \end{center}%
+        \quotation
+      \fi}
+      {\if@twocolumn\else\endquotation\fi}
+\fi
+\makeatother

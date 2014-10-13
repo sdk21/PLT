@@ -1,0 +1,12 @@
+There are five kinds of tokens: identifiers, keywords, constants, expression operators, and other separators. There are six kinds of tokens: identifiers, keywords, constants, strings, expression operators, and other separators. If the input stream has been parsed into tokens up to a given character, the next token is taken to include the longest string of characters which could possibly constitute a token.\cmargin{Rephrase: that's plagiarism}
+
+\section{Character set}
+\QL supports a subset of ASCII; that is, allowed characters are
+\fbox{\texttt{a-zA-Z0-9@\#,-\_;:()[]\{\}<>=+/|*}}, as well as tabulations \texttt{\textbackslash{}t}, spaces, and line returns \texttt{\textbackslash{}n} and {\textbackslash{}r}.
+\section{Comments}
+Comments start with a \# sign, which then extends until the next carriage return. Multiline comments are not supported.
+
+\section{Identifier (names)}
+An identifier is an arbitrarily long sequence of alphabetic and numeric characters, where \texttt{\_} is included as ``alphabetic''. It must start with a lowercase or uppercase letter, i.e. one of $\texttt{a-zA-Z}$.
+
+\noindent The language is case-sensitive: \texttt{hullabaloo} and \texttt{hullABaLoo} are considered as different.
