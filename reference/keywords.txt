@@ -1,0 +1,11 @@
+int com mat
+
+if elif else for from to by while break def
+
+and or xor not
+
+true false
+
+Pi e
+
+transp adj isunit det norm conj exp sin cos tan im re
