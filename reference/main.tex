@@ -1,4 +1,4 @@
-\documentclass[11pt]{report}
+\documentclass[11pt]{article}
 
 \def\withcolors{1}
 \def\withnotes{1}
@@ -7,6 +7,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{packages}
 \input{preamble}
+\usepackage{multicol}
+
+\newcommand{\complex}{\texttt{com}\xspace}
+\newcommand{\integ}{\texttt{int}\xspace}
 
 \newcommand{\QL}{\textsf{QLang}\xspace}
 \title{\QL: Qubit Language\\ \Large(Reference Manual)}
@@ -22,25 +26,26 @@
 
 \maketitle
 \tableofcontents
+\clearpage
 
-\chapter{Introduction}
-\chapter{Lexical conventions}
+\section{Introduction}
+\section{Lexical conventions}
 \input{sec-lexicalconventions}
-\chapter{Syntax notation}
-\chapter{What's in a Name?}
-\chapter{Objects and lvalues}
-\chapter{Conversions}
-\chapter{Expressions}
+\section{Syntax notation}
+\section{What's in a Name?}
+\section{Objects and lvalues}
+\section{Conversions}
+\section{Expressions}
 \input{sec-expressions}
-\chapter{Declarations}
-\chapter{Statements}
-\chapter{External definitions}
-\chapter{Scope rules}
-\chapter{Compiler control lines}
-\chapter{Implicit declarations}
-\chapter{Types revisited}
-\chapter{Constant expressions}
-\chapter{Examples}
+\section{Declarations}
+\section{Statements}
+\section{External definitions}
+\section{Scope rules}
+\section{Compiler control lines}
+\section{Implicit declarations}
+\section{Types revisited}
+\section{Constant expressions}
+\section{Examples}
 \dots
 
 \end{document}
