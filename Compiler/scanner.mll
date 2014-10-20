@@ -4,7 +4,7 @@ let whitespace = [' ' '\t' '\r' '\n']
 let integers = ['0'-'9']+
 let floats = ['0'-'9']+ '.' ['0'-'9']*
 let complex = floats '+' floats 'i'
-let strings = ['a'-'z' 'A'-'Z']+
+let qubits = ('<'['0'-'1']+ '|') | ('|'['0'-'1']+ '>')
 
 rule token = parse
   whitespace { token lexbuf }
@@ -17,14 +17,15 @@ rule token = parse
 | ']'        { RBRACK }
 | '{'        { LBRACE } (* Surround blocks *)
 | '}'        { RBRACH }  
-| '<'        { LCARR }  (* Open bra- *)
-| '>'        { RCARR }  (* Close -ket *)
+| '<'        { LCAR }   (* Open bra- *)
+| '>'        { RCAR }   (* Close -ket *)
 | '='        { ASSIGN } (* Assignment *)
 | '+'        { PLUS }   (* Addition *)
 | '-'        { MINUS }  (* Subtraction *)
 | '*'        { MULT }   (* Multiplication *)
 | '/'        { DIV }    (* Division *)
 | '^'        { EXPN }   (* Exponentiation *)
+| '@'        { TENS }   (* Tensor product *)
 | '|'        { BAR }    (* Close bra- and Open -ket *)
 | "eq"       { EQ }     (* Equal to (structural) *)
 | "neq"      { NEQ }    (* Not equal to (structural) *) 
@@ -66,12 +67,13 @@ rule token = parse
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
 | "com"      { COM }    (* Complex type *)
+| "qubit"    { QUBIT }  (* Qubit type *)
 | "mat"      { MAT }    (* Matrix type *)
 | eof        { EOF }    (* End of File *)
 | integers as lxm  { INT_LIT(int_of_string lxm) }
 | floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
 | complex  as lxm  { COM(lxm) }
-| strings  as lxm  { ID(lxm) }
+| qubits   as lxm  { QUB(lxm) }
 | _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
 
 and comment = parse
