@@ -4,10 +4,10 @@ let whitespace = [' ' '\t' '\r' '\n']
 let integers = ['0'-'9']+
 let floats = ['0'-'9']+ '.' ['0'-'9']*
 let complex = floats '+' floats 'i'
-let qubits = ('<'['0'-'1']+ '|') | ('|'['0'-'1']+ '>')
 
 rule token = parse
   whitespace { token lexbuf }
+
 | '#'        { comment lexbuf }
 | ','        { COMMA }  (* Separate row elements *)
 | ';'        { SEMI }   (* Separate column elements *)
@@ -24,6 +24,7 @@ rule token = parse
 | '-'        { MINUS }  (* Subtraction *)
 | '*'        { MULT }   (* Multiplication *)
 | '/'        { DIV }    (* Division *)
+| '%'        { MOD }    (* Modulus *)
 | '^'        { EXPN }   (* Exponentiation *)
 | '@'        { TENS }   (* Tensor product *)
 | '|'        { BAR }    (* Close bra- and Open -ket *)
@@ -66,14 +67,15 @@ rule token = parse
 | "xor"      { XOR }    (* Boolean xor *)
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
-| "com"      { COM }    (* Complex type *)
-| "qubit"    { QUBIT }  (* Qubit type *)
+| "comp"     { COMP }   (* Complex type *)
+| "qub"      { QUB }    (* Qubit type *)
+| "rvec"     { RVEC }   (* Row vector *)
+| "cvec"     { CVEC }   (* Column vector *)
 | "mat"      { MAT }    (* Matrix type *)
 | eof        { EOF }    (* End of File *)
 | integers as lxm  { INT_LIT(int_of_string lxm) }
 | floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
 | complex  as lxm  { COM(lxm) }
-| qubits   as lxm  { QUB(lxm) }
 | _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
 
 and comment = parse

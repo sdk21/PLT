@@ -13,10 +13,15 @@ An identifier is an arbitrarily long sequence of alphabetic and numeric characte
 
 \subsection{Keywords}
 The following identifiers as reserved for keywords, and no one shall use them because it's forbidden and uncool.
-\begin{multicols}{2}
-\verbatiminput{keywords.txt}
-\end{multicols}
-
+\begin{verbatim}
+pi e
+int float comp rvect cvect mat
+true false
+if elif else
+def for from to by while break
+or and xor
+not re im norm isunit trans det adj conj sin cos tan
+\end{verbatim}
 \subsection{Constants}
 There are three sorts of constants in the language, namely \emph{integer}, \emph{complex} and \emph{identifier} constants. The first are comprised of any sequence of integers of the form \texttt{0|([1-9][0-9]*)} (recall that integers are non-negative), and have type \integ. The second are of type \complex and have the form 
 \texttt{$R$|$R$+$R$i|$R$i}
