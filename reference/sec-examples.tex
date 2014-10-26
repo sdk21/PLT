@@ -1,0 +1,21 @@
+We present some examples that illustrates the use of Qlang in solving quantum computing problems.
+
+\subsection{Deutsch Jozsa Algorithm}
+\begin{lstlisting}
+
+	def outcome = deutschjozsa(qubit in, mat U){
+		
+		qubitInput = in @ |1>;
+		input = (H @ H)*input;
+		input = U * input;
+		input = (H @ I)*input;
+		input=(in*Adj(in)@ I)*input;
+		
+		if (M0 == 0){
+			outcome = 0;
+		}
+		else{
+			outcome = 1;
+		}
+	}
+\end{lstlisting}
