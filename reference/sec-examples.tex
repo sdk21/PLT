@@ -2,7 +2,16 @@ We present some examples that illustrates the use of Qlang in solving quantum co
 
 \subsection { Solving Quantum Computation Problem}
 \subsubsection{Problem1}
-Evaluate the following expressions: a. $(H \otimes S) \ket{00}$ b. $\dotproduct[101,000]$ c. $\bra{01} H \otimes H \ket{01} $
+Evaluate the following expressions: a. $(H \otimes X) \ket{00}$ b. $\dotproduct[101,000]$ c. $\bra{01} H \otimes H \ket{01} $
+\begin{lstlisting}
+	def pseudo = evaluate (){
+		qubit mat0 = |00>;
+		mat HX = H @ X
+		pseudo = HX * mat0;
+	}
+	
+\end{lstlisting}
+
 \subsubsection{Problem 2}
 Find the matrix corresponding to the quantum circuit:
 \begin{figure}[h!]
@@ -19,7 +28,6 @@ def circuitMat = findMatrix (){
 	qubit mat1=|01>;
 	qubit mat2=|10>;
 	qubit mat3=|11>;
-		
 		
 	CNOT = [1,0,0,0;0,1,0,0;0,0,0,1;0,0,1,0]
 	HNOT = [1/sqrt(2),0,0,1/sqrt(2);0,1,0,0;1/sqrt(2),0,1,-1/sqrt(2);0,0,0,0]
