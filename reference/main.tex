@@ -17,7 +17,12 @@
 \def\dotproduct[#1,#2]{
 \langle #1 | #2 \rangle
 }
-
+\def\twobytwomatrix[#1,#2,#3,#4]{
+\begin{bmatrix}
+	#1 & #2 \\
+	#3 & #4
+\end{bmatrix}
+}
 \newcommand{\QL}{\textsf{QLang}\xspace}
 \title{\QL: Qubit Language\\ \Large(Reference Manual)}
 \author{
@@ -46,11 +51,7 @@
 \input{sec-expressions}
 \section{Declarations}
 \section{Statements}
-\section{External definitions}
 \section{Scope rules}
-\section{Compiler control lines}
-\section{Implicit declarations}
-\section{Types revisited}
 \section{Constant expressions}
 \input{sec-constantexpr}
 \section{Examples}
