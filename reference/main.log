@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  27 OCT 2014 16:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  27 OCT 2014 16:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1199,7 +1199,14 @@ File: lstlang1.sty 2014/03/04 1.5c listings language file
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... none found.
 
-No file main.aux.
+(./main.aux
+
+LaTeX Warning: Label `cir1' multiply defined.
+
+
+LaTeX Warning: Label `cir1' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 71.
@@ -1217,7 +1224,7 @@ LaTeX Font Info:    ... okay on input line 71.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 71.
 LaTeX Font Info:    ... okay on input line 71.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 71.
-(/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmr.fd
+ (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Info: Redefining \microtypecontext on input line 71.
@@ -1331,14 +1338,17 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 (/usr/local/texlive/2014/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-)
+) (./main.toc
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 3.
+[1
+
+{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+[2])
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
- [1
-
-{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-(./sec-lexicalconventions.tex
+ [3] (./sec-lexicalconventions.tex
 LaTeX Font Info:    Try loading font information for T1+lmtt on input line 5.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmtt.fd
@@ -1354,12 +1364,10 @@ Overfull \hbox (4.95729pt too wide) in paragraph at lines 4--6
 SCII; that is, al-lowed char-ac-ters are [],
  []
 
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 10.
 File: keywords.txt  (verbatim)
 Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
 ine 21.
-[2
+[4
 
 ]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
@@ -1378,7 +1386,7 @@ Overfull \hbox (58.98247pt too wide) in paragraph at lines 2--25
 []  
  []
 
-[3]) [4]
+[5]) [6]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10> on input line 27.
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -1387,7 +1395,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 27.
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 27.
- [5] [6]
+ [7] [8]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 72.
@@ -1396,7 +1404,7 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 72.
 
-[7] [8]
+[9] [10]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 104.
@@ -1430,7 +1438,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 28--33
 
  []
 
-[9]
+[11]
 Underfull \hbox (badness 10000) in paragraph at lines 37--45
 
  []
@@ -1460,14 +1468,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 48--49
 
  []
 
-) (./Statements.tex [10]) (./Scope.tex [11]) (./sec-constantexpr.tex)
-(./sec-examples.tex <circuit1.png, id=153, 262.9825pt x 93.34875pt>
+) (./Statements.tex [12]) (./Scope.tex [13]) (./sec-constantexpr.tex)
+(./sec-examples.tex [14] <circuit1.png, id=293, 262.9825pt x 93.34875pt>
 File: circuit1.png Graphic file (type png)
 
 <use circuit1.png>
 Package pdftex.def Info: circuit1.png used on input line 26.
 (pdftex.def)             Requested size: 262.98184pt x 93.34851pt.
- [12] <circuit2.png, id=176, 411.5375pt x 102.3825pt>
+ <circuit2.png, id=295, 411.5375pt x 102.3825pt>
 File: circuit2.png Graphic file (type png)
 
 <use circuit2.png>
@@ -1477,13 +1485,13 @@ Package pdftex.def Info: circuit2.png used on input line 58.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[13 <./circuit1.png>] [14 <./circuit2.png>]
-<grover.png, id=257, 437.635pt x 117.43875pt>
+[15 <./circuit1.png>] [16 <./circuit2.png>]
+<grover.png, id=368, 437.635pt x 117.43875pt>
 File: grover.png Graphic file (type png)
  <use grover.png>
 Package pdftex.def Info: grover.png used on input line 137.
 (pdftex.def)             Requested size: 437.63393pt x 117.43845pt.
- [15 <./grover.png>]) [16]
+ [17 <./grover.png>]) [18]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 98.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 98.
  (./main.aux)
@@ -1491,14 +1499,14 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 98.
 Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 98.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 25781 strings out of 493117
- 468711 string characters out of 6135433
- 682265 words of memory out of 5000000
- 28260 multiletter control sequences out of 15000+600000
+ 25829 strings out of 493117
+ 469440 string characters out of 6135433
+ 691265 words of memory out of 5000000
+ 28266 multiletter control sequences out of 15000+600000
  85196 words of font info for 140 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,9n,76p,1705b,1886s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1522,10 +1530,10 @@ texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2014/texmf-dist
 e1/public/lm/lmsy10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/
 lm/lmsy8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtk10.p
 fb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on main.pdf (16 pages, 399908 bytes).
+Output written on main.pdf (18 pages, 406835 bytes).
 PDF statistics:
- 665 PDF objects out of 1000 (max. 8388607)
- 616 compressed objects within 7 object streams
- 240 named destinations out of 1000 (max. 500000)
+ 791 PDF objects out of 1000 (max. 8388607)
+ 739 compressed objects within 8 object streams
+ 278 named destinations out of 1000 (max. 500000)
  25700 words of extra memory for PDF output out of 29859 (max. 10000000)
 
