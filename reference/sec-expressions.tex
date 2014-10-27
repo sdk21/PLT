@@ -19,11 +19,11 @@ The result is the real component of the expression. The type of the expression m
 \subsubsection{im expression}
 The result is the imaginary component of the expression. The type of the expression must be comp. The result has the same type as the expression (it is a complex number with  0 real component).
 \subsubsection{norm expression}
-The result is the norm of the expression. The type of the expression must be rvect or cvect. The result has type int if the expression is an integer vector, type float if the expression is a float vector, and type comp if the expression is a complex number vector.
+The result is the norm of the expression. The type of the expression must be mat. The result has type int if the expression is an integer matrix, type float if the expression is a float matrix, and type comp if the expression is a complex number matrix.
 \subsubsection{isunit expression}
-The result is a boolean indicating if it is true or false that the expression is a unit vector or unit matrix. The type of the expression must be rvect, cvect or mat.
+The result is a boolean indicating if it is true or false that the expression is a unit matrix. The type of the expression must be mat.
 \subsubsection{trans expression}
-The result is the transpose of the expression. The type of the expression must be rvect, cvect or mat. The result has type cvect if the expression is of type rvect, has type rvect if the expression is of type cvect, and has type mat if the expression is of type mat.
+The result is the transpose of the expression. The type of the expression must be mat. The result has the same type as the expression.
 \subsubsection{det expression}
 The result is the determinant of the expression. The type of the expression must be mat. The result has type int if the expression is an integer matrix,  type float if the expression was a float matrix, and type comp if the expression was a complex number matrix.
 \subsubsection{adj expression}
@@ -70,4 +70,4 @@ The result is a boolean indicating the logical \textit{or} of the expressions. T
 \subsection{Assignment Operators}
 Assignment operators have left associativity
 \subsubsection{lvalue $=$ expression}
-The result is the assignment of the expression to the lvalue. The lvalue must have been previously declared. The type of the expression must be of the same that the lvalue was declared as. Recall, lvalues can be declared as int, float, comp, rvect, cvect, mat, and qubit.
+The result is the assignment of the expression to the lvalue. The lvalue must have been previously declared. The type of the expression must be of the same that the lvalue was declared as. Recall, lvalues can be declared as int, float, comp, mat, and qubit.

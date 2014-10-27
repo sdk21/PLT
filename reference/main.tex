@@ -17,12 +17,14 @@
 \def\dotproduct[#1,#2]{
 \langle #1 | #2 \rangle
 }
+
 \def\twobytwomatrix[#1,#2,#3,#4]{
 \begin{bmatrix}
 	#1 & #2 \\
 	#3 & #4
 \end{bmatrix}
 }
+
 \newcommand{\QL}{\textsf{QLang}\xspace}
 \title{\QL: Qubit Language\\ \Large(Reference Manual)}
 \author{
@@ -50,10 +52,11 @@
 \subsection{Operator Precedence}
 \input{sec-expressions}
 \section{Declarations}
+\input{sec-declarations}
 \section{Statements}
 \section{Scope rules}
 \section{Constant expressions}
-\input{sec-constantexpr}
 \section{Examples}
-\input{sec-examples}
+\dots
+
 \end{document}
