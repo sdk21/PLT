@@ -2,9 +2,9 @@
 The remaining major subsections of this section describe the groups of expression operators, while the minor subsections describe the individual operators within a group.
 \subsection{Primary Expressions}
 \subsubsection{identifier}
-Identifiers are primary expressions. All identifiers have an associated type that is given to them upon declaration (e.g. float ident; declares an identifier named ident that is of type float).
+Identifiers are primary expressions. All identifiers have an associated type that is given to them upon declaration (e.g. \textit{float ident} declares an identifier named ident that is of type float).
 \subsubsection{constant}
-Constants are primary expressions. As discussed above, constants are integers, floats, complex numbers, qubits, and matrices. All constants have an associated type that are predetermined by the QLang language (e.g. integers are of type int).
+Constants are primary expressions. Constants are integer, float, complex number, qubit, and matrix literals as well as the built-in constants of the language (e.g. pi). All constants have an associated type that are predetermined by the language (e.g. integers are of type int). 
 \subsubsection{(expression)}
 Parenthesized expressions are primary expressions. The type and value of a parenthesized expression is the same as the type and value of the expression without parenthesis. Parentheses allow expressions to be evaluated in a desired precedence. Parenthesized expressions are evaluated relative to each other starting with the expression that is nested the most deeply and ending with the expression that is nested the least deeply (i.e. the shallowest).
 \subsubsection{primary-expression[expression]}
