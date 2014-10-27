@@ -1,0 +1,7 @@
+pi e
+int float comp rvect cvect mat
+true false
+if elif else
+def for from to by while break
+or and xor
+not re im norm isunit trans det adj conj sin cos tan exp

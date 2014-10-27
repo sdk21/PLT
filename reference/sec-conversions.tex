@@ -1,0 +1,7 @@
+Applying unary or binary operators to some values may cause an implicit conversion of their operands. In this section, we list the possible conversions, and their expected result -- any conversion not listed here is impossible, and attempting to force it would generate a compilation error.
+
+\begin{itemize}
+  \item $\complex\to\float$: the imaginary part of the complex number is dropped (will generate a warning).
+  \item $\float\to\integ$: the floating number is rounded towards zero.
+  \item $\complex\to\integ$: equivalent to $\complex\to\float\to\integ$.
+\end{itemize}
