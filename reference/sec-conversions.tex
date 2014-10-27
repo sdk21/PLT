@@ -1,7 +1,11 @@
 Applying unary or binary operators to some values may cause an implicit conversion of their operands. In this section, we list the possible conversions, and their expected result -- any conversion not listed here is impossible, and attempting to force it would generate a compilation error.
 
 \begin{itemize}
+  \item $\integ\to\float$, $\float\to\complex$, $\integ\to\complex$.
   \item $\complex\to\float$: the imaginary part of the complex number is dropped (will generate a warning).
   \item $\float\to\integ$: the floating number is rounded towards zero.
   \item $\complex\to\integ$: equivalent to $\complex\to\float\to\integ$.
+  \item $\complex\to\mat$: the floating number $z$ becomes the $1\times1$ $\begin{bmatrix} z \end{bmatrix}$ (will generate a warning).
+  \item $\float\to\mat$: the floating number $x$ becomes the $1\times1$ matrix $\begin{bmatrix} x \end{bmatrix}$ (will generate a warning).
+  \item $\integ\to\mat$: the integer $a$ becomes the $1\times1$ matrix $\begin{bmatrix} a \end{bmatrix}$ (will generate a warning).
 \end{itemize}

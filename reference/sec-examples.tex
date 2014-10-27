@@ -8,7 +8,7 @@ Evaluate the following expressions: a. $(H \otimes X) \ket{00}$ b. $\dotproduct[
 def pseudo = evaluate (){
 		
 	# a quit type declaration follows dirac notation
-	qubit mat0 = |00>;
+	qub mat0 = |00>;
 		
 	# Both X and H are constant with type mat and
 	# @ corresponds to tensor product.
@@ -33,10 +33,10 @@ Find the matrix corresponding to the quantum circuit:
 def circuitMat = findMatrix (){
 	
 	# all basis qubit in 2 dimension
-	qubit mat0=|00>;
-	qubit mat1=|01>;
-	qubit mat2=|10>;
-	qubit mat3=|11>;
+	qub mat0=|00>;
+	qub mat1=|01>;
+	qub mat2=|10>;
+	qub mat3=|11>;
 	
 	# controlled not matrix	
 	mat CNOT = [1,0,0,0;0,1,0,0;0,0,0,1;0,0,1,0]
@@ -65,8 +65,8 @@ Consider the circuit and show the probabilities of outcome 0 where $\ket{\Psi_{i
 def probability = outcomeZero(){
 	
 	# top and bottom qubits
-	qubit top = |0>;
-	qubit bottom = |1>;
+	qub top = |0>;
+	qub bottom = |1>;
 	
 	# Applying H on top qubit 
 	mat output = (H @ I) * (top @ bottom);
@@ -97,7 +97,7 @@ def probability = outcomeZero(){
 \subsubsection{Deutsch Jozsa Algorithm}
 \begin{lstlisting}
 
-def outcome = deutschJozsa(qubit top, mat U){
+def outcome = deutschJozsa(qub top, mat U){
 		
 	# in corresponds to the qubit in top register
 	# input is the tensor product of top register and bottom register
@@ -148,7 +148,7 @@ def result = grover (quit top, int x0){
 	# this is a special case where n=1
 	
 	# qubit in the bottom register
-	qubit bottom = |1>;
+	qub bottom = |1>;
 	
 	# tensor product of top and bottom qubit
 	mat input = top @ bottom;

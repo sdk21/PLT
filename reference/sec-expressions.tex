@@ -1,6 +1,7 @@
 \input{sec-expressions-table}
 \subsection{Literals}
-Literals are integers, floats, complex numbers, qubits, and matrices, as well as the built-in constants of the language (e.g. \textsf{Pi}). Integers are of type \integ, floats are of type \float, complex numbers are of type \complex, qubits are of type \qubit, and matrices are of type \mat. The built-in constants have pre-determined types described above (e.g. \textsf{Pi} is of type \float).\\\\
+Literals are integers, floats, complex numbers, qubits, and matrices, as well as the built-in constants of the language (e.g. \textsf{pi}). Integers are of type \integ, floats are of type \float, complex numbers are of type \complex, qubits are of type \qubit, and matrices are of type \mat. The built-in constants have pre-determined types described above (e.g. \textsf{pi} is of type \float).
+
 The remaining major subsections of this section describe the groups of \textit{expression} operators, while the minor subsections describe the individual operators within a group.
 \subsection{Primary Expressions}
 \subsubsection{identifier}
@@ -12,28 +13,28 @@ Parenthesized \textit{expressions} are primary \textit{expressions}. The type an
 \subsubsection{primary-\textit{expression}(\textit{expression}-list)}
 Primary \textit{expressions} followed by a parenthesized \textit{expression} list are primary \textit{expressions}. Such primary \textit{expressions} can be used in the declaration of functions or function calls. The \textit{expression} list must consist of one or more \textit{expressions} separated by commas. If being used in function declarations, they must be preceded by the correct function declaration syntax and each \textit{expression} in the \textit{expression} list must evaluate to a type followed by an identifier. If being used in function calls each \textit{expression} in the \textit{expression} list must evaluate to an identifier.
 \subsubsection{[\textit{expression}-elementlist]}
-Expression element lists in brackets are primary \textit{expressions}. Such primary \textit{expressions} are used to define matrices and therefore are of type \mat. The \textit{expression} element list must consist of one or more \textit{expressions} separated by commas or semi-colons. Commas separate \textit{expressions} into matrix columns and semi-colons separate \textit{expressions} into matrix rows. The \textit{expressions} must evaluate to the same type and can be of type \integ, \float, \complex, or \mat. Additionally, the number of \textit{expressions} in each row of the matrix must be the same. An example matrix is shown below.
+Expression element lists in brackets are primary \textit{expressions}. Such primary \textit{expressions} are used to define matrices and therefore are of type \mat. The \textit{expression} element list must consist of one or more \textit{expressions} separated by commas or semi-colons. Commas separate \textit{expressions} into matrix columns and \new{colons} separate \textit{expressions} into matrix rows. The \textit{expressions} must evaluate to the same type and can be of type \integ, \float, \complex, or \mat. Additionally, the number of \textit{expressions} in each row of the matrix must be the same. An example matrix is shown below.
 
-\begin{verbatim}
+\begin{lstlisting}
 int a = 3;
 int b = 12;
-mat my_matrix = [ 0+1, 2, a; 5-1, 2*3-1, 12/2];
-\end{verbatim}
+mat my_matrix = [ 0+1, 2, a: 5-1, 2*3-1, 12/2];
+\end{lstlisting}
 
 \subsubsection{<\textit{expression}|}
 Expressions with a less than sign on the left and a bar on the right are primary \textit{expressions}. Such \textit{expressions} are used to define qubits and therefore are of type \qubit. The notation is meant to mimic the "bra-" of "bra-ket" notation and can therefore be thought of as a row vector representation of the given qubit. Following "bra-ket" notation, the \textit{expression} must evaluate  to an integer literal of only 0's and 1's, which represents the state of the qubit. An example "bra-" qubit is shown below.
 
-\begin{verbatim}
+\begin{lstlisting}
 qub b_qubit = <0100|;
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{|\textit{expression}>}
 Expressions with a bar on the left and a greater than sign on the right are primary \textit{expressions}. All of the considerations are the same as for <\textit{expression}|, except that this notation mimics the "ket" of "bra-ket" notation and can therefore be though of as a column vector representation of the given qubit. An example "ket-" qubit is shown below.
 
-\begin{verbatim}
+\begin{lstlisting}
 int a = 001;
 qub k_qubit = |a>;
-\end{verbatim}
+\end{lstlisting}
 
 \subsection{Unary Operators}
 \subsubsection{not \textit{expression}}

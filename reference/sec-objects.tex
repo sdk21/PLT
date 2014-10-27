@@ -1,1 +1,14 @@
-The language comprises 5 core types, namely \integ, \float, \complex, \qubit, \mat. (In particular, column and row vectors are represented respectively as $n\times1$ or $1\times n$ matrices).
+\subsection{Objects and lvalues}
+As in C, ``an object is a manipulatable region of storage; an lvalue is an expression referring to an object.''
+
+\subsection{Valid types}
+
+The language features 5 elementary types, namely \integ, \float, \complex, \qubit, \mat. (In particular, column and row vectors are represented respectively as $n\times1$ or $1\times n$ matrices.) Is also valid any type that inductively can be built from an a valid type as follows:
+\begin{itemize}
+  \item elementary types are valid;
+  \item an \emph{array} of a valid type is valid. Arrays have fixed size (that must be declared at compilation time), and are comprised of elements of a single, fixed valid type;
+  \item a \emph{function} taking as input a fixed number of elements from (non-necessarily identical) valid types, and returning a valid type.
+\end{itemize}
+
+\section{Conversions}
+\input{sec-conversions}

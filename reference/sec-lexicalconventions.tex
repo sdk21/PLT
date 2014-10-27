@@ -12,16 +12,8 @@ An identifier is an arbitrarily long sequence of alphabetic and numeric characte
 \noindent The language is case-sensitive: \texttt{hullabaloo} and \texttt{hullABaLoo} are considered as different.
 
 \subsection{Keywords}
-The following identifiers as reserved for keywords, and no one shall use them because it's forbidden and uncool.
-\begin{verbatim}
-pi e
-int float comp rvect cvect mat
-true false
-if elif else
-def for from to by while break
-or and xor
-not re im norm isunit trans det adj conj sin cos tan
-\end{verbatim}
+The following identifiers as reserved for keywords: using them as function of variable name will result in an error at compilation time.
+\verbatiminput{keywords.txt}
 \subsection{Constants}
 There are fours sorts of constants in the language, namely \emph{integer}, \emph{float}, \emph{complex} and \emph{identifier} constants. The first are comprised of any sequence of integers of the form \texttt{0|([1-9][0-9]*)} (recall that integers are non-negative), and have type \integ. The second are of type \float  and have the form \texttt{$R$}, while the third are of type \complex and have the form 
 \texttt{$R$|$R$+$R$i|$R$i}
@@ -31,7 +23,7 @@ is defined as \texttt{[+-]\{0,1\}((($A$.$B$*|.$B$+)([eE][+-]?B+)?)|$A$[eE][+-]?B
 \noindent Finally, the identifier constants are a subset of the reserved keywords, and include:
 \begin{description}
   \item[\texttt{e}] the base of natural logarithm $e=\sum_{k=0}^\infty \frac{1}{k!}$. Equivalent to \texttt{exp(1)}; has type \complex.
-  \item[\texttt{Pi}] the constant $\pi$. Has type \complex.
+  \item[\texttt{pi}] the constant $\pi$. Has type \complex.
   \item[\texttt{true}] represents the Boolean value \textsf{true}. Stored internally  as \integ 1.
   \item[\texttt{false}] represents the Boolean value \textsf{false}. Stored internally  as \integ 0.
 \end{description}
