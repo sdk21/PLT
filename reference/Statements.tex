@@ -1,0 +1,58 @@
+
+
+\subsection{Expression statements}
+
+Expression statements are the building blocks of an executable program. As the name suggests, expression statements are nothing but expressions, delimited by semicolons. 
+Expressions can actually be declarations, assignments, operations or even function calls.
+For example,
+\begin{verbatim}
+x = a + 3;
+\end{verbatim}
+is a valid expression statement, and so is 
+\begin{verbatim}
+print(a);
+\end{verbatim}
+
+\subsection{The if-elif-else statement}
+The \texttt{if-elif-else} statement is used for selectively executing statements based on some condition.Essentially, if the condition following the \texttt{if} keyword is satisfied, the specified statements get executed.To specify what happens if the condition does not evaluate to true, we have the \texttt{else} keyword.
+In case we want to evaluate more than one condition at a time, we also have the \texttt{elif} keyword. So an if can be followed by any number of \texttt{elif}s, and at most one else block which is the end of the construct.The statements following the \texttt{else} are executed only if neither of the conditions specified before that evaluate to true.
+
+
+\begin{verbatim}
+
+
+	if ( condition) {
+	} elif (condition) {
+	} else {
+	}
+
+
+Example:
+if ( x==5) {
+       print("x is 5");
+	} elif (x==3) {
+	   print("x is 3");
+	} else {
+	   print("x is neither 5 nor 3")
+	}
+\end{verbatim}
+
+\subsection{The for loop}
+
+The for statement is used for executing a set of statements a specified number of times.	The statements within the for loop are executed as long as the value of the variable is within the specified range. 
+As soon as the value goes out of range, control comes out of the for loop. To ensure termination, each iteration of the for loop increments/decrements the value of the variable, bringing it one step closer to the final value that is to be achieved.
+
+By default, increment or decrement is by 1. However, if the desired increment is something other than one, the by keyword lets you specify that explicitly.
+
+An example of for loop, increment by 2 is as follows: 
+
+\begin{verbatim}
+
+	for k from 1 to 10 by 2 {
+	}
+\end{verbatim}
+
+
+
+
+  

@@ -1,0 +1,21 @@
+
+
+Within a program, variables may be declared and/or defined  in various places. The scope of each variable is different, depending on where it is declared.There are three primary scope rules.
+
+If a variable is defined at the outset/outer block of a program, it is visible everywhere in the program.
+
+If a variable is defined as a parameter to a function, or inside a function/block of code, it is visible only within that function.
+
+Declarations made after a specific declaration are not visible to it, or to any declarations before it.
+
+For instance, consider the following snippet.
+
+\begin{verbatim}
+int x = 5;
+
+int y = x + 10;  \# this works
+
+int z = a + 100; \# this does not
+
+int a = 200; 
+\end{verbatim}
