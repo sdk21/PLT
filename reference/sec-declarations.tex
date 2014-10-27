@@ -13,14 +13,14 @@ There are four main type specifiers\\
 		\\*\indent\indent\textit{com}
 		\\*\indent\indent\textit{mat}
 
-\subsection{Declarators}
-The declarator-list consist of either a single declarator, or a series of declarators separated by commas.\\
+\subsection{ Declarator List }
+The declarator-list field of a declaration is a comma-separated sequence of declarators.\\
 
 	\textit{declarator-list:}
 		\\*\indent\indent\textit{declarator}
 		\\*\indent\indent\textit{declarator , declarator-list}\\
 
-A declarator refers to an object with a type determined by the type-specifier in the overall declaration. Declarators can have the following form\\
+Declarators refer to a certain object. That object is of the type indicated by the type-specifier in the declaration. Declarators have the syntax\\
 
 	\textit{declarator:}
 		\\*\indent\indent\textit{identifier}
@@ -28,20 +28,22 @@ A declarator refers to an object with a type determined by the type-specifier in
 		\\*\indent\indent\textit{declarator [ constant-expression ]}
 		\\*\indent\indent\textit{( declarator )}\\
 
-\subsection{ Meaning of Declarators }
-Each declarator that appears in an expression is a call to create an object of the specified type. Each declarator has one identifier, and it is this identifier that is now associated with the created object. 
+The grouping in this definition is the same as in expressions.				
 
-If declarator D has the form\\
+\subsection{ Meaning of Declarators }
+Each expression that has the same form as a declarator is a call to create an object of the specified type. Each declarator has one identifier. Each identifier is of the type indicated by the specifier.\\
+
+If declarator D has the form\\\\
 		\\*\indent\indent\textit{D ( )}\\\\
-then the contained identifier has the type "function" that is returning an object. This object has the type which the identifier would have had if the declarator had just been D.\\\\
+then the contained identifier has the type "function returning ...", where "..." is the type which the identifier would have had if the declarator had been D.\\\\
 If a declarator has the form\\
 		\\*\indent\indent\textit{D[constant-expression]}\\
 or
 		\\*\indent\indent\textit{D[ ]}\\\\
-then it is a declarator whose identifier is of type "array". In the first case, the constant- expression is an expression whose value can be defined at compile time.  The type of that constant-expression is int. In the second case, the constant expression 1 is used. \\
+then it is a declarator whose identifier is of type "array". In the first case, the constant- expression is an expression whose value is determinable at compile time.  The type of that constant-expression is int. In the second case, the constant expression 1 is used. \\
 
-An array can be constructed from one of the basic types, or from another array.\\
+An array may be constructed from one of the basic types, or from another array.\\
 
-Parentheses in declarators do not change the the type of contained identifier, but can affect the relations between the individual components of the declarator.\\
+Parentheses in declarators do not alter the type of the contained identifier, but rather the binding of the individual compoents of the declarator.\\
 
-Not all possible combinations of the above syntax are permitted. There are certain restrictions such as how array of functions cannot be declared.
+Not all possibilities of the above syntax are actually allowed. There are certain further restrictions. There are no array of functions.
