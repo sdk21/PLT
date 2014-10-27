@@ -1,18 +1,18 @@
 \input{sec-expressions-table}
 \subsection{Literals}
-Literals are integers, floats, complex numbers, qubits, and matricies, as well as the built-in constants of the language (e.g. pi). Integers are of type int, floats are of type float, complex numbers are of type comp, qubits are of type qub, and matrices are of type mat. The built-in constants have pre-determined types described above (e.g. pi is of type float).\\\\
-The remaining major subsections of this section describe the groups of expression operators, while the minor subsections describe the individual operators within a group.
+Literals are integers, floats, complex numbers, qubits, and matrices, as well as the built-in constants of the language (e.g. \textsf{Pi}). Integers are of type \integ, floats are of type \float, complex numbers are of type \complex, qubits are of type \qubit, and matrices are of type \mat. The built-in constants have pre-determined types described above (e.g. \textsf{Pi} is of type \float).\\\\
+The remaining major subsections of this section describe the groups of \textit{expression} operators, while the minor subsections describe the individual operators within a group.
 \subsection{Primary Expressions}
 \subsubsection{identifier}
-Identifiers are primary expressions. All identifiers have an associated type that is given to them upon declaration (e.g. \textit{float ident} declares an identifier named ident that is of type float).
+Identifiers are primary \textit{expressions}. All identifiers have an associated type that is given to them upon declaration (e.g. \float \textit{ident} declares an identifier named ident that is of type \float).
 \subsubsection{literals}
-Literals are primary expressions. They are described above.
-\subsubsection{(expression)}
-Parenthesized expressions are primary expressions. The type and value of a parenthesized expression is the same as the type and value of the expression without parenthesis. Parentheses allow expressions to be evaluated in a desired precedence. Parenthesized expressions are evaluated relative to each other starting with the expression that is nested the most deeply and ending with the expression that is nested the least deeply (i.e. the shallowest).
-\subsubsection{primary-expression(expression-list)}
-Primary expressions followed by a parenthesized expression list are primary expressions. Such primary expressions can be used in the declaration of functions or function calls. The expression list must consist of one or more expressions separated by commas. If being used in function declarations, they must be preceded by the correct function declaration syntax and each expression in the expression list must evaluate to a type followed by an identifier. If being used in function calls each expression in the expression list must evaluate to an identifier.
-\subsubsection{[expression-elementlist]}
-Expression element lists in brackets are primary expressions. Such primary expressions are used to define matrices and therefore are of type mat. The expression element list must consist of one or more expressions separated by commas or semi-colons. Commas separate expressions into matrix columns and semi-colons separate expressions into matrix rows. The expressions must evaluate to the same type and can be of type int, float, comp, or mat. Additionally, the number of expressions in each row of the matrix must be the same. An example matrix is shown below.
+Literals are primary \textit{expressions}. They are described above.
+\subsubsection{(\textit{expression})}
+Parenthesized \textit{expressions} are primary \textit{expressions}. The type and value of a parenthesized \textit{expression} is the same as the type and value of the \textit{expression} without parenthesis. Parentheses allow \textit{expressions} to be evaluated in a desired precedence. Parenthesized \textit{expressions} are evaluated relative to each other starting with the \textit{expression} that is nested the most deeply and ending with the \textit{expression} that is nested the least deeply (i.e. the shallowest).
+\subsubsection{primary-\textit{expression}(\textit{expression}-list)}
+Primary \textit{expressions} followed by a parenthesized \textit{expression} list are primary \textit{expressions}. Such primary \textit{expressions} can be used in the declaration of functions or function calls. The \textit{expression} list must consist of one or more \textit{expressions} separated by commas. If being used in function declarations, they must be preceded by the correct function declaration syntax and each \textit{expression} in the \textit{expression} list must evaluate to a type followed by an identifier. If being used in function calls each \textit{expression} in the \textit{expression} list must evaluate to an identifier.
+\subsubsection{[\textit{expression}-elementlist]}
+Expression element lists in brackets are primary \textit{expressions}. Such primary \textit{expressions} are used to define matrices and therefore are of type \mat. The \textit{expression} element list must consist of one or more \textit{expressions} separated by commas or semi-colons. Commas separate \textit{expressions} into matrix columns and semi-colons separate \textit{expressions} into matrix rows. The \textit{expressions} must evaluate to the same type and can be of type \integ, \float, \complex, or \mat. Additionally, the number of \textit{expressions} in each row of the matrix must be the same. An example matrix is shown below.
 
 \begin{verbatim}
 int a = 3;
@@ -20,15 +20,15 @@ int b = 12;
 mat my_matrix = [ 0+1, 2, a; 5-1, 2*3-1, 12/2];
 \end{verbatim}
 
-\subsubsection{<expression|}
-Expressions with a less than sign on the left and a bar on the right are primary expressions. Such expressions are used to define qubits and therefore are of type qub. The notation is meant to mimic the "bra-" of "bra-ket" notation and can therefore be thought of as a row vector representation of the given qubit. Following "bra-ket" notation, the expression must evaluate  to an integer literal of only 0's and 1's, which represents the state of the qubit. An example "bra-" qubit is shown below.
+\subsubsection{<\textit{expression}|}
+Expressions with a less than sign on the left and a bar on the right are primary \textit{expressions}. Such \textit{expressions} are used to define qubits and therefore are of type \qubit. The notation is meant to mimic the "bra-" of "bra-ket" notation and can therefore be thought of as a row vector representation of the given qubit. Following "bra-ket" notation, the \textit{expression} must evaluate  to an integer literal of only 0's and 1's, which represents the state of the qubit. An example "bra-" qubit is shown below.
 
 \begin{verbatim}
 qub b_qubit = <0100|;
 \end{verbatim}
 
-\subsubsection{|expression>}
-Expressions with a bar on the left and a greater than sign on the right are primary expressions. All of the considerations are the same as for <\textit{expression}|, except that this notation mimics the "ket" of "bra-ket" notation and can therefore be though of as a column vector representation of the given qubit. An example "ket-" qubit is shown below.
+\subsubsection{|\textit{expression}>}
+Expressions with a bar on the left and a greater than sign on the right are primary \textit{expressions}. All of the considerations are the same as for <\textit{expression}|, except that this notation mimics the "ket" of "bra-ket" notation and can therefore be though of as a column vector representation of the given qubit. An example "ket-" qubit is shown below.
 
 \begin{verbatim}
 int a = 001;
@@ -36,62 +36,63 @@ qub k_qubit = |a>;
 \end{verbatim}
 
 \subsection{Unary Operators}
-\subsubsection{not expression}
-The result is a boolean indicating the logical \textit{not} of the expression. The type of the expression must be int or float. In the expressions, 0 is considered false and all other values are considered true.
-\subsubsection{re expression}
-The result is the real component of the expression. The type of the expression must be comp. The result has the same type as the expression (it is a complex number with  0 imaginary component).
-\subsubsection{im expression}
-The result is the imaginary component of the expression. The type of the expression must be comp. The result has the same type as the expression (it is a complex number with  0 real component).
-\subsubsection{norm expression}
-The result is the norm of the expression. The type of the expression must be mat. The result has type float if the expression is an integer matrix or float matrix and type comp if the expression is a complex number matrix.
-\subsubsection{isunit expression}
-The result is a boolean indicating if it is true or false that the expression is a unit matrix. The type of the expression must be mat.
-\subsubsection{trans expression}
-The result is the transpose of the expression. The type of the expression must be mat. The result has the same type as the expression.
-\subsubsection{det expression}
-The result is the determinant of the expression. The type of the expression must be mat. The result has type float if the expression is an integer matrix or float matrix and type comp if the expression is a complex number matrix.
-\subsubsection{adj expression}
-The result is the adjucate of the expression. The type of the expression must be mat. The result has the same type as the expression.
-\subsubsection{conj expression}
-The result is the complex conjugate of the expression. The type of the expression must be comp or mat. The result has type mat. The result has the same type as the expression.
-\subsubsection{sin expression}
-The result is the evaluation of the trigonometric function sine on the expression. The type of the expression must be int, float, or comp. The result has type float if the expression is of type int or float and type comp if the expression is of type comp.
-\subsubsection{cos expression}
-The result is the evaluation of the trigonometric function cosine on the expression. The type of the expression must be int, float, or comp. The result has type float if the expression is of type int or float and type comp if the expression is of type comp.
-\subsubsection{tan expression}
-The result is the evaluation of the trigonometric function tangent on the expression. The type of the expression must be int, float, or comp. The result has type float if the expression is of type int or float and type comp if the expression is of type comp.
+\subsubsection{not \textit{expression}}
+The result is a Boolean indicating the logical \textsf{not} of the \textit{expression}. The type of the \textit{expression} must be \integ or \float. In the \textit{expressions}, 0 is considered false and all other values are considered true.
+\subsubsection{re \textit{expression}}
+The result is the real component of the \textit{expression}. The type of the \textit{expression} must be  \complex. The result has the same type as the \textit{expression} (it is a complex number with  0 imaginary component).
+\subsubsection{im \textit{expression}}
+The result is the imaginary component of the \textit{expression}. The type of the \textit{expression} must be  \complex. The result has the same type as the \textit{expression} (it is a complex number with  0 real component).
+\subsubsection{norm \textit{expression}}
+The result is the norm of the \textit{expression}. The type of the \textit{expression} must be \mat, \new{\complex, \qubit or \float}. The result has type \float, and corresponds to the $2$-norm; in the case of \complex or \float, this coincides with respectively the module and absolute value.
+% if the \textit{expression} is an integer matrix or \float matrix and type \complex if the \textit{expression} is a complex number matrix.
+\subsubsection{isunit \textit{expression}}
+The result is a Boolean indicating if it is true or false that the \textit{expression} is a unit matrix. The type of the \textit{expression} must be \mat.
+\subsubsection{trans \textit{expression}}
+The result is the transpose of the \textit{expression}. The type of the \textit{expression} must be \mat. The result has the same type as the \textit{expression}.
+\subsubsection{det \textit{expression}}
+The result is the determinant of the \textit{expression}. The type of the \textit{expression} must be \mat. The result has type \float if the \textit{expression} is an integer matrix or \float matrix and type \complex if the \textit{expression} is a complex number matrix.
+\subsubsection{adj \textit{expression}}
+The result is the \new{adjoint} of the \textit{expression}. The type of the \textit{expression} must be \mat. The result has the same type as the \textit{expression}.
+\subsubsection{conj \textit{expression}}
+The result is the complex conjugate of the \textit{expression}. The type of the \textit{expression} must be \complex or \mat. The result has the same type as the \textit{expression}.
+\subsubsection{sin \textit{expression}}
+The result is the evaluation of the trigonometric function sine on the \textit{expression}. The type of the \textit{expression} must be \integ, \float, or  \complex. The result has type \float if the \textit{expression} is of type \integ or \float and type \complex if the \textit{expression} is of type  \complex.
+\subsubsection{cos \textit{expression}}
+The result is the evaluation of the trigonometric function cosine on the \textit{expression}. The type of the \textit{expression} must be \integ, \float, or  \complex. The result has type \float if the \textit{expression} is of type \integ or \float and type \complex if the \textit{expression} is of type  \complex.
+\subsubsection{tan \textit{expression}}
+The result is the evaluation of the trigonometric function tangent on the \textit{expression}. The type of the \textit{expression} must be \integ, \float, or  \complex. The result has type \float if the \textit{expression} is of type \integ or \float and type \complex if the \textit{expression} is of type  \complex. \new{(If an error occured because of a division by zero, a runtime exception is raised.)}
 \subsection{Binary Operators}
-\subsubsection{expression $\hat{}$ expression}
-The result is the exponentiation of the first expression by the second expression. The types of the expressions must be of type int, float, or comp. If the expressions are of the same type, the result has the same type as the expressions. Otherwise, if at least one expression is a comp, the result is of type comp; if neither expressions are comp, but at least one is float, the result is of type float.
-\subsubsection{expression * expression}
-The result is the product of the expressions. The type considerations are the same as they are for \textit{expression $\hat{}$ expression}
-\subsubsection{expression / expression}
-The result is the quotient of the expressions, where the first expression is the dividend and the second is the divisor. The type considerations are the same as they are for \textit{expression $\hat{}$ expression}. Integer division is rounded towards 0 and truncated.
-\subsubsection{expression \% expression}
-The result is the remainder of the division of the expressions, where the first expression is the dividend and the second is the divisor. The sign of the dividend and the divisor are ignored, so the result returned is always the remainder of the absolute value of the dividend divided by the absolute value of the divisor. The type considerations are the same as they are for \textit{expression $\hat{}$ expression}.
-\subsubsection{expression + expression}
-The result is the sum of the expressions. The types of the expressions must be of type int, float, comp, or qubit. Otherwise, if at least one expression is a comp, the result is of type comp; if neither expressions are comp, but at least one is float, the result is of type float. Qubits are special and can only be summed with each other.
-\subsubsection{expression - expression}
-The result is the difference of the first and second expressions. The type considerations are the same as they are for \textit{expression - expression}.
-\subsubsection{expression @ expression}
-The result is the tensor product of the first and second expressions. The The expressions must be of type of mat. The result has the same type as the expression.
-\subsubsection{expression eq expression}
-The result is a boolean indicating if it is true or false that the two expression are structurally equivalent. The type of the expressions must be the same.
-\subsubsection{expression lt expression}
-The result is a boolean indicating if it is true or false that the first expression is less than the second. The type of the expressions must be int, float, or comp and must be the same.
-\subsubsection{expression gt expression}
-The result is a boolean indicating if it is true or false that the first expression is greater than the second. The type of the expressions must be int, float, or comp and must be the same.
-\subsubsection{expression leq expression}
-The result is a boolean indicating if it is true or false that the first expression is less than  or equal to the second. The type of the expressions must be int, float, or comp and must be the same.
-\subsubsection{expression geq expression}
-The result is a boolean indicating if it is true or false that the first expression is greater than or equal to the second. The type of the expressions must be int, float, or comp and must be the same.
-\subsubsection{expression or expression}
-The result is a boolean indicating the logical \textit{or} of the expressions. The type of the expressions must be int or float and must be the same. In the expressions, 0 is considered false and all other values are considered true.
-\subsubsection{expression and expression}
-The result is a boolean indicating the logical \textit{and} of the expressions. The type considerations are the same as they are for \textit{expression or expression}.
-\subsubsection{expression xor expression}
-The result is a boolean indicating the logical \textit{xor} of the expressions. The type considerations are the same as they are for \textit{expression or expression}.
+\subsubsection{\textit{expression} $\hat{}$ \textit{expression}}
+The result is the exponentiation of the first \textit{expression} by the second \textit{expression}. The types of the \textit{expression} must be of type \integ, \float, or  \complex. If the \textit{expressions} are of the same type, the result has the same type as the \textit{expressions}. Otherwise, if at least one \textit{expression} is a \complex, the result is of type \complex; if neither \textit{expressions} are comp, but at least one is \float, the result is of type \float.
+\subsubsection{\textit{expression} * \textit{expression}}
+The result is the product of the \textit{expressions}. The type considerations are the same as they are for \textit{expression} $\hat{}$ \textit{expression}
+\subsubsection{\textit{expression} / \textit{expression}}
+The result is the quotient of the \textit{expressions}, where the first \textit{expression} is the dividend and the second is the divisor. The type considerations are the same as they are for \textit{expression} $\hat{}$ \textit{expression}. Integer division is rounded towards 0 and truncated. \new{(If an error occured because of a division by zero, a runtime exception is raised.)}
+\subsubsection{\textit{expression} \% \textit{expression}}
+The result is the remainder of the division of the \textit{expressions}, where the first \textit{expression} is the dividend and the second is the divisor. The sign of the dividend and the divisor are ignored, so the result returned is always the remainder of the absolute value (or module) of the dividend divided by the absolute value of the divisor. The type considerations are the same as they are for \textit{expression} $\hat{}$ \textit{expression}.
+\subsubsection{\textit{expression} + \textit{expression}}
+The result is the sum of the \textit{expressions}. The types of the \textit{expressions} must be of type \integ, \float, \complex, \new{\mat} or \qubit. If at least one \textit{expression} is a \complex, the result is of type \complex; if neither \textit{expressions} are comp, but at least one is \float, the result is of type \float. Qubits and matrices are special and can only be summed with within operands of the same type \new{(and, in the case of matrices, dimensions)}.
+\subsubsection{\textit{expression} - \textit{expression}}
+The result is the difference of the first and second \textit{expression}. The type considerations are the same as they are for \textit{expression} + \textit{expression}.
+\subsubsection{\textit{expression} @ \textit{expression}}
+The result is the tensor product of the first and second \textit{expressions}. The \textit{expressions} must be of type of \mat. The result has the same type as the \textit{expression}.
+\subsubsection{\textit{expression} eq \textit{expression}}
+The result is a Boolean indicating if it is true or false that the two \textit{expression} are structurally equivalent. The type of the \textit{expressions} must be the same.
+\subsubsection{\textit{expression} lt \textit{expression}}
+The result is a Boolean indicating if it is true or false that the first \textit{expression} is less than the second. The type of the \textit{expressions} must be \integ or \float and must be the same. \cmargin{no ordering for complex numbers}
+\subsubsection{\textit{expression} gt \textit{expression}}
+The result is a Boolean indicating if it is true or false that the first \textit{expression} is greater than the second. The type of the \textit{expressions} must be \integ or \float and must be the same. \cmargin{no ordering for complex numbers}
+\subsubsection{\textit{expression} leq \textit{expression}}
+The result is a Boolean indicating if it is true or false that the first \textit{expression} is less than  or equal to the second. The type of the \textit{expressions} must be \integ or \float and must be the same. \cmargin{no ordering for complex numbers}
+\subsubsection{\textit{expression} geq \textit{expression}}
+The result is a Boolean indicating if it is true or false that the first \textit{expression} is greater than or equal to the second. The type of the \textit{expressions} must be \integ or \float and must be the same. \cmargin{no ordering for complex numbers}
+\subsubsection{\textit{expression} or \textit{expression}}
+The result is a Boolean indicating the logical \textit{or} of the \textit{expressions}. The type of the \textit{expressions} must be \integ or \float and must be the same. In the \textit{expressions}, 0 is considered \textsf{false} and all other values are considered \textsf{true}.
+\subsubsection{\textit{expression} and \textit{expression}}
+The result is a Boolean indicating the logical \textit{and} of the \textit{expressions}. The type considerations are the same as they are for \textit{expression} or \textit{expression}.
+\subsubsection{\textit{expression} xor \textit{expression}}
+The result is a Boolean indicating the logical \textit{xor} of the \textit{expressions}. The type considerations are the same as they are for \textit{expression} or \textit{expression}.
 \subsection{Assignment Operators}
 Assignment operators have left associativity
-\subsubsection{lvalue $=$ expression}
-The result is the assignment of the expression to the lvalue. The lvalue must have been previously declared. The type of the expression must be of the same that the lvalue was declared as. Recall, lvalues can be declared as int, float, comp, mat, and qubit.
+\subsubsection{lvalue $=$ \textit{expression}}
+The result is the assignment of the \textit{expression} to the lvalue. The lvalue must have been previously declared. The type of the \textit{expression} must be of the same that the lvalue was declared as. Recall, lvalues can be declared as \integ, \float, comp, mat, and qubit.
