@@ -39,10 +39,10 @@ def circuitMat = findMatrix (){
 	qub mat3=|11>;
 	
 	# controlled not matrix	
-	mat CNOT = [1,0,0,0;0,1,0,0;0,0,0,1;0,0,1,0]
+	mat CNOT = [1,0,0,0:0,1,0,0:0,0,0,1:0,0,1,0]
 	
 	#controlled hadmard matrix
-	mat HNOT = [1/sqrt(2),0,0,1/sqrt(2);0,1,0,0;1/sqrt(2),0,1,-1/sqrt(2);0,0,0,0]
+	mat HNOT = [1/sqrt(2),0,0,1/sqrt(2):0,1,0,0:1/sqrt(2),0,1,-1/sqrt(2):0,0,0,0]
 	#composition of control gates
 	mat allGates = CNOT * HNOT * CNOT
 	
@@ -72,10 +72,10 @@ def probability = outcomeZero(){
 	mat output = (H @ I) * (top @ bottom);
 	
 	# Controlled Not operator
-	mat CNOT = [I, [0,0;0,0]; [0,0;0,0], X];
+	mat CNOT = [I, [0,0:0,0]: [0,0:0,0], X];
 	
 	# Controlled Y operator
-	mat CY = [Y,[0,0;0,0];[0,0;0,0], I];
+	mat CY = [Y,[0,0:0,0]:[0,0:0,0], I];
 	
 	# Applying Control Operators
 	output = (CY)*(CNOT)*output
@@ -157,7 +157,7 @@ def result = grover (quit top, int x0){
 	input = (H @ H) * input;
 	
 	#define S
-	mat S = [1,0;0-1]
+	mat S = [1,0:0-1]
 	
 	# k : number of time grover operator is applied
 	# for n > 1 k=ceil((pi*2^(n/2))/4);
