@@ -1,9 +1,16 @@
 %{ open Ast %}
 
+(* missing bra, ket, tensor, unit, def, rvec, cvec, mat*)
+
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
-%token PLUS MINUS TIMES DIVIDE ASSIGN
+%token PLUS MINUS MULT DIV MOD ASSIGN EXPN NORM TRANS DET ADJ CONJ
+%token SIN COS TAN
+%token TRUE FALSE
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE FOR WHILE INT
+%token RETURN IF ELSE FOR WHILE FROM TO BY BREAK CONT NOT AND OR XOR EOF
+%token COMP INT FLOAT QUB
+%token I E PI
+%token IM RE
 %token <int> LITERAL
 %token <string> ID
 %token EOF
@@ -14,7 +21,10 @@
 %left EQ NEQ
 %left LT GT LEQ GEQ
 %left PLUS MINUS
-%left TIMES DIVIDE
+%left MULT DIV MOD 
+(* %left NORM TRANS DET ADJ CONJ *)
+%left EXPN
+(* %left SIN COS TAN  *)
 
 %start program
 %type <Ast.program> program
