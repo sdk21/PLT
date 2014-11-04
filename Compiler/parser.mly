@@ -20,7 +20,10 @@
 %left EQ NEQ
 %left LT GT LEQ GEQ
 %left PLUS MINUS
-%left TIMES DIVIDE
+%left MULT DIV MOD 
+(* %left NORM TRANS DET ADJ CONJ *)
+%left EXPN
+(* %left SIN COS TAN  *)
 
 %start program
 %type <Ast.program> program
