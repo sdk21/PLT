@@ -64,8 +64,8 @@ type stmt =
 (* Variables Declaration *)
 type var_decl = 
   { 
-    var_name : string;
     var_type : data_type;
+    var_name : string;
   }
 
 (* Function Declaration *)
