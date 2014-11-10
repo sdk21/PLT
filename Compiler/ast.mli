@@ -44,9 +44,9 @@ type bi_op =
 type expr =
   Lit_int of int
   | Lit_float of float
-  | Lit_com of expr * expr
-  | Lit_qub of expr
-  | Lit_mat of expr
+  | Com of expr * expr
+  | Qub of expr
+  | Mat of expr
   | Id of string
   | Unop of un_op * expr
   | Binop of expr * bi_op *expr
