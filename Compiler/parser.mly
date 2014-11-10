@@ -1,29 +1,32 @@
 %{ open Ast %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA BAR
-%token LBRACK RBRACK LBRACE RBRACE LCAR RCAR
-%token PLUS MINUS TIMES DIV ASSIGN MOD EXPN TENS
-%token EQ NEQ LT LEQ GT GEQ UNIT I E PI
-%token RETURN IF ELSE FOR WHILE INT
-%token IM RE NORM TRANS DET ADJ CONJ SIN COS TAN
-%token DEF ELIF FROM TO BY BREAK CONT TRUE FALSE
-%token NOT AND OR XOR
-%token FLOAT COMP QUB RVEC CVEC MAT
-%token <float> FLOAT
-%token <int> LITERAL
+%token I
+%token <float> E
+%token <float> PI
+%token INT FLOAT COM QUB MAT
+%token DEF
+%token RETURN
+%token ASSIGN
+%token COMMA SEMI LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE LCAR RCAR BAR
+%token PLUS MINUS TIMES DIV MOD EXPN
+%token EQ NEQ LT GT LEQ GEQ
+%token TRUE FALSE NOT AND OR XOR
+%token TENS UNIT NORM TRANS DET ADJ CONJ
+%token IM RE SIN COS TAN
+%token IF ELIF ELSE FOR FROM TO BY WHILE BREAK CONT
 %token <string> ID
-%token EOF
+%token <int> INT_LIT
+%token <float> FLOAT_LIT
 
-%nonassoc NOELSE
-%nonassoc ELSE
 %right ASSIGN
-%left EQ NEQ
+%left NOT AND OR XOR
+%left EQ NEQ UNIT
 %left LT GT LEQ GEQ
-%left PLUS MINUS
-%left MULT DIV MOD 
-(* %left NORM TRANS DET ADJ CONJ *)
-%left EXPN
-(* %left SIN COS TAN  *)
+%left SIN COS TAN
+%left IM RE
+%left PLUS MINUS TENS
+%left MULT DIV MOD NORM TRANS DET ADJ CONJ
+%right EXPN
 
 %start program
 %type <Ast.program> program
@@ -35,8 +38,33 @@ program:
  | program vdecl { ($2 :: fst $1), snd $1 }
  | program fdecl { fst $1, ($2 :: snd $1) }
 
+vtype:
+  INT     { Int }
+  | FLOAT { Float }
+  | COM   { Com }
+  | QUB   { Qub }
+  | MAT   { Mat }
+
+vdecl:
+  vtype ID SEMICOLON { { v_type = $1;
+                         v_name = $2 } } 
+vdecl_list:
+  /* nothing */  { [] }
+  | vdecl_list vdecl { $2 :: $1 }
+
+formal_params:
+  /* nothing */ { [] }
+  formal_params_list { List.rev $1 }
+
+formal_params_list:
+  vtype ID                          { { var_type = $1; 
+                                        var_name = $2; } }
+  formal_params_list COMMA vtype ID { {  var_type = $3;
+                                         var_name = $4; } :: $1 }
+
 fdecl:
-   ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+   DEF ID EQ ID LPAREN RPAREN
+   ID LPAREN EQ formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
      { { fname = $1;
 	 formals = $3;
 	 locals = List.rev $6;
