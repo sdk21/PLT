@@ -44,8 +44,9 @@ type bi_op =
 type expr =
   Lit_int of int
   | Lit_float of float
-  | Com of expr * expr
-  | Qub of expr
+  | Com of float * float
+  | Qub_bra of expr
+  | Qub_ket of expr
   | Mat of expr list list
   | Id of string
   | Unop of un_op * expr
@@ -72,13 +73,13 @@ type var_decl =
 (* Function Declaration *)
 type func_decl = 
   {
-    func_type : data_type;
+    ret_type : data_type;
+    ret_name : string;
     func_name : string;
-    args : var_decl list;
+    formal_params : var_decl list;
     locals : var_decl list;
     body : stmt list;
   }
-
 
 type program =
   var_decl list * func_decl list

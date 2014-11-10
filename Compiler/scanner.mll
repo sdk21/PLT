@@ -35,8 +35,9 @@ rule token = parse
 | '='        { ASSIGN } (* Assignment *)
 
 (* Punctuation *)
-| ','        { COMMA }  (* Separate row elements *)
-| ';'        { SEMI }   (* Separate column elements *)
+| ','        { COMMA }  (* Separate list elements *)
+| ':'        { COLON }  (* Separate matrix rows *)
+| ';'        { SEMI }   (* Separate matrix columns *)
 | '('        { LPAREN } (* Surround expression *)
 | ')'        { RPAREN } 
 | '['        { LBRACK } (* Surround vectors/matricies *)
@@ -103,10 +104,9 @@ rule token = parse
 (* Numbers *)
 | integers as lxm  { INT_LIT(int_of_string lxm) }
 | floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
-| complex  as lxm  { COM_LIT(lxm) }
 
 (* End of File *)
- eof        { EOF }    (* End of File *)
+| eof        { EOF }    (* End of File *)
 
 (* Illegal Input *)
 | _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
