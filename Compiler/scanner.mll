@@ -13,9 +13,6 @@ rule token = parse
 (* Comments *)
 | '#'        { comment lexbuf }
 
-(* Function Declaration *)
-| "def"      { DEF }    (* Define function *)
-
 (* Built-in Constants *)
 | "i"        { I }      (* Indicates imaginary number *)
 | "e"        { E }      (* Euler's number *)
@@ -24,10 +21,19 @@ rule token = parse
 (* Built-in Types *)
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
-| "com"     { COM }   (* Complex type *)
+| "com"      { COM }   (* Complex type *)
 | "qub"      { QUB }    (* Qubit type *)
 | "mat"      { MAT }    (* Matrix type *)
-|
+
+(* Function Declaration *)
+| "def"      { DEF }    (* Define function *)
+
+(* Function Return *)
+| "return"   { RETURN }
+
+(* Assignment *)
+| '='        { ASSIGN } (* Assignment *)
+
 (* Punctuation *)
 | ','        { COMMA }  (* Separate row elements *)
 | ';'        { SEMI }   (* Separate column elements *)
@@ -42,7 +48,6 @@ rule token = parse
 | '|'        { BAR }    (* Close bra- and Open -ket *)
 
 (* Algebraic Operators *)
-| '='        { ASSIGN } (* Assignment *)
 | '+'        { PLUS }   (* Addition *)
 | '-'        { MINUS }  (* Subtraction *)
 | '*'        { TIMES }   (* Multiplication *)
@@ -53,10 +58,10 @@ rule token = parse
 (* Relational Operators *)
 | "eq"       { EQ }     (* Equal to (structural) *)
 | "neq"      { NEQ }    (* Not equal to (structural) *) 
-| "gt"       { GT }     (* Greater than *)
 | "lt"       { LT }     (* Less than *)
-| "geq"      { GEQ }    (* Greater than or equal to *)
+| "gt"       { GT }     (* Greater than *)
 | "leq"      { LEQ }    (* Less than or equal to *)
+| "geq"      { GEQ }    (* Greater than or equal to *)
 
 (* Boolean Values & Operators *)
 | "true"     { TRUE }   (* Boolean true *)
@@ -67,13 +72,13 @@ rule token = parse
 | "xor"      { XOR }    (* Boolean xor *)
 
 (* Matrix Operators *)
-| '@'        { TENS }   (* Tensor product *)
 | "unit"     { UNIT }   (* Is unit matrix? *)
 | "norm"     { NORM }   (* Get norm *)
 | "trans"    { TRANS }  (* Get transpose *)
 | "det"      { DET }    (* Get determinant *) 
 | "adj"      { ADJ }    (* Get adjoint *)
 | "conj"     { CONJ }   (* Get complex conjugate *)
+| '@'        { TENS }   (* Tensor product *)
 
 (* Built-in Functions  *)
 | "im"       { IM }     (* Is imaginary number? *)
@@ -100,7 +105,7 @@ rule token = parse
 (* Numbers *)
 | integers as lxm  { INT_LIT(int_of_string lxm) }
 | floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
-| complex  as lxm  { COM(lxm) }
+| complex  as lxm  { COM_LIT(lxm) }
 
 (* End of File *)
  eof        { EOF }    (* End of File *)
