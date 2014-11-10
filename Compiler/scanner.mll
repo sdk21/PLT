@@ -89,8 +89,6 @@ rule token = parse
 
 (* Control Flow *)
 | "if"       { IF }     (* If statement *)
-| "elif"     { ELIF }   (* Else if statement *)
-| "else"     { ELSE }   (* Else statement *)
 | "for"      { FOR }    (* For loop (For i from x to y by z *)
 | "from"     { FROM }
 | "to"       { TO }

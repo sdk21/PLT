@@ -46,7 +46,7 @@ type expr =
   | Lit_float of float
   | Com of expr * expr
   | Qub of expr
-  | Mat of expr
+  | Mat of expr list list
   | Id of string
   | Unop of un_op * expr
   | Binop of expr * bi_op *expr
@@ -56,13 +56,12 @@ type expr =
 
 (* Statements *)
 type stmt =
-  Block of stmt list
-  | Expr of expr
-  | Return of expr
-  | For of expr * expr * expr * stmt
-  | While of expr * stmt
+  Expr of expr
+  | Block of stmt list
   | If of expr * stmt
-
+  | For of expr * expr * expr * expr * stmt
+  | While of expr * stmt
+ 
 (* Variables Declaration *)
 type var_decl = 
   { 

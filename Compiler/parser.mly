@@ -70,18 +70,22 @@ actual_params_list:
     expr                    { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
 
-(* NEXT *)
 fdecl:
-   DEF ID EQ ID LPAREN formal_params RPAREN LBRACE vdecl_list stmt_list RBRACE
-     { { fname = $1;
-	 formals = $3;
-	 locals = List.rev $6;
-	 body = List.rev $7 } }
-stmt:  
+   DEF vtype ID EQ ID LPAREN formal_params RPAREN LBRACE vdecl_list stmt_list RBRACE
+     { { ret_type = $2;
+         ret_name = $3;
+         func_name = $5;
+	 formal_params = $7;
+	 locals = Lis.rev $10;
+	 body = List.rev $11; } }
 
-stmt_list:
-  /* nothing */ { [] }
-  | stmt_list stmt { $2 :: $1 }
+mat_row_list:
+  LPAREN mat_row RPAREN { [List.rev $1] }
+  | mat_row_list COLON LPAREN mat_row RPAREN { $3 :: $1 }
+
+mat_row:
+   expr { [$1] }
+  | mat_row COMMA expr { $3 :: $1 }
 
 expr:
   ID                               { Id($1) }
@@ -91,6 +95,9 @@ expr:
   | LCAR expr BAR                  { Qub($1, $2, $3) }
   | BAR expr RCAR                  { Qub($1, $2, $3) }
   | LBRACK mat_row_list RBRACK     { Mat($2) }
+  | LPAREN expr RPAREN             { $2 }
+  | ID ASSIGN expr                 { Assign($1, $3) }
+  | ID LPAREN actual_params RPAREN { Call($1, $3) }
   | NOT expr                       { Unop(Not, $2) }
   | RE expr                        { Unop(Re, $2) }
   | IM expr                        { Unop(Im, $2) }
@@ -119,18 +126,18 @@ expr:
   | expr AND    expr               { Binop($1, And,  $3) }
   | expr XOR    expr               { Binop($1, Xor,  $3) }
   | expr TENS   expr               { Binop($1, Tens,  $3) }
-  | ID ASSIGN   expr               { Assign($1, $3) }
-  | ID LPAREN actual_params RPAREN { Call($1, $3) }
-  | LPAREN expr RPAREN { $2 }
 
-mat_row_list:
-  LPAREN mat_row RPAREN { [List.rev $1] }
-  | mat_row_list COLON LPAREN mat_row RPAREN { $3 :: $1 }
+ by:
+  /* nothing */ { Noexpr }
+ | BY expr
 
-mat_row:
-   expr { [$1] }
-  | mat_row COMMA expr { $3 :: $1 }
+stmt:  
+  expr SEMI                            { Expr($1) }
+  | LBRACE stmt_list RBRACE            { Block(List.rev $2) }
+  | FOR expr FROM expr TO expr by stmt { For($2, $4, $6, $8, $9) }
+  | WHILE LPAREN expr RPAREN stmt      { While($3, $5) }
+  | IF LPAREN expr RPAREN stmt         { If($3, $4) }
 
-expr_opt:
-    /* nothing */ { Noexpr }
-  | expr          { $1 }
+stmt_list:
+  /* nothing */ { [] }
+  | stmt_list stmt { $2 :: $1 }
