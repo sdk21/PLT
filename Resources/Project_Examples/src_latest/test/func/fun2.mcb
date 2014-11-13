@@ -1,0 +1,11 @@
+int foo(int x) {
+	return x;
+}
+
+int entry() {
+	int x;
+	int y;
+	x = 3;
+	y = foo(x);
+	print(y);
+}

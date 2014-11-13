@@ -1,0 +1,17 @@
+int entry() {
+	float a;
+	floatMat b;
+	floatMat c;
+	a = 1;
+	Init b[2][2];
+	b = [[1, 2 ? 3, 4]];
+	print(b[0][1]);
+	print(a);
+	a = | b |;
+	print(a);
+	a = tr(b);
+	print(a);
+	Init c[1][1];
+	c = submat(b, 1, 1, 1, 1);
+	print(|c|);
+}

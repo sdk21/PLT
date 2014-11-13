@@ -1,0 +1,10 @@
+int entry() {
+	float y2;
+	int z4s;
+	y2 = 1;
+	print(y2);
+	z4s = 4;
+	print(z4s);
+	y2 = z4s;
+	print(y2);
+}

@@ -1,0 +1,9 @@
+
+int entry()
+{
+print(foo(2));
+}
+
+int foo(int x, double y)
+{
+return x}

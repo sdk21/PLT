@@ -1,0 +1,113 @@
+%
+% clam.tex -- master LaTeX file for 'CLAM: The Concise Linear Algebra Manipulation Language'
+%
+\newcommand{\sys}{CLAM}
+\newcommand{\longtitle}{\sys{}: The Concise Linear Algebra Manipulation Language}
+\newcommand{\authorlist}{Jeremy Andrus and Robert Martin and Kevin Sun and Yongxu Zhang}
+\newcommand{\authoremails}{\{jca2119, rdm2128, kfs2110, yz2419\}@columbia.edu}
+
+% Build Project proposal only (default for now)
+\ifcsname ifproposal\endcsname\else
+  \expandafter\let\csname ifproposal\expandafter\endcsname
+                  \csname iftrue\endcsname
+\fi
+% Build Language Reference Manual only
+\ifcsname ifrefman\endcsname\else
+  \expandafter\let\csname ifrefman\expandafter\endcsname
+                  \csname iffalse\endcsname
+\fi
+\ifcsname ifbook\endcsname\else
+  \expandafter\let\csname ifbook\expandafter\endcsname
+                  \csname iffalse\endcsname
+\fi
+
+% Document Class
+\ifbook
+  \documentclass[10pt,letterpaper,titlepage,onecolumn,oneside]{book}
+\else
+  \documentclass[10pt,letterpaper,onecolumn,oneside]{article}
+\fi
+
+\usepackage[margin=1.0in]{geometry}
+\usepackage[utf8x]{inputenc}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage[font=scriptsize,caption=false]{subfig}
+\usepackage{underscore}
+% hyphenat redefines "BreakableUnderscore", so I need
+% to do some LaTeX gymnastics to make it work...
+\makeatletter
+\let\BreakableUnderscore\@undefined
+\makeatother
+\usepackage{hyphenat}
+\usepackage{wrapfig}
+\usepackage{lastpage}
+\usepackage{balance}
+\usepackage{cite}
+\usepackage{pdfsync}
+\usepackage[colorlinks=false,
+    pdftitle={\longtitle{}},
+    pdfborder={0 0 0},
+    pdfauthor={\authorlist{}},
+    pdfdisplaydoctitle=true,
+    plainpages=false]{hyperref}
+\usepackage{breakurl}
+\usepackage{multirow}
+\usepackage{pgfgantt}
+
+\setlength{\parindent}{0in}
+\addtolength{\parskip}{\baselineskip}
+
+% other useful commands
+\newcommand{\comment}[1]{}
+
+\begin{document}
+
+% this usually saves about a line-or-two by squeezing inter-sentence space
+%\frenchspacing
+
+\title{\longtitle{}}
+\author{\authorlist{}\\\authoremails{}\\\\Columbia University\\COMS W4115: Programming Languages and Translators}
+\maketitle
+
+% Body of the paper in different files
+\ifproposal
+  % Project Proposal
+  \input{proposal}
+\else
+  \input{clamlisting}
+  \input{ocamllisting}
+  \ifrefman
+    % Language Reference Manual
+    \section*{Language Reference Manual}
+    \input{manual}
+    \clearpage
+  \else
+    % Final Project report is the default output here
+    \tableofcontents
+    \input{intro}
+    \input{tutorial}
+    % Language Reference Manual
+    \chapter{Language Reference Manual}
+    \label{chap:lrm}
+    \input{manual}
+    \input{plan}
+    \input{design}
+    \input{testing}
+    \input{lessons}
+    \appendix
+    \input{appendix}
+    \clearpage
+  \fi
+  {
+    \balance
+    \bibliographystyle{abbrv}
+    \bibliography{clam}
+  }
+\fi
+
+\end{document}

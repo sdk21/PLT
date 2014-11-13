@@ -1,0 +1,38 @@
+
+int entry()
+{
+if (2 > 3 ! 2 > 3)
+	print(0);
+
+if (3 > 5 || 2 > 1)
+	print(999);
+
+if (3 < 5 && 2 > 1)
+	print(888);
+
+if (3 >= 2)
+	if (2 >= 1)
+	print(777);
+
+
+if (3 < 2)
+	if (2 > 1)
+	print(555);
+
+
+else 	print(666);
+
+if (3 > 2)
+	if (2 > 1)
+	print(333);
+
+else 	print(444);
+
+
+if (3 != 3)
+	print(222);
+
+if (3 == 3)
+	print(111);
+
+}

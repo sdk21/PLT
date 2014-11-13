@@ -1,0 +1,652 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simple Sectioned Essay Template
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing essay content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
+\usepackage{hyperref}
+\usepackage{geometry} % Required to change the page size to A4
+\usepackage{graphicx}
+\geometry{a4paper} % Set the page size to be A4 as opposed to the default US Letter
+
+\usepackage{graphicx} % Required for including pictures
+
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+\usepackage{listings}
+\usepackage[usenames,dvipsnames]{color} % Required for custom color
+\linespread{1.2} % Line spacing
+
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
+\lstloadlanguages{C++} % Load C++ syntax for listings, for a list of other languages supported see: ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
+\lstset{language=Perl, % Use Perl in this example
+        frame=single, % Single frame around code
+        basicstyle=\small\ttfamily, % Use small true type font
+        keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
+        keywordstyle=[2]\color{Purple}, % Perl function arguments purple
+        keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
+        identifierstyle=, % Nothing special about identifiers                                         
+        commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
+        stringstyle=\color{Purple}, % Strings are purple
+        showstringspaces=false, % Don't put marks in string spaces
+        tabsize=5, % 5 spaces per tab
+        %
+        % Put standard Perl functions not included in the default language here
+        morekeywords={rand},
+        %
+        % Put Perl function parameters here
+        morekeywords=[2]{on, off, interp},
+        %
+        % Put user defined functions here
+        morekeywords=[3]{test},
+       	%
+        morecomment=[l][\color{Blue}]{...}, % Line continuation (...) like blue comment
+        numbers=left, % Line numbers on left
+        firstnumber=1, % Line numbers start with line 1
+        numberstyle=\tiny\color{Blue}, % Line numbers are blue and small
+        stepnumber=5 % Line numbers go in steps of 5
+}
+
+% Creates a new command to include a perl script, the first parameter is the filename of the script (without .pl), the second parameter is the caption
+\newcommand{\cppcode}[2]{
+\begin{itemize}
+\item[]\lstinputlisting[caption=#2,label=#1]{#1.pl}
+\end{itemize}
+}
+
+
+\graphicspath{{./Pictures/}} % Specifies the directory where pictures are stored
+\usepackage{amsmath}
+\usepackage{centernot}
+\usepackage[T1]{fontenc}
+\newcommand{\tab}{\hspace*{2em}}
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\LARGE Columbia University}\\[1.5cm] % Name of your university/college
+\textsc{\Large Computer Science Department}\\[0.5cm] % Major heading such as course name
+\textsc{\large COMS W4115 Programming Languages and Translators}\\[0.5cm] % Minor heading such as course title
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Matcab: Matrix Manipulation Language}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Cheng Xiang \\ Yu Qiao \\ Ran Yu \\ Tianchen Yu % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Supervisor:} \\
+Prof. Stephen A. Edwards\ % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[4cm]
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Include a table of contents
+
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\section{Introduction} % Major section
+
+The MatCab is a programming language that simplifies and accelerates matrix manipulations. It is a C-style language that particularly aims at easier and faster matrix computing for programmers. Matrix computing is one of the most common linear algebra operations used in scientific computation. Operations like image processing and data mining both require considerable amount of highly efficient matrix calculations. For example, in the multi-dimensional regression, a basic algorithm in Machine Learning, we need to compute the inverse of the matrix. Instead of writing multiple lines to implement the inverse function and maybe error-prone due to the unfamiliar with inverse concept. Our MatCab language, however, provides an easy way to apply basic arithmetical operation to matrices. Like that you can simply type 'A"' to get the inverse matrix of A. And its C-like syntax can help C programmers get rid of the burden of hundreds of lines of c-code for matrix computing, making the computation simple, compact and easy to read. \\
+MatCab simplifies matrix processing, through domain-specific data types and operators. A basic data type in MatCab is a $FloatMat$, which is a 2-dimension matrix consist of float numbers. And $FloatMat$ support  various basic Matrix computation, such as $inverse,~,transpose,~,convolution,~\dots$ and etc.\\
+With the feature of matrix manipulation, MatCab can be widely use in programming about calculation. The intuitive, robust and portable MatCab can do a lot in programming. 
+%---------------------------------------------
+%	Language Tutorial
+%---------------------------------------------
+\section{Language Tutorial}
+a
+\subsection{Input and Output}
+b
+\subsubsection{Your first program}
+c
+\subsubsection{Using command-line arguments}
+d
+\subsection{Compiling and Running Your Program}
+e
+\subsection{Basic Types}
+f
+\subsubsection{IntMat}
+g
+\subsubsection{FloatMat}
+h
+\subsection{Convolutions}
+i
+\subsection{A Full Example}
+j
+%----------------------------------------------------------------------------------------
+%	MAJOR SECTION 1
+%----------------------------------------------------------------------------------------
+\section{Language Reference Manual}
+\subsection{Lexical Conventions} % Major section
+
+There are six kinds of tokens: comments, identifiers, keywords, constants, strings, and operators. Comments, blanks, tabs, tabs, new lines and are ignored. The token is recognized until the parser sees a separator.
+%------------------------------------------------
+\subsubsection{Comments} ß
+A line that begins with a pound sign (\#) is comments. The compiler will ignore the comments. Only single-line comment is supported. 
+
+\begin{center}
+\emph{\#This is a line of comment.}
+\end{center}
+
+%------------------------------------------------
+\subsubsection{Identifiers}
+An identifier is used to distinguish one variable or function to another. It is sequence of letters and numbers, and it must start with a letter. The identifiers are case-sensitive, i.e. “move” and “Move” are different variables.
+
+\begin{center}
+\emph {Identifier \ensuremath{\rightarrow}  {[}a-zA-Z{]}({[}a-zA-Z\_{]} \big| {[}0-9{]})*}
+\end{center}
+
+%------------------------------------------------
+\subsubsection{Keywords} 
+A keyword is reserved and cannot be used as an identifier. 
+\begin{center}
+\emph {Keyword  \ensuremath{\rightarrow} 
+ int \big| char \big| float \big| rowvec \big| colvec 
+       \big| matrix \big| return \big| break \big| continue  
+       \big| if \big| else \big| for \big| while \big| entry 
+       \big| true \big| false \big| import \big| export 
+}
+\end{center}
+
+%------------------------------------------------
+\subsubsection{Constants} ß
+There are four kinds of constants in Matcab: numeric constants, string literal constants, vector constants, and matrix constants.
+%------------------------------------------------
+
+%\subsubsubsection{Numeric Constants} 
+A numeric constant can be an integer constant, a float constant.
+The integer is a series of numbers. The float constant contains an integer part, a decimal point, a fraction part and a character `f'.
+
+\begin{center}
+\emph {Numeric Constant \ensuremath{\rightarrow} Integer Constant \big| Float Constant}
+
+\emph {Integer Constant \ensuremath{\rightarrow} {[}0-9{]}+}
+
+\emph {Float Constant \ensuremath{\rightarrow} {[}0-9{]}+ . {[}0-9{]}+ `f'}
+\end{center}
+
+%------------------------------------------------
+%\subsubsubsection{String Literal Constants} 
+A string literal constant is anything inside a pair of double quote marks.
+\begin{center}
+\emph {String Literal  \ensuremath{\rightarrow} ``(any character)''}
+\end{center}
+
+%------------------------------------------------
+%\subsubsubsection{ Vector Constants}
+A vector constant can be a row vector or a column vector. A pair of square brackets demarcates them both.  A row vector is ended with a character `r’ while a column vector is ended with a character `c’. For example, {[}3,4,5{]}r is a row vector.
+\begin{center}
+\emph {Vector Constant   \ensuremath{\rightarrow} Row Vector Constant  \big| Column Vector Constant}
+\emph {Row Vector Constant   \ensuremath{\rightarrow} open\_square\_bracket close\_square\_bracket `r’  \big| open\_square\_bracket (Numeric Constant ,)+ Numeric Constant close\_square\_breacket `r’}
+\emph {Column Vector Constant   \ensuremath{\rightarrow} open\_square\_bracket close\_square\_bracket `c’  \big| open\_square\_bracket (Numeric Constant ,)+ Numeric Constant close\_square\_breacket `c’}
+\end{center}
+
+%------------------------------------------------
+%\subsubsubsection{Matrix Constants} 
+A matrix constant begins with an open square bracket and ends with a close square bracket, just like the vector constant. It can be filled with several row vectors, column vectors, or numbers. For example, {[}(1,2,3);(4,5,6);(7,8,9){]} gives a 3*3 matrix with values specified; {[}c1;c2;c3{]} gives a matrix with column vector specified; {[}r1;r2;r3{]} gives a matrix with row vector specified.
+\begin{center}
+\emph {Matrix Constants  \ensuremath{\rightarrow} open\_square\_bracket (comma separated numbers)* close\_square\_bracket}
+\end{center}
+
+%------------------------------------------------
+\subsection{Syntax Notations} 
+Because Matcab supports both number and matrix operations, we use uppercase letter and lowercase letter to distinguish them in the following discussion – Any uppercase character denotes a matrix, and any lowercase denotes a number.
+
+%------------------------------------------------
+\subsection{Types} 
+There are two types can either be an atomic type or a compound type.
+
+%------------------------------------------------
+\subsubsection{Atomic Types}
+As a support or a complement language to other general programming languages, like C language, which focuses on matrix manipulation, MatCab supports a subset of arithmetic types defined in C programming language. 
+\begin{center}
+\emph {char\\int\\float}
+\end{center}
+
+%------------------------------------------------
+\subsubsection{Compound Types}
+MatCab supports compound types built upon atomic types. 
+\begin{center}
+\emph {rowvec\\colvec\\matrix}
+\end{center}
+Users cannot define new data types in Matcab.
+
+%------------------------------------------------
+\subsection{Expressions}
+Here the definition of MatCab expressions follows the steps in C Language Reference Manual defining expressions.
+
+%------------------------------------------------
+\subsubsection{Primary Expressions}
+An identifier, a constant, a string (an array of chars), an expression enclosed in parentheses, a primary expression followed by an expression in square brackets or a function call (a primary expression followed by parentheses containing possibly empty, as well as possibly comma separated list of expressions) could be a primary expression.
+\begin {center}
+			
+Identifier
+
+Constant
+
+String
+
+( expression )
+
+Primary-expression {[} expression {]}
+
+Primary-expression ( expression-list )
+
+\end {center}
+
+%------------------------------------------------
+\subsubsection{Unary operators}
+There are several kinds of unary operators in MatCab:
+\begin {center}
++ expression
+
+- expression
+
+! expression
+
+expression \~{}
+
+expression \~{}.
+
+expression '
+
+| expression |
+
+tr( expression )
+\end {center}
+
+! operator will make the entire expression of value 0, if the operand is of value other than 0; and will be of value 1 if the operand is of value 0.
+
+\~{} and \~{}. operator performe matrix inverse calculation. As the convention of MatCab, if \~{}. operator  is chosen by the programmer, the calculation will use GPU to accelerate.
+
+` operator gives the transpose of the original expression.
+
+| A | operator calculates the determinant of the given expression.
+
+tr() operator calculates the trace of the given expression.
+
+%------------------------------------------------
+\subsubsection{Binary operators}
+\begin {center}
+expression + expression
+
+expression - expression
+
+expression * expression
+
+expression / expression
+
+expression % expression
+
+expression *. expression
+
+expression ** expression
+
+expression == expression
+
+expression || expression
+
+expression \&\& expression
+\end {center}
+*. operator will performe matrix multiplication using GPU acceleration.
+==, || and \&\& operators are used in flow control.
+
+
+%------------------------------------------------
+\subsubsection{Other operators}
+Besides unary and binary operators, MatCab supports some useful matrix calculations using such operators:
+
+\begin {center} submat( expression, expression, expression, expression, expression ) \end {center}
+\begin {center} 	sum( expression, expression, expression ) \end {center}
+submat operator gives out a submatrix of the original expression according to the parameters assigned to.
+sum operator gives the sum of the elements in a row or a column of a given expression.
+
+%------------------------------------------------
+\subsubsection{I/O Expressions}
+MatCab take in the input and give out the output using I/O expressions defined within the language itself.
+
+\begin {center} Matrix-identifier = Import ( filename )\end {center}
+\begin {center} Export ( filename, matrix-identifier )\end {center}
+
+%------------------------------------------------
+\subsection{Declarations}
+Declarations are used to associate an identifier and its data type. It tells the interpreter how to treat each identifier properly. All variables must be firstly explicitly declared before it can be used in a statement. Declarations could appear at any place of a MatCab program. It has the form:
+
+\tab	declaration:
+
+\tab\tab Type-specifier declarator-list
+
+\tab	declarator-list:
+
+\tab\tab		First-declarator
+
+\tab\tab		First-declarator, declarator-list
+
+\tab	first-declarator:
+
+\tab\tab	Declarator initializer
+
+\tab	declarator:
+
+\tab\tab		Identifier
+
+\tab\tab		Declarator ()
+
+\tab\tab		Declarator {[} constant-expression {]}
+
+\tab	Initializer:
+
+\tab\tab		Constant
+
+\tab\tab		{ constant-expression-list }
+
+%------------------------------------------------
+\subsection{Statements}
+Statements end with semicolons in MatCab, just like what it is like in C language. Most of the time, they are expression statements. If needed, statements can be grouped together using curly bracket pair. For flow control purpose, \emph{if} statements, \emph{while} statements, \emph{for} statements are supported in MatCab. Their grammar rules are exactly the same as C language.
+
+%------------------------------------------------
+\subsection{Program Definition}
+A MatCab program consists of several definition statements and exactly one entry point. The entry point itself is a function declaration with a specified form:
+
+Program \ensuremath{\rightarrow} EntryPoint FunctionDecl*
+
+EntryPoint \ensuremath{\rightarrow} int entry (){ Statement }
+
+FunctionDecl \ensuremath{\rightarrow} Type id { FormalList}
+
+FormalList \ensuremath{\rightarrow} Type id FormalRest*
+
+FormalRest \ensuremath{\rightarrow}, Type id
+
+Type \ensuremath{\rightarrow} AtomicType
+
+  \tab      \ensuremath{\rightarrow} CompoundType
+
+AtomicType \ensuremath{\rightarrow} char
+
+\tab	                    \ensuremath{\rightarrow} int 
+
+ \tab	                   \ensuremath{\rightarrow} float
+
+CompoundType \ensuremath{\rightarrow} rowec<AtomicType>
+
+ \tab	           	            \ensuremath{\rightarrow} columnvec<AtomicType>
+
+  \tab	         	            \ensuremath{\rightarrow} matrix<AtomicType>
+
+Statement \ensuremath{\rightarrow} VarDecl* 
+
+\tab	           \ensuremath{\rightarrow} { Statement* }
+
+\tab	           \ensuremath{\rightarrow} if ( Exp ) Statement else Statement
+
+\tab	           \ensuremath{\rightarrow} while ( Exp ) Statement
+
+\tab	           \ensuremath{\rightarrow} for ( Exp ; Exp ; Exp) { Statement* }
+
+\tab	           \ensuremath{\rightarrow} id = Exp ;
+
+\tab	           \ensuremath{\rightarrow} id [ Exp ]= Exp ;
+
+\tab	           \ensuremath{\rightarrow} id = import (id);
+
+\tab	           \ensuremath{\rightarrow} export (id);
+
+Exp     \ensuremath{\rightarrow} ( Exp )
+
+\tab	           \ensuremath{\rightarrow} [ Exp ]
+
+\tab	           \ensuremath{\rightarrow} Exp BInOp Exp
+
+  \tab	         \ensuremath{\rightarrow} LhsUnaryOp Exp
+
+  \tab	         \ensuremath{\rightarrow} Exp RhsUnaryOp
+
+  \tab	         \ensuremath{\rightarrow} | Exp |
+
+  \tab	         \ensuremath{\rightarrow} | tr ( exp) |
+
+ \tab	          \ensuremath{\rightarrow} submat (Exp+)
+
+\tab	           \ensuremath{\rightarrow} sum (Exp+)
+
+\tab	           \ensuremath{\rightarrow} Constant
+
+ \tab	          \ensuremath{\rightarrow} true
+
+ \tab	          \ensuremath{\rightarrow} false
+
+\tab	           \ensuremath{\rightarrow} id
+
+BinOp \ensuremath{\rightarrow} +
+
+ \tab	          \ensuremath{\rightarrow} -
+
+\tab	           \ensuremath{\rightarrow} *
+
+\tab	          \ensuremath{\rightarrow} /
+
+ \tab	         \ensuremath{\rightarrow} \%
+
+ \tab	         \ensuremath{\rightarrow} *.
+
+ \tab	         \ensuremath{\rightarrow} **
+
+LhsUnaryOp \ensuremath{\rightarrow} +
+
+ \tab	                    \ensuremath{\rightarrow} -
+
+\tab		      \ensuremath{\rightarrow} !
+
+RhsUnaryOp \ensuremath{\rightarrow} \~{}
+
+\tab		      \ensuremath{\rightarrow} \~{}.
+
+ \tab	        \ensuremath{\rightarrow} '
+
+VarDecl \ensuremath{\rightarrow} Type id ,
+
+%------------------------------------------------
+\subsection{How Scope Rules Work in MatCab}
+Identifiers are only valid in the scope that enclosed by the nearest curly bracket pair. If an identifier is declared out of any curly bracket pairs, then it is a global variable that accessible from anywhere of the program.
+
+%------------------------------------------------
+\subsection{Examples}
+
+\begin{lstlisting}[firstline=1,lastline=30]
+// Sample program Matrix Multiplication
+int entry() {
+	int THRES = 100;
+	matrix A = import(``matrix1.txt'')f;
+	matrix B = import(``matrix2.txt'');
+	int ma, mb, na, nb;
+	ma = rows_count(A);
+	mb = rows_count(B);
+	na = columns_count(A);
+	nb = columns_count(B);
+	if (na == mb)
+	{
+		matrix C = new matrix(ma, nb);
+		If (ma > THRES || na > THRES || nb > THRES)
+			C = A *. B;
+		else
+			C = A * B;
+		export(``result.txt'', C);
+	}
+}
+
+\end{lstlisting}
+
+%-----------------------
+%	Project Plan
+%------------------------
+
+\section{Project Plan}
+\subsection{Overview}
+This is an team project that involves 4 people, so we have make clear each team member's responsibility at the very beginning. At first we tried to use CUDA to speedup matrix calculation and did some research on it, but it did not come into use at last. All four team members participated in designing, coding, and testing, while each one has more specific tasks per the table below.
+
+\begin{table}
+\centering
+\caption{Responsibility of Each Member}
+\begin{tabular}{|c|c|} \hline
+Cheng Xiang &   Team management, Syntax design, Parsing and AST, Test suites \\ \hline
+Tianchen Yu &  Semantic analysis, Code generation  \\ \hline
+Ran Yu & Scanner and Matrix library \\ \hline
+Yu Qiao & Architecture design, Glue everything together, Automatic Testing \\ \hline 
+\end{tabular}
+\end{table}
+
+At the beginning of this semester, we came up with a project proposal and then every one has his/her share of responsibility and worked towards it.   
+
+
+\subsection{Administration}
+We set several milestone for important deliverables for time management.
+
+\begin{table}
+\centering
+\caption{Project Plan}
+\begin{tabular}{|c|c|} \hline
+Cutting Time & Deliverable \\ \hline
+Sept 26 & Language proposal finished, background language learnt \\ \hline
+Oct 2 & Team member responsibility defined, scanner started \\ \hline
+Oct 18 & Scanner completed, language convention started \\ \hline
+Oct 31 & Language reference manual finished, parser started \\ \hline
+Nov 15 & Parser finished, proceed to AST \\ \hline
+Dec 2 & AST done, proceed to code generation \\ \hline
+Dec 16 & Code generation finished, proceed to test \\ \hline
+Dec 19 & Turnover \\ \hline  
+\end{tabular}
+\end{table}
+
+\subsection{Develop environment}
+\begin{description}
+\item[Programming Language] We use the latest OCaml 4.00.0 as developing language. 
+\item[Scannner] We use OCamllex as scanner.  
+\item[Parser] We use OCamlyacc as parser. 
+\item[Automatic Tests] We use a Perl script and a bash script to test do regression test periodically. 
+\item[Automatic Build] We use GNU make.
+\item[Compile] As our compiler outputs Java code, we use Java 1.6.0\_35 as runtime support.
+\item[Version Control] We use SVN to do the version control. The repository is in google code and is publicly available. The URL is  \url{http://code.google.com/p/matcab/} 
+\end{description}
+
+
+
+%----------------
+% 	Architecture Design
+%-----------------
+\section{Architecture Design}
+\subsection{Overview}
+The MatCab compiler is nothing different than a common compiler. It has four parts: scanner, parser, AST and code generator. The only difference between MatCab compiler and the commercial compiler is that it does not generate assemble code. Instead, it generates Java source code and makes use of Java as runtime support.
+ \begin{figure}[!h] 
+     \centering   
+     \includegraphics[width=9cm, height=7.5cm]{arch.png} 
+     \caption{\label{lb}MatCab Architecture} 
+\end{figure}
+\subsection{Scanner}
+The scanner is used to tokenize the input file into token streams. The scanner will eliminate all kinds of useless tokens, such as tabs, white spaces, tabs, etc, and will raise an error if the scanner meets an illegal token. We used ocamllex to build the scanner.
+
+\subsection{Parser}
+The parser accepts the token stream generated by the scanner and parses it to build an AST. If the input token stream does not meet the requirements of the predefined syntax, it will raise an error. We used ocamlyacc to build the parser.
+
+\subsection{AST}
+The abstract syntax tree eliminates some unnecessary parts of elements at the parsing phase to the rest compiling job easier. It is nec
+
+%-------------
+%	Test cases
+%----------------
+\section{Test Plan}
+test cases
+
+
+%----------------
+%	Lesson learned
+%-----------------
+\section{Lesson Learned}
+This section gives the lessons learned by each member.
+
+\subsection{Ran Yu}
+Although I have implemented a compiler in my undergraduate study, MatCab is a really different one. Thinking in the O'Caml way is such a different experience for me.
+ 
+Except Functional language, I learned in detail how the AST, scanner, parser and compiler are worked together to translate a programming language into executable. It is much more hard than I expected, but I am very glad that our team work together and make it.
+
+Also I learned how to design unit test that discover all kind of dark corner and fix the problem with teammates.
+
+Last but not least, the project teach me a lot in team working. How to deal with each other and how to make the project developed more efficient. In our project, everyone of us gave the best effort to implement the compiler. 
+
+\subsection{Yu Qiao}
+The first lesson I learnt is start early, although this has been repeatedly stated by so many times by different teams. OCaml is a language that is very difficult to command, and it requires far more time than expected to write just a few lines of code. Starting early means getting a deep understanding of OCaml and thus make the following work smoothly. 
+
+The second lesson is to define LRM accurately first. We did not come up with a crystal clear LRM at first, and that proves to be a mistake. We had to revise the parser and AST again and again when doing the real coding, which is a great waste of time. 
+
+The third lesson is to resolve the technical risk at the very begging. We failed to generate CUDA code because we could not finish it in a very short time. Learning something new is always time-consuming, and the best way is to let someone resole this risk at first.
+ 
+
+%----------------
+%	Appendix
+%------------------
+\section{Appendix}
+appen
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+\bibitem[Dennis M. Ritchie, 1973]{DMR:1973dg}
+Dennis M. Ritchie (1973).
+\newblock C Reference Manual.
+\newblock {\em Bell Telephone Laboratories}
+
+\bibitem[Jeremy, Robert, Kevin and Yongxu, 2011]{JRKY:2011dg}
+Jeremy Andrus and Robert Martin and Kevin Sun and Yongxu Zhang (2011).
+\newblock CLAM: The Concise Linear Algebra Manipulation Language.
+\newblock {\em Columbia University}
+
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}

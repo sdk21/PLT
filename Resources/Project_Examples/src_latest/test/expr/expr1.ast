@@ -1,0 +1,16 @@
+
+int entry()
+{
+double[][] cdouble[][] bdouble aprint((|c|));
+c=(submat(b,1,1,1,1));
+init (c , 1, 1 )
+print(a);
+a=(tr(b));
+print(a);
+a=(|b|);
+print(a);
+print(b[0][1]);
+b=Im_init (1,2,3,4);
+init (b , 2, 2 )
+a=1;
+}

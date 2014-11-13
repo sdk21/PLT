@@ -1,0 +1,82 @@
+\newcommand{\startsyn}{\begin{center}\begin{tabular}{l}}
+\newcommand{\stopsyn}{\end{tabular}\end{center}}
+
+\section{Introduction}
+The \sys{} programming language is a linear algebra manipulation language
+specifically targeted for image processing. It provides an efficient way to
+express complex image manipulation algorithms through compact matrix
+operations. \sys{} programs are first compiled into a ''C`` module which is
+further compiled into a machine binary by an existing C compiler. This two-step
+process is completely automated by the \sys{} compiler, and by default no C code
+is output (this can be changed with compiler arguments - see section~\ref{sec:compiling}).
+
+This language reference is inspired by the C reference manual~\cite{DBLP:KernighanR88}.
+It details the syntax of the \sys{} language.
+
+\input{lrm-lexical}
+\input{lrm-types}
+\input{lrm-objects}
+\input{lrm-expressions}
+\input{lrm-statements}
+\input{lrm-misc}
+\input{lrm-grammar}
+
+\clearpage
+\section{Examples}
+
+\subsection{Gaussian Blur}
+Figure~\ref{fig:clamblur} shows an example \sys{} program which performs a Gaussian
+blur on an input image. The input and resulting output images are shown in
+Figures~\ref{fig:clamblurin} and~\ref{fig:clamblurout}.
+
+\begin{figure}[hb!]
+  \begin{center}
+  \lstinputlisting[language=CLAM]{src/blur.clam}
+  \caption{Gaussian Blur Implemented in \sys{}}
+  \label{fig:clamblur}
+  \end{center}
+\end{figure}
+{
+  \captionsetup{justification=centering}
+  \begin{figure*}[h!]
+    \centering
+    \subfloat[Input Image]{
+      \includegraphics*[width=7.5cm]{figures/lena.png}\label{fig:clamblurin}
+    }\hfill
+    \subfloat[Blurred Output Image]{
+      \includegraphics*[width=7.5cm]{figures/lena-blur.png}\label{fig:clamblurout}
+    }\hfill
+    \captionsetup{font=bf}
+    \caption{Gaussian Blur \sys{} Example}
+  \end{figure*}
+}
+
+\clearpage
+\subsection{Image Segmentation}
+Figure~\ref{fig:clamseg} shows an example \sys{} program which performs
+basic image segmentation. Pixels with a luminance value greater than 200 are
+displayed as red, pixels with a luminance less than or equal to 80 are displayed as blue,
+and pixels in between are displayed as Green. The input and resulting output images are shown in
+Figures~\ref{fig:clamsegin} and~\ref{fig:clamsegout}.
+
+\begin{figure}[hb!]
+  \begin{center}
+  \lstinputlisting[language=CLAM]{src/segment.clam}
+  \caption{Simple Image Segmentation Implemented in \sys{}}
+  \label{fig:clamseg}
+  \end{center}
+\end{figure}
+{
+  \captionsetup{justification=centering}
+  \begin{figure*}[h!]
+    \centering
+    \subfloat[Input Image]{
+      \includegraphics*[width=7.5cm]{figures/lena.png}\label{fig:clamsegin}
+    }\hfill
+    \subfloat[Segmented Output Image]{
+      \includegraphics*[width=7.5cm]{figures/lena-seg.png}\label{fig:clamsegout}
+    }\hfill
+    \captionsetup{font=bf}
+    \caption{Image Segmentation \sys{} Example}
+  \end{figure*}
+}

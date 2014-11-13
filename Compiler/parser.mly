@@ -31,8 +31,9 @@ let pi = 3.141592653 %}
 %left MULT DIV MOD NORM TRANS DET ADJ CONJ
 %right EXPN
 
-%start program
-%type <Ast.program> program
+%start expr
+/*%type <Ast.program> programi*/
+%type <Ast.expr> expr
 
 %%
 
@@ -84,7 +85,7 @@ fdecl:
 
 mat_row_list:
   LPAREN mat_row RPAREN { [List.rev $2] }
-  | mat_row_list COLON LPAREN mat_row RPAREN { $4 :: $1 }
+  | mat_row_list LPAREN mat_row RPAREN { $3 :: $1 }
 
 mat_row:
    expr { [$1] }

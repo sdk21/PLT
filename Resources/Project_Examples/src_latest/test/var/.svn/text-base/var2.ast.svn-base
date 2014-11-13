@@ -1,0 +1,10 @@
+
+int entry()
+{
+int z4sdouble y2print(y2);
+y2=z4s;
+print(z4s);
+z4s=4;
+print(y2);
+y2=1;
+}

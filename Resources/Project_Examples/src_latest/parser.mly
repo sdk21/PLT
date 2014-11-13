@@ -1,0 +1,168 @@
+%{ open Ast 
+	open Printf %}
+
+%token IMPORT EXPORT
+%token PLUS MINUS TIMES DIVIDES MTIMES MODE
+%token NEQ LT LEQ GT GEQ EQ
+%token CROPROD TRANSPO INVERSE MINVERSE BAR TRACE SUBMAT SUM CONVOLUTION
+%token ASSIGN PLUSASS MINUASS NEG
+%token AND OR NOT
+%token LPAREN RPAREN LBRACE RBRACE COLON COMMA LBRACKET RBRACKET SEMICOLON QUES SLASH BACKSLASH
+%token INT FLOAT INTROWVEC INTCOLVEC FLOATROWVEC FLOATCOLVEC INTMAT FLOATMAT CONSTANT INIT
+%token IF ELSE WHILE FOR IN ENDIF RETURN
+%token SWITCH
+%token EOF
+
+
+%token <int> INT_LITERAL
+%token <float> FLOAT_LITERAL
+%token <string> IDENTIFIER
+%token <string> TRUE
+%token <string> FALSE
+
+%nonassoc IDENTIFIER
+%right ASSIGN
+%left EQ NEQ
+%left LT GT LEQ GEQ
+%left PLUS MINUS
+%left TIMES DIVIDES MODE MTIMES CONVOLUTION
+%left OR
+%left AND
+%right NOT
+%right INVERSE MINVERSE TRANSPO
+%right LPAREN
+%nonassoc LBRACKET
+%nonassoc UMINUS
+
+%start program
+%type <Ast.program> program
+%%
+program
+	/* Global variables; Function declarations; Entry point. */
+	: { [], [] }
+	| program VarDecl  { ( $2 :: fst $1 ), snd $1 }
+	| program FuncDecl { fst $1, ( $2 :: snd $1 ) }
+;
+
+VarDecl_list
+	: /* nothing */ { [] }
+	| VarDecl_list VarDecl { $2 :: $1 }
+;
+
+VarDecl
+	: Type IDENTIFIER SEMICOLON { { var_type = $1; var_name = $2 } }
+;
+
+FuncDecl
+	: Type IDENTIFIER LPAREN formal_list_opt RPAREN LBRACE VarDecl_list Statement_list RBRACE { { func_type = $1; func_name = $2; formals = $4; locals = $7; body = $8; } }
+;
+
+formal_list_opt
+	: { [] }
+	| formal_list { $1 }
+	
+formal_list
+	: Type IDENTIFIER formal_list_rest { { var_type = $1; var_name = $2; } :: $3 }
+;
+	
+formal_list_rest
+	: /* nothing */ { [] }
+	| COMMA formal_list { $2 }
+;
+
+Type
+	: INT { Int }
+	| FLOAT { Det }
+	| INTROWVEC { IntRowVec }
+	| FLOATROWVEC { FloatRowVec }
+	| INTCOLVEC { IntColVec }
+	| FLOATCOLVEC { FloatColVec }
+	| INTMAT	{ IntMatrix }
+	| FLOATMAT	{ FloatMatrix }
+;
+
+Statement_list
+	: /* nothing */ { [] }
+	| Statement_list Statement { $2 :: $1 }
+;
+
+Statement
+	: expr SEMICOLON { Expr($1) }
+	| SEMICOLON { Empty }
+	| LBRACE Statement_list RBRACE { Block($2) }
+	| IF LPAREN Bool_expr RPAREN Statement ELSE Statement ENDIF SEMICOLON { Ifelse($3, $5, $7) }
+	| IF LPAREN Bool_expr RPAREN Statement ENDIF SEMICOLON { If($3, $5) }
+	| FOR LPAREN expr SEMICOLON Bool_expr SEMICOLON expr RPAREN Statement { For($3, $5, $7, $9) }
+	| WHILE LPAREN Bool_expr RPAREN Statement { While($3, $5) }
+	| EXPORT LPAREN IDENTIFIER RPAREN SEMICOLON { Export($3) }
+	| IDENTIFIER ASSIGN IMPORT LPAREN IDENTIFIER RPAREN SEMICOLON { Import($1, $5) }
+	| RETURN expr SEMICOLON { Return($2) }
+	| INIT IDENTIFIER LBRACKET expr RBRACKET LBRACKET expr RBRACKET { Init($2, $4, $7) }
+;
+
+data
+	: FLOAT_LITERAL { Float_lit($1) }
+	| INT_LITERAL { Int_lit($1) }
+	| TRUE { Boolean($1) }
+	| FALSE { Boolean($1) }
+;
+
+Int_Row
+	: { [] }
+	| expr { [$1] }
+	| Int_Row COMMA expr { $3 :: $1 }
+	
+IntMat_Init
+	: Int_Row { [List.rev $1] }
+	| IntMat_Init QUES Int_Row { $1 @ [List.rev $3] }
+
+IdList_opt
+	: { [] }
+	| IdList { $1 }
+
+IdList
+	: expr { [$1] }
+	| IdList COMMA expr { $1 @ [$3] }
+
+expr
+	: data { $1 }
+	| IDENTIFIER ASSIGN expr { VarAssign($1, $3) }
+	| BAR expr BAR { Det($2) }
+	| SLASH IntMat_Init BACKSLASH { Im_init($2) }
+	| TRACE LPAREN expr RPAREN { Trace($3) }
+	| SUBMAT LPAREN expr COMMA expr COMMA expr COMMA expr COMMA expr RPAREN { SubMat($3, $5, $7, $9, $11) }
+	| SUM LPAREN expr COMMA expr COMMA expr COMMA expr COMMA expr RPAREN { AreaSum($3, $5, $7, $9, $11) }
+	| IDENTIFIER LBRACKET expr RBRACKET LBRACKET expr RBRACKET { Part_of_mat(Id($1), $3, $6) }
+	| IDENTIFIER { Id($1) }
+	| LPAREN expr RPAREN { $2 }
+	| IDENTIFIER LPAREN IdList_opt RPAREN { Call($1, $3) }
+	| expr TIMES expr { Binary_op($1, Times, $3) }
+	| expr DIVIDES expr { Binary_op($1, Divides, $3) }	
+	| expr MODE expr { Binary_op($1, Mode, $3) }
+	| expr MTIMES expr { Binary_op($1, Mtimes, $3) }
+	| expr CONVOLUTION expr { Binary_op($1, Convolution, $3) }
+	| expr PLUS expr { Binary_op($1, Add, $3) }
+	| expr MINUS expr { Binary_op($1, Sub, $3) }
+	| MINUS expr %prec UMINUS { Unary_op($2, Neg) }
+	| expr RhsUnaryOp { Unary_op($1, $2) }
+	| IDENTIFIER LBRACKET expr RBRACKET LBRACKET expr RBRACKET ASSIGN expr { ElemAssign($1, $3, $6, $9) }
+;
+
+Bool_expr
+	: expr EQ expr { Bool_expr1($1, Eq, $3) }
+	| expr NEQ expr { Bool_expr1($1, Neq, $3) }
+	| expr LT expr { Bool_expr1($1, Lt, $3) }
+	| expr GT expr { Bool_expr1($1, Gt, $3) }
+	| expr LEQ expr { Bool_expr1($1, Leq, $3) }
+	| expr GEQ expr { Bool_expr1($1, Geq, $3) }
+	| LPAREN Bool_expr RPAREN { $2 }
+	| Bool_expr AND Bool_expr { Bool_expr2($1, And, $3) }
+	| Bool_expr OR Bool_expr { Bool_expr2($1, Or, $3) }
+	| NOT Bool_expr { Bool_expr2($2, Not, $2) }
+;
+
+RhsUnaryOp
+	: INVERSE { Inverse }
+	| MINVERSE { Minverse }
+	| TRANSPO { Transpo }
+;

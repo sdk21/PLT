@@ -1,0 +1,14 @@
+int entry() {
+	int a;
+	floatMat b;
+	floatMat d;
+	
+	Init b[3][3];
+	b = [[ 1,2,3?4,5,6?9,8,7]];
+	Init d[3][3];
+	d = [[ 10, 0, 30 ? 44, 2, 92 ? 3, 49, 72 ]];
+	b = b * 11;
+	print(b[2][2]);
+	d = d ** b;
+	print(d[1][1]);
+}

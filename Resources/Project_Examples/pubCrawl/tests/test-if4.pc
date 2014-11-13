@@ -1,0 +1,14 @@
+if (false) {
+  print(42); 
+}
+elif (false) {
+  print(9);
+}
+elif (true) {
+  print(8);
+}
+else {
+  print(88);
+}
+
+print(17);

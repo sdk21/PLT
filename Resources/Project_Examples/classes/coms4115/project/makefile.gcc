@@ -1,0 +1,20 @@
+CMOS = labels.cmo vars.cmo gencpp.cmo semantic.cmo lamescan.cmo lamepar.cmo lame.cmo
+
+CMIS = ast.cmi labels.cmi vars.cmi icode.cmi gencpp.cmi semantic.cmi lamepar.cmi
+
+lame : $(CMIS) $(CMOS)
+	ocamlc -o lame $(CMOS)
+
+%.cmo : %.ml
+	ocamlc -c $<
+
+%.cmi : %.mli
+	ocamlc -c $<
+
+lamepar.mli : lamepar.mly
+	ocamlyacc lamepar.mly
+
+lamescan.ml : lamescan.mll
+	ocamllex lamescan.mll
+
+lamepar.cmo : lamepar.ml

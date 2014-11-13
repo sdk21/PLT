@@ -1,0 +1,10 @@
+int entry() {
+	int a;
+	floatMat b;
+	floatMat c;
+	a = 1;
+	Init b[3][2];
+	b = [[1, 2 ? 3, 4 ? 5 , 6]];
+	print(a);
+	print(b[1][1]);
+}

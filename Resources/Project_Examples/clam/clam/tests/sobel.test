@@ -1,0 +1,28 @@
+#!/bin/bash
+TEST_DESC="Compile and test the Sobel filter"
+. _buildup.sh
+
+INPUT_IMG="ucla.png"
+OUTPUT_IMG="ucla_sobel.png"
+
+compile_it
+if [ $ERRORS -eq 0 ]; then
+	run_it "$INPUT_IMG" "$OUTPUT_IMG"
+	if [ ! $ERRORS -eq 0 ]; then
+		error "$RUN_OUTPUT"
+	fi
+else
+	error "$COMPILE_OUTPUT"
+fi
+
+if [ $ERRORS -eq 0 ]; then
+	EXPECTED="ucla_sobel_expected.png"
+	compare "$OUTPUT_IMG" "$EXPECTED"
+	ERRORS=$?
+	if [ ! $ERRORS -eq 0 ]; then
+		error "Output image $OUTPUT_IMG  does not match $EXPECTED"
+	fi
+	rm "$OUTPUT_IMG"
+fi
+
+. _breakdown.sh

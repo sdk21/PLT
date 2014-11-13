@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<funny_slash_stupid_stuffs>
+
+<stuff>
+<sn>0</sn>
+<author>Cheng</author>
+<content>Alright I've decided to create this file for everyone to record the funny/stupid/bizarre/non-senses/crazy/what-ever-you-wanna-record things that encountered during working on this project.\n</content>
+</stuff>
+
+<stuff>
+<sn>1</sn>
+<author>Cheng</author>
+<content>The first stupid I met is that while writing "parser.mly", I named the start symbol as "Program". And I will encounter a compilation errer later on.\nAnd I solved it, by changing it to "program".</content>
+</stuff>
+
+<stuff>
+<sn>2</sn>
+<author>Yu</author>
+<content>Really? I changed the name to "Programme" and it still does not work... Seems it must start with a lowercase word.</content>
+</stuff>
+
+
+<stuff>
+<sn>3</sn>
+<author>Yu</author>
+<content>Need to run ``unset CLASSPATH'' to run the java program</content>
+</stuff>
+
+</funny_slash_stupid_stuffs>

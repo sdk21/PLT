@@ -1,0 +1,11 @@
+
+int entry()
+{
+int yint xprint(y);
+y=foo(x);
+x=3;
+}
+
+int foo(int x)
+{
+return x}

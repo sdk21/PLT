@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/137/trunk/test/basic
+END
+basic1.java
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/137/trunk/test/basic/basic1.java
+END
+basic2.java
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/111/trunk/test/basic/basic2.java
+END
+basic3.java
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/137/trunk/test/basic/basic3.java
+END
+basic4.java
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/111/trunk/test/basic/basic4.java
+END
+basic5.java
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/137/trunk/test/basic/basic5.java
+END
+basic1.ast
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/111/trunk/test/basic/basic1.ast
+END
+basic2.ast
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/111/trunk/test/basic/basic2.ast
+END
+basic3.ast
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/111/trunk/test/basic/basic3.ast
+END
+basic4.ast
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/111/trunk/test/basic/basic4.ast
+END
+basic5.ast
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/111/trunk/test/basic/basic5.ast
+END
+basic1.output
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/111/trunk/test/basic/basic1.output
+END
+basic1.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/99/trunk/test/basic/basic1.mcb
+END
+basic2.output
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/111/trunk/test/basic/basic2.output
+END
+basic2.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/99/trunk/test/basic/basic2.mcb
+END
+basic3.output
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/111/trunk/test/basic/basic3.output
+END
+basic3.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/100/trunk/test/basic/basic3.mcb
+END
+basic4.output
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/111/trunk/test/basic/basic4.output
+END
+basic4.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/99/trunk/test/basic/basic4.mcb
+END
+basic5.output
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/111/trunk/test/basic/basic5.output
+END
+basic5.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/105/trunk/test/basic/basic5.mcb
+END

@@ -1,0 +1,9 @@
+if (true || true) {
+	print("hey");
+}
+if (true || false) {
+	print("dude");	
+}
+if (false || false) {
+	print("whats up");	
+}

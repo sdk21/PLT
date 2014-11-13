@@ -1,0 +1,4 @@
+int entry() {
+	floatMat A;
+	Init A[1][5];
+}

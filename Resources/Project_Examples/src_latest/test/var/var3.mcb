@@ -1,0 +1,9 @@
+float main() {
+	int q;
+	q = 4;
+	return q;
+}
+
+int entry() {
+	print(main());
+}

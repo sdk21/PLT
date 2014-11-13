@@ -1,0 +1,18 @@
+int entry() {
+	int z1;
+	float y2;
+	int z3;
+	z3 = 1000;
+	y2 = 1.10;
+	print(z3);
+	print(y2);
+}
+
+float y42s;
+
+int baz(int baz) {
+	int barr;
+	return 0;
+}
+
+int qqq;

@@ -1,0 +1,129 @@
+\chapter{Project Plan}
+\label{chap:projplan}
+
+\section{Overview}
+The \sys{} project used a distributed development model as suggested by the
+\texttt{git}~\cite{git:website} version control system. Each team member was expected
+to keep up with overall development through automated emails sent out via \texttt{git}
+hook scripts run on every successful push.
+
+Initial planning and design of the \sys{} language came out of the previous experience of
+group members in image processing. Specification of language syntax was driven by the desire
+to simplify basic image processing and linear algebra calculations which are onerous to
+implement in other languages. The core of this development hinged on the \emph{convolution}
+(section~\ref{ssec:convolutionop}) operator. When used in combination with a flexible matrix
+definition syntax, a simple convolution operator can eliminate quadruply--nested for--loops and
+clarify program operation. This paradigm lead us directly to our elegant matrix definition
+syntax, and a \texttt{Kernel} (section~\ref{ssec:kernels}) formalism that allows efficient
+ordering of calculations and further reduces the number of lines of code necessary to implement
+most algorithm.
+
+We took a practical approach to formalizing the language semantics by attempting to implement
+a real--world algorithm in the most compact yet readable manner possible. We chose
+the \emph{Sobel}~\cite{sobel:wikipedia} operator which is a standard edge detection algorithm
+used in computer vision. Calculating the Sobel operator involves a luminance calculation,
+two separate convolutions, and two additional calculations on the convolution output. Using
+this algorithm as a guide, we developed a syntax which balanced complexity and readability,
+and is able to implement the complete Sobel operator in 12 lines of code
+(see section~\ref{sec:tutorial:fullexample} for a source listing).
+
+After language specification and semantics were reasonably well-defined, we began development
+of the scanner and parser. We quickly realized that the most challenging pieces of the \sys{}
+design would be the strict type--checking and backend C implementations. With this in mind,
+the project was put on a loose timeline where priority was given to the verifier
+(see section~\ref{chap:archdesign}) and to the C library implementation of the \sys{} syntax.
+
+Fortunately formal verification of types and syntax could happen substantially in parallel
+with the backend and semantically checked abstract syntax tree (SAST) generation. However, we found
+that the details of the generated C code, the backend implementation, and the SAST were
+inexorably entwined. Thus the major focus of development at the end of the project was on
+this area, and collaborative programming techniques such as pair-programming were employed to
+speed development and improve code quality.
+\\ % FORMAT HACK!
+
+Our testing procedure, described in chapter~\ref{chap:testplan}, is based around unit tests
+divided into four major categories: syntactic tests, semantic/type tests, CString tests, and
+functional output tests. Each category is designed to exercise a specific area of the \sys{}
+compiler, and each test uses a simple pass/fail metric. Unit tests were developed in parallel
+to other development, and were used extensively to fix bugs and refine the language syntax.
+
+\section{Administration}
+
+Although \sys{} development did not follow a strict timeline, there was a well-defined order
+in which major pieces of the design had to be completed.
+Figure~\ref{fig:timeline} shows the timeline that \sys{} development followed which was
+reconstructed from the version control logs. Note that there was a compression of activity
+near the end of the development cycle. This was an unfortunate side-effect of a loosely-defined
+schedule.
+\begin{figure}[h!]
+\begin{center}
+  \begin{tikzpicture}[x=0.75cm, y=0.9cm]
+    \begin{ganttchart}[vgrid, hgrid,
+                       bar={draw=green!90, fill=green!20, rounded corners=3pt},
+                       milestone={fill=orange!20, draw=orange!90}]{16}
+      \gantttitle{Sept.}{4} \gantttitle{Oct.}{4} \gantttitle{Nov.}{5} \gantttitle{Dec.}{3} \\
+      \ganttbar{Language Definition}{2}{3.5} \\
+      \ganttmilestone{Language Proposal}{3.5} \\
+      \ganttbar{Framework/Infrastructure}{3.5}{6.25} \\
+      \ganttmilestone{LRM}{8.25} \\
+      \ganttbar{Scanner/Parser}{5}{10.25} \\
+      \ganttbar{Verifier}{9}{13.5} \\
+      \ganttbar{SAST}{9}{14} \\
+      \ganttbar{Semantic/Backend}{13}{15} \\
+      \ganttbar{C Implementation}{13.5}{15} \\
+      \ganttbar{Unit Tests/Bugfixes}{12.5}{15} \\
+      \ganttmilestone{Functional \sys{}}{14.75}
+    \end{ganttchart}
+  \end{tikzpicture}
+  \caption{\sys{} Development Timeline}
+  \label{fig:timeline}
+\end{center}
+\end{figure}
+
+Each member of the \sys{} team played a role in the development process. Figure~\ref{fig:devroles}
+details the code and documentation responsibilities of each member. In addition to each documentation
+area specified in the figure, each team member contributed a \emph{lessons learned} paragraph. These
+were collected into Chapter~\ref{chap:lessons}.
+
+\begin{figure}[h!]
+  \begin{center}
+    \begin{tabular}{ l | l | l }
+      {\bf Developer} & {\bf Code Responsibilities} & {\bf Documentation Responsibilities} \\
+      \hline
+      \multirow{3}{*}{Jeremy Andrus} & Framework, Scanner/Parser, & Introduction (Ch.\ref{chap:intro}), LRM (Ch.\ref{chap:lrm}), \\
+      & Verifier, C Implementation & Project Plan (Ch.\ref{chap:projplan}), Code Reference (App.\ref{chap:coderef}), \\
+      & & VCS History (App.\ref{chap:vcshistory}) \\
+      \hline
+      \multirow{2}{*}{Robert Martin} & SAST, Semantic, Backend & Architectural Design (Ch.\ref{chap:archdesign}), LRM (Ch.\ref{chap:lrm}), \\
+      & & Introduction (Ch.\ref{chap:intro})\\
+      \hline
+      \multirow{2}{*}{Kevin Sun} & Unit Tests, Verifier Bugfixes & Language Tutorial (Ch.\ref{chap:tutorial}), Test Plan (Ch.\ref{chap:testplan}),\\
+      & & LRM (Ch.\ref{chap:lrm})\\
+      \hline
+      \multirow{2}{*}{Yongxu Zhang} & Unit Tests, Verifier Bugfixes & Test Plan (Ch.\ref{chap:testplan}) \\
+      & & \\
+    \end{tabular}
+    \caption{Roles and Responsibilities}
+    \label{fig:devroles}
+  \end{center}
+\end{figure}
+
+\section{Development Environment}
+The \sys{} compiler is written in Objective Caml (OCaml) and C/C++. The bulk of the compilation is
+done in OCaml which generates C/C++. A \sys{} C library was written which implements the
+low-level details of the image processing described by the language including structures,
+memory management, and a convolution framework written in a C++ template function.
+
+Compiling \sys{} requires the \texttt{gcc} compiler and the OCaml toolchain available for
+download from the OCaml website: \url{http://caml.inria.fr/download}. In order to produce
+machine-executable binaries, \sys{} must invoke the \texttt{g++} compiler which should be
+accessible from the user's default \emph{PATH}.
+
+\sys{} documentation, including all charts, code examples, and course-related documents,
+were written in \LaTeX{}. This allowed the team to work on the same document in a coherent,
+distributed manner.
+
+All source code and documentation was managed in the \texttt{git}~\cite{git:website}
+distributed version control system. A ``master'' repository was kept on a Columbia CRF backed-up
+server, and \emph{hook} scripts were used to notify all team members when code was pushed to this
+repository. A complete log of project activity can be found in Appendix~\ref{chap:vcshistory}.

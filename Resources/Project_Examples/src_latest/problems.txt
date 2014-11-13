@@ -1,0 +1,44 @@
+1.
+Need to add support for matrix initialization:
+
+matrix<int> a;
+a = [1,1,1;2,2,2;3,3,3];
+
+Status: close 
+Date: 2012.12.13
+
+2.
+Parser do not handle 'WHILE' operation
+
+Status: close
+Date: 2012.12.13
+
+3. 
+No 'Return' in the parser.
+
+Status:close
+Date: 2012.12.13
+
+4.
+Add function call AST node
+
+Status: close 
+Date: 2012.12.15
+
+5. 
+Allow empty formal list
+
+Status: close
+Date: 2012.12.15
+
+6.
+The sequence of statements should be reversed
+
+Status: close 
+Date: 2012.12.16
+
+7.
+Compiler does not take a non-argument function
+
+Status: open
+Date: 2012.12.16

@@ -1,0 +1,25 @@
+
+getRedditTitles = (redditUrl) -> {
+	result = download(redditUrl);
+	links = List.where(List.split(result, '<'), el -> { 
+		return List.find(el, "a class=") >= 0
+			&& List.find(el, "title") >= 0;
+	});
+	titles = List.map(links, x -> {
+		parts = List.split(x, '>');
+		return parts[1];
+	});
+	return titles;
+};
+
+counts = List.map(List.range(0, 9), x -> { return x*25; });
+
+urls = List.map(counts, x -> { 
+	return "http://www.reddit.com/?count=" ^ numToString(x); 
+});
+
+allTitles = distribute(urls, getRedditTitles);
+
+List.map(allTitles, titles -> {
+	return List.map(titles, print);
+});

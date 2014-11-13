@@ -1,0 +1,13 @@
+int entry() {
+	int a;
+	floatMat b;
+	floatMat c;
+	a = 1;
+	Init b[2][2];
+	b = [[1, 2 ? 3, 4]];
+	print(a);
+	Init c[1][1];
+	c = submat(b, 1, 1, 1, 1);
+	print(|c|);
+	print(sum(b, 0, 1, 0, 1));
+}

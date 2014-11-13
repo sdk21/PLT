@@ -1,0 +1,8 @@
+Image srcimg = imgread("ucla.png");
+
+Calc Lum := #[(3*Red + 6*Green + 1*Blue)/10]#;
+srcimg |= Lum;
+
+Image output;
+output:foo = srcimg:foo; /* srcimg:foo doesn't exist! */
+

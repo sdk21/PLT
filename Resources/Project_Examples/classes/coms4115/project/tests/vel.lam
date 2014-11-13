@@ -1,0 +1,17 @@
+matrix vt = { 50, 0; 0, 50 };
+matrix a = { 0, 0; 0, 9.8 };
+
+matrix vf = {0, 0; 0, 0};
+
+scalar t = 0;
+
+while(t < 100)
+{
+    
+	vf = vt + (1/2) * -1 * a * t * t;
+    
+	t = t + 1;
+    
+	print t + ": " + vf[1,1] + "\n";
+
+}

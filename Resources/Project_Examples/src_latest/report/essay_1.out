@@ -1,0 +1,45 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Language Tutorial}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{General Purpose Programs}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{MAE}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Gaussian Filter}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Compiling and Running Your Program}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Language Reference Manual}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Program Definition}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.2}{Lexical Conventions}{section.3}% 9
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Comments}{subsection.3.2}% 10
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Identifiers}{subsection.3.2}% 11
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Keywords}{subsection.3.2}% 12
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Constants}{subsection.3.2}% 13
+\BOOKMARK [2][-]{subsection.3.3}{Operators}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.4}{Types}{section.3}% 15
+\BOOKMARK [2][-]{subsection.3.5}{Expressions}{section.3}% 16
+\BOOKMARK [3][-]{subsubsection.3.5.1}{Assignment expressions}{subsection.3.5}% 17
+\BOOKMARK [3][-]{subsubsection.3.5.2}{ Built-in function call expressions}{subsection.3.5}% 18
+\BOOKMARK [3][-]{subsubsection.3.5.3}{User defined function calls}{subsection.3.5}% 19
+\BOOKMARK [3][-]{subsubsection.3.5.4}{Declarations}{subsection.3.5}% 20
+\BOOKMARK [2][-]{subsection.3.6}{Statements}{section.3}% 21
+\BOOKMARK [2][-]{subsection.3.7}{Flow Control Statements}{section.3}% 22
+\BOOKMARK [2][-]{subsection.3.8}{Program Definition}{section.3}% 23
+\BOOKMARK [1][-]{section.4}{Project Plan}{}% 24
+\BOOKMARK [2][-]{subsection.4.1}{Overview}{section.4}% 25
+\BOOKMARK [2][-]{subsection.4.2}{Administration}{section.4}% 26
+\BOOKMARK [2][-]{subsection.4.3}{Develop environment}{section.4}% 27
+\BOOKMARK [1][-]{section.5}{Architecture Design}{}% 28
+\BOOKMARK [2][-]{subsection.5.1}{Overview}{section.5}% 29
+\BOOKMARK [2][-]{subsection.5.2}{Scanner}{section.5}% 30
+\BOOKMARK [2][-]{subsection.5.3}{Parser}{section.5}% 31
+\BOOKMARK [2][-]{subsection.5.4}{AST}{section.5}% 32
+\BOOKMARK [2][-]{subsection.5.5}{Compiler}{section.5}% 33
+\BOOKMARK [1][-]{section.6}{Test Plan}{}% 34
+\BOOKMARK [2][-]{subsection.6.1}{basic}{section.6}% 35
+\BOOKMARK [2][-]{subsection.6.2}{expr}{section.6}% 36
+\BOOKMARK [2][-]{subsection.6.3}{func}{section.6}% 37
+\BOOKMARK [2][-]{subsection.6.4}{stmt}{section.6}% 38
+\BOOKMARK [2][-]{subsection.6.5}{var}{section.6}% 39
+\BOOKMARK [2][-]{subsection.6.6}{comprehensive}{section.6}% 40
+\BOOKMARK [1][-]{section.7}{Lesson Learned}{}% 41
+\BOOKMARK [2][-]{subsection.7.1}{Cheng Xiang}{section.7}% 42
+\BOOKMARK [2][-]{subsection.7.2}{Tianchen Yu}{section.7}% 43
+\BOOKMARK [2][-]{subsection.7.3}{Ran Yu}{section.7}% 44
+\BOOKMARK [2][-]{subsection.7.4}{Yu Qiao}{section.7}% 45

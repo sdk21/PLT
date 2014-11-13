@@ -1,0 +1,12 @@
+
+int entry()
+{
+print(fac(6));
+}
+
+int fac(int n)
+{
+if (n == 0 || n == 1)
+	return 1
+else 	return (fac((n)-(1)))*(n)
+}

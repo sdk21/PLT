@@ -1,0 +1,7 @@
+list1 = ["hey","i","talk"];
+
+results1 = List.map(list1, (x) -> {
+	return x[0];
+});
+
+print(results1);

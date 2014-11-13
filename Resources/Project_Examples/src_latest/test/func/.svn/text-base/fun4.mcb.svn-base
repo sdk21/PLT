@@ -1,0 +1,14 @@
+float foo(floatMat A, int x, int y) {
+	return A[x][y];
+}
+
+int entry() {
+	floatMat B;
+	int xx;
+	int yy;
+	xx = 3;
+	yy = 4;
+	Init B[10][10];
+	B[1][1] = 9;
+	print(foo(B, xx, yy) + 33);
+}

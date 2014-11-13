@@ -1,0 +1,4 @@
+int entry() {
+	intMat A;
+	Init A[1][5];
+}

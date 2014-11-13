@@ -1,0 +1,7 @@
+matrix A = { 1; 2; 3; 4; 5; 6; 7; 8; 9 };
+scalar i = 0;
+while(i < 6) {
+    print A[i];
+    print "\n";
+    i = i + 1;
+}

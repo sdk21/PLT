@@ -1,0 +1,40 @@
+\chapter{Introduction}
+\label{chap:intro}
+
+\sys{} is a linear algebra manipulation language specifically targeted for
+image processing. It provides an efficient way to express complex image
+manipulation algorithms through compact matrix operations. Traditional image
+processing is performed using a language such as C, or C++. Algorithms in these
+languages are quite complex and error-prone due to the large number of lines of
+code required to implement something as conceptually simple as, "make this image
+blurry." The complexity arises from the need to perform elaborate calculations
+on every pixel in an image. For example, to blur an image you first need to
+calculate the luminance of the pixel (from the red, green, and blue channels),
+then you need to mathematically combine this with the luminance of adjacent pixels,
+and finally re-calculate red, green, and blue values for an output image.
+
+\sys{} simplifies image processing, and more generally linear algebra, through
+domain-specific data types and operators. A basic data type in \sys{} is a
+\texttt{Calc}, which can either be a \emph{Matrix} or a \emph{CString}.
+Matrices can be variable sized with an optional rational coefficient, and are
+used in image convolution operations. CStrings are simple calculations
+based on previously defined channels and basic C math operations such as \texttt{sqrt}
+or \texttt{atan}.
+
+An \texttt{Image} is another \sys{} data type which is expressed as a collection
+of channels. For example, when reading an image into memory, \sys{} creates a
+\emph{Red}, \emph{Green}, and \emph{Blue} channel automatically. Additional
+Image channels can be assigned from other images, or calculated
+using an expression syntax that defines a calculation involving the
+values of other, previously defined, channels. The basic image processing operator
+in \sys{} is the convolution operator. This operator takes an \texttt{Image} channel and a
+\texttt{Kernel}, an ordered collection of \texttt{Calc} objects. This
+operator convolves each \texttt{Matrix} within the \texttt{Kernel} with the input channel,
+and runs each CString calculation on the input channel in the order they were defined in
+the \texttt{Kernel}. It then collects the resulting output channels into a new \texttt{Image}.
+
+Two primary use cases of \sys{} are basic image information extraction, and
+filtering. The compact syntax and powerful basic data types of \sys{} make
+information extraction, such as finding all the edges in an image, simple, compact,
+and easy to read.
+

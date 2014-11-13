@@ -1,0 +1,29 @@
+
+Solving system of simultaneous linear equations:
+
+3 x1 + 1 x2 = 3
+9 x1 + 4 x2 = 6
+
+A = 
+3	1	
+9	4	
+
+
+B = 
+3	
+6	
+
+
+Determinant(A) = 3
+
+Inverse(A) = 
+1.33333	-0.333333	
+-3	1	
+
+X = Inverse(A) * B = 
+2	
+-3	
+
+Solution:
+x1 = 2
+x2 = -3

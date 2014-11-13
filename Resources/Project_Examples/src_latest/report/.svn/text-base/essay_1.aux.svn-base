@@ -1,0 +1,69 @@
+\relax 
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{3}{section.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Language Tutorial}{3}{section.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}General Purpose Programs}{3}{subsection.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}MAE}{4}{subsection.2.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Gaussian Filter}{5}{subsection.2.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Compiling and Running Your Program}{5}{subsection.2.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Language Reference Manual}{6}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Program Definition}{6}{subsection.3.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Lexical Conventions}{7}{subsection.3.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Comments}{7}{subsubsection.3.2.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Identifiers}{7}{subsubsection.3.2.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}Keywords}{7}{subsubsection.3.2.3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.4}Constants}{8}{subsubsection.3.2.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Operators}{8}{subsection.3.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Types}{8}{subsection.3.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Expressions}{8}{subsection.3.5}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Operators}}{9}{table.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.1}Assignment expressions}{10}{subsubsection.3.5.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.2} Built-in function call expressions}{10}{subsubsection.3.5.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.3}User defined function calls}{10}{subsubsection.3.5.3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.4}Declarations}{10}{subsubsection.3.5.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Statements}{11}{subsection.3.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Flow Control Statements}{11}{subsection.3.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8}Program Definition}{11}{subsection.3.8}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Project Plan}{15}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Overview}{15}{subsection.4.1}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Responsibility of Each Member}}{16}{table.2}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Project Plan}}{16}{table.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Administration}{16}{subsection.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Develop environment}{16}{subsection.4.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Architecture Design}{17}{section.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Overview}{17}{subsection.5.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces MatCab Architecture}}{17}{figure.1}}
+\newlabel{lb}{{1}{17}{MatCab Architecture\relax }{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Scanner}{18}{subsection.5.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Parser}{18}{subsection.5.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}AST}{18}{subsection.5.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Compiler}{18}{subsection.5.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Test Plan}{18}{section.6}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Type checking list}}{19}{table.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}basic}{19}{subsection.6.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}expr}{20}{subsection.6.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}func}{20}{subsection.6.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}stmt}{21}{subsection.6.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}var}{21}{subsection.6.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}comprehensive}{22}{subsection.6.6}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Lesson Learned}{23}{section.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Cheng Xiang}{23}{subsection.7.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Tianchen Yu}{24}{subsection.7.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Ran Yu}{24}{subsection.7.3}}
+\bibcite{DMR:1973dg}{Dennis M. Ritchie, 1973}
+\bibcite{JRKY:2011dg}{Jeremy, Robert, Kevin and Yongxu, 2011}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Yu Qiao}{25}{subsection.7.4}}

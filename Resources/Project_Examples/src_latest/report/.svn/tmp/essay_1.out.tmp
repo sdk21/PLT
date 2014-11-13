@@ -1,0 +1,55 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Language Tutorial}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Input and Output}{section.2}% 3
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Your first program}{subsection.2.1}% 4
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Using command-line arguments}{subsection.2.1}% 5
+\BOOKMARK [2][-]{subsection.2.2}{Compiling and Running Your Program}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.3}{Basic Types}{section.2}% 7
+\BOOKMARK [3][-]{subsubsection.2.3.1}{IntMat}{subsection.2.3}% 8
+\BOOKMARK [3][-]{subsubsection.2.3.2}{FloatMat}{subsection.2.3}% 9
+\BOOKMARK [2][-]{subsection.2.4}{Convolutions}{section.2}% 10
+\BOOKMARK [2][-]{subsection.2.5}{A Full Example}{section.2}% 11
+\BOOKMARK [1][-]{section.3}{Language Reference Manual}{}% 12
+\BOOKMARK [2][-]{subsection.3.1}{Lexical Conventions}{section.3}% 13
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Comments}{subsection.3.1}% 14
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Identifiers}{subsection.3.1}% 15
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Keywords}{subsection.3.1}% 16
+\BOOKMARK [3][-]{subsubsection.3.1.4}{Constants}{subsection.3.1}% 17
+\BOOKMARK [2][-]{subsection.3.2}{Syntax Notations}{section.3}% 18
+\BOOKMARK [2][-]{subsection.3.3}{Types}{section.3}% 19
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Atomic Types}{subsection.3.3}% 20
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Compound Types}{subsection.3.3}% 21
+\BOOKMARK [2][-]{subsection.3.4}{Expressions}{section.3}% 22
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Primary Expressions}{subsection.3.4}% 23
+\BOOKMARK [3][-]{subsubsection.3.4.2}{Unary operators}{subsection.3.4}% 24
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Binary operators}{subsection.3.4}% 25
+\BOOKMARK [3][-]{subsubsection.3.4.4}{Other operators}{subsection.3.4}% 26
+\BOOKMARK [3][-]{subsubsection.3.4.5}{I/O Expressions}{subsection.3.4}% 27
+\BOOKMARK [2][-]{subsection.3.5}{Declarations}{section.3}% 28
+\BOOKMARK [2][-]{subsection.3.6}{Statements}{section.3}% 29
+\BOOKMARK [2][-]{subsection.3.7}{Program Definition}{section.3}% 30
+\BOOKMARK [2][-]{subsection.3.8}{How Scope Rules Work in MatCab}{section.3}% 31
+\BOOKMARK [2][-]{subsection.3.9}{Examples}{section.3}% 32
+\BOOKMARK [1][-]{section.4}{Project Plan}{}% 33
+\BOOKMARK [2][-]{subsection.4.1}{Overview}{section.4}% 34
+\BOOKMARK [2][-]{subsection.4.2}{Administration}{section.4}% 35
+\BOOKMARK [2][-]{subsection.4.3}{Develop environment}{section.4}% 36
+\BOOKMARK [1][-]{section.5}{Architecture Design}{}% 37
+<<<<<<< .mine
+\BOOKMARK [2][-]{subsection.5.1}{Overview}{section.5}% 38
+\BOOKMARK [2][-]{subsection.5.2}{Scanner}{section.5}% 39
+\BOOKMARK [2][-]{subsection.5.3}{Parser}{section.5}% 40
+\BOOKMARK [1][-]{section.6}{Test Plan}{}% 41
+\BOOKMARK [1][-]{section.7}{Lesson Learned}{}% 42
+\BOOKMARK [2][-]{subsection.7.1}{Ran Yu}{section.7}% 43
+\BOOKMARK [2][-]{subsection.7.2}{Yu Qiao}{section.7}% 44
+\BOOKMARK [1][-]{section.8}{Appendix}{}% 45
+=======
+\BOOKMARK [2][-]{subsection.5.1}{Overview}{section.5}% 38
+\BOOKMARK [2][-]{subsection.5.2}{Scanner}{section.5}% 39
+\BOOKMARK [1][-]{section.6}{Test Plan}{}% 40
+\BOOKMARK [1][-]{section.7}{Lesson Learned}{}% 41
+\BOOKMARK [2][-]{subsection.7.1}{Ran Yu}{section.7}% 42
+\BOOKMARK [2][-]{subsection.7.2}{Yu Qiao}{section.7}% 43
+\BOOKMARK [1][-]{section.8}{Appendix}{}% 44
+>>>>>>> .r161

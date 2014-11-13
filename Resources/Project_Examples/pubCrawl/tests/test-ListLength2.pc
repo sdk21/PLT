@@ -1,0 +1,7 @@
+list1 = [1, 2, 3, 4, 5, 6];
+
+print(List.length(list1));
+
+list1 = List.remove(list1 , 1);
+
+print(List.length(list1));

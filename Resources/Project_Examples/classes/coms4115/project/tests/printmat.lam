@@ -1,0 +1,2 @@
+matrix A = { 1, 0; 0, 1 };
+print A;

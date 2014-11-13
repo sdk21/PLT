@@ -1,0 +1,11 @@
+scalar x = 1;
+if(x < 5) {
+    print "x < 5\n";
+} else {
+    print "Something else\n";
+}
+if(x >= 5) {
+    print "Something else\n";
+} else {
+    print "x < 5\n";
+}

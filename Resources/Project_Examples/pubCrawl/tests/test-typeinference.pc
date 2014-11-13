@@ -1,0 +1,11 @@
+a = (() -> { return [{a:1},{a:2},{a:3}]; }())[1].a;
+x1 = x -> { return x; };
+x2 = List.map([1,2,3], x1);
+x3 = (o) -> { return List.map("hey", o.a.b[0]); };
+obj = {
+    i: x1,
+	wrap: (x) -> { return { a: { b: [x] } }; }
+};
+x4 = x3(obj.wrap(obj.i));
+print(x2);
+print(x4);

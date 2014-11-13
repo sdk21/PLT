@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/158/trunk/test/comprehensive
+END
+fac.ast
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/137/trunk/test/comprehensive/fac.ast
+END
+fib.output
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/137/trunk/test/comprehensive/fib.output
+END
+fib.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/126/trunk/test/comprehensive/fib.mcb
+END
+fib.java
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/158/trunk/test/comprehensive/fib.java
+END
+mae.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/152/trunk/test/comprehensive/mae.mcb
+END
+gcd.ast
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/111/trunk/test/comprehensive/gcd.ast
+END
+fib.class
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/125/trunk/test/comprehensive/fib.class
+END
+fib.ast
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/137/trunk/test/comprehensive/fib.ast
+END
+fac.output
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/137/trunk/test/comprehensive/fac.output
+END
+fac.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/127/trunk/test/comprehensive/fac.mcb
+END
+fac.java
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/158/trunk/test/comprehensive/fac.java
+END
+gcd.output
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/111/trunk/test/comprehensive/gcd.output
+END
+gcd.mcb
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/109/trunk/test/comprehensive/gcd.mcb
+END
+gcd.java
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/158/trunk/test/comprehensive/gcd.java
+END

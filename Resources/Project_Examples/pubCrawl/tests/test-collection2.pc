@@ -1,0 +1,10 @@
+list1 = [1, 2, 3, 4, 5];
+
+list2 = list1[:];
+list3 = list2[0:2];
+
+print(list2[4]);
+
+print(list3[0]);
+print(list3[1]);
+print(list3[2]);

@@ -1,0 +1,8 @@
+int entry() {
+	float a;
+	a = foo(1, 2);
+	print(a);
+}
+float foo(int x, int y) {
+	return 0.5;
+}

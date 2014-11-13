@@ -1,0 +1,7 @@
+int entry() {
+	if (2 > 3)
+		print(3);
+	else
+		print(222);
+	endif;
+}

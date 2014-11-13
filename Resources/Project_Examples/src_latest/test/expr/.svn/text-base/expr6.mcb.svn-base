@@ -1,0 +1,27 @@
+int entry() {
+	int i;
+	int j;
+	float tmp;
+	float b;
+	floatMat c;
+	floatMat d;
+	floatMat e;
+	
+	Init c[3][3];
+	c = [[ 1,2,3?4,5,6?9,8,7]];
+	
+	for (i = 0; i < 3; i = i + 1) {
+		for (j = 0; j < 3; j = j + 1) {
+			tmp = c[i][j];
+			c[i][j] = tmp * 10;
+		}
+	}
+	print(c);
+	
+	Init e[3][2];
+	e = [[ 6, 4 ? 2, 9 ? 5, 1 ]];
+	e = c * e;
+	print(e[1][1]);
+	print(e[2][1]);
+	print(e);
+}

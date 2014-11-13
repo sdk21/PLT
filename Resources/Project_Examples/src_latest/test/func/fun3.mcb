@@ -1,0 +1,7 @@
+int foo(int x, float y) {
+	return x;
+}
+
+int entry() {
+	print(foo(2));
+}

@@ -1,0 +1,41 @@
+\section{Meaning of Identifiers}
+\label{sec:identmeaning}
+
+\subsection{Basic Types}
+\label{ssec:types}
+There are three basic types defined by the \sys{} language.
+Type identifiers always begin with an upper-case letter followed by a sequence
+of zero or more legal identifier characters. The list of built-in types is as follows:
+\startsyn
+\texttt{Image} \\
+\texttt{Calc} \\
+\texttt{Kernel}
+\stopsyn 
+
+\subsubsection{Atom Types}
+\label{sssec:atomtypes}
+The \texttt{Calc} type may be further modified
+to specify individual element, or ``atom'' types. This specifies the type
+of the resulting calculation performed by a \texttt{Calc} object (either CString or Matrix --
+see section~\ref{ssec:calc}). When calculation results exceed the bounds of the specified type,
+values are clamped (set to the max or min value appropriately).
+An \emph{atom-type} identifier is denoted using the \texttt{<} and \texttt{>}
+characters immediately following the identifier of the object whose atom type
+is being specified:
+\startsyn
+\texttt{Calc} \emph{identifier}\texttt{<}\emph{atom-type}\texttt{>}
+\stopsyn
+Legal \emph{atom-type}s are as follows:
+\startsyn
+Uint8 \\
+Uint16 \\
+Uint32 \\
+Int8 \\
+Int16 \\
+Int32 \\
+Angle
+\stopsyn
+In the absence of an atom-type specification, the atom-type defaults to Uint8,
+which implies a range of integers from 0-255 inclusive. (This is also the atomic-type
+for the default \emph{Red}, \emph{Green} and \emph{Blue} channels.)
+

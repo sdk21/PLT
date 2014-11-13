@@ -1,0 +1,10 @@
+
+int entry()
+{
+print(main());
+}
+
+double main()
+{
+int qreturn qq=4;
+}

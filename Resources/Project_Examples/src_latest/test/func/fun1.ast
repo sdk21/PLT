@@ -1,0 +1,10 @@
+
+double foo(int x, int y)
+{
+return 0.5}
+
+int entry()
+{
+double aprint(a);
+a=foo(1,2);
+}

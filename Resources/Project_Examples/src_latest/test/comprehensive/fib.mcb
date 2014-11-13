@@ -1,0 +1,24 @@
+int fib(int n) {
+	int tmp;
+	
+	if (n == 1)
+		return 1;
+	endif;
+	
+	if (n == 2)
+		return 1;
+	endif;
+	
+	if (n >= 3)
+	{
+		tmp = fib(n-1) + fib(n-2);
+		return tmp;
+	}
+	endif;
+	
+	return 0;
+}
+
+int entry() {
+	print(fib(5));
+}

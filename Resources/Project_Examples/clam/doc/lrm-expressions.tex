@@ -1,0 +1,185 @@
+\section{Expressions}
+\label{sec:expressions}
+
+\subsection{Primary Expressions}
+\label{ssec:primaryexpresions}
+\sys{} primary expressions can be identifiers, constants, or strings.
+The type of the expression depends on the identifier, constant or string.
+
+\subsection{Unary Operators}
+\label{ssec:unaryoperators}
+There are two unary operators in \sys{}, and they are only used with a
+numeric-valued operand such as a numeric constant
+(see~\ref{sssec:numericconstants}).
+These expressions are grouped right-to-left:
+\startsyn
+\texttt{+}\emph{unsigned-integer} \\
+\texttt{-}\emph{unsigned-integer}
+\stopsyn
+
+\subsubsection{\texttt{+} operator}
+This operator forces the value of its numeric operand to be positive.
+The resulting expression is of numeric type with a value equal to the
+value of the numeric operand.
+
+\subsubsection{\texttt{-} operator}
+This operator forces the value of its numeric operand to be negative.
+The resulting expression is of numeric type with a value equal to the
+negative of the numeric operand.
+
+\subsection{Channel/Calc Expresions}
+\label{ssec:channelexpressions}
+Channel and \texttt{Calc} types are the basis of \texttt{Image} and
+\texttt{Kernel} objects respectively. There are several operators that
+manipulate Channels and \texttt{Calc}s.
+
+\subsubsection{\texttt{:} operator}
+\label{sssec:colonop}
+Extract, reference or assign an individual Channel in an image.
+\startsyn
+\emph{image-identifier}\texttt{:}\emph{channel-identifier}
+\stopsyn
+The resulting expression has a type corresponding to the
+extracted Channel.
+
+\subsection{Composition Operators}
+\label{ssec:compositionops}
+These operators compose an \texttt{Image} or \texttt{Kernel} from one
+or more \texttt{Calc} objects.
+All channel composition operators are left-to-right associative.
+
+\subsubsection{\texttt{|} operator}
+\label{sssec:barop}
+Define of list of (one or more) \texttt{Calc}s. The resulting expression is a
+\emph{multi-calc} expression, and can be assigned
+to a \texttt{Kernel} object.
+\startsyn
+\texttt{|} \emph{calc-expression} \\
+\emph{multi-calc-expression} \texttt{|} \emph{calc-expression} \\
+\stopsyn
+Note that \texttt{Calc}s are appended in order, and
+subsequent operations may rely on this order.
+Also note that even single \texttt{Calc} identifiers must be preceded by \texttt{|}
+
+\subsection{\texttt{**} operator}
+\label{ssec:convolutionop}
+
+The convlution operator, or \texttt{**}, performs the calculations of a
+\texttt{Kernel} on a Channel, and evaluates to a new \texttt{Image}. The
+resulting \texttt{Image} will have a Channel for the result of each
+(non-transient) calculation.
+When a \texttt{Kernel} is evaluated, as many operations as possible are
+parallelized to improve performance.
+
+Parallelized calculations may depend on each other as long as the
+dependent calculation is listed after its dependency when the \texttt{Kernel} is
+defined, and the dependent calculation does not depend on more than
+the current pixel of the required calculation.
+
+Any channels marked with an \texttt{@} symbol are transient and
+are not added to the result \texttt{Image}.
+
+\subsection{Escaped ``C'' Expression}
+\label{ssec:escapedC}
+
+Escaped ``C'' expressions, or \emph{CStrings}, are snippits of ``C'' code
+which will be run once for every pixel in an \texttt{Image} Channel. The
+string may reference other Channels in the \texttt{Image} provided the
+Channels have been previously defined. To reference a Channel within a
+CString, the name of the Channel is used just like a local variable in C.
+CStrings are used on the right side
+of the \texttt{:=} operator when defining a Channel.
+
+The escaped code must be a single expression
+in C that will evaluate to the type defined by the containing \texttt{Calc} object.
+The expression cannot contain the following characters/tokens:
+\texttt{; \# \{ \} " ' /* */}. Parentheses may be used to group expressions or
+cast objects, but all parenthesis within the expression must be matched.
+
+\texttt{Calc} types and their C-equivalent types:
+\begin{center}\begin{tabular}{l | l}
+\sys type & equivalent C type \\
+\hline
+Uint8  & uint8_t \\
+Uint16 & uint16_t \\
+Uint32 & uint32_t \\
+Int8  & int8_t \\
+Int16 & int16_t \\
+Int32 & int32_t \\
+Angle  & float
+\end{tabular}\end{center}
+
+When the channel described by a CString must be evaluated,
+every pixel value in the channel is calculated by evaluating the C expression.
+When the expression is evaluated, every identifier corresponding to
+another channel in the image will be replaced by the value of the
+pixel in the same location in the referenced channel. Thus, if the C expression
+contains the identifier \texttt{Red}, then when the channel is calculated
+it will replace \texttt{Red} in the expression with the appropriate value
+from the \texttt{Red} channel.
+
+All standard C operators are available for use, as well as any library functions
+defined in \texttt{math.h}. Although bracket characters are not allowed within
+CStrings, the \emph{ternary} conditional operator, \texttt{a ? b : c} is allowed.
+This enables more complex pixel value calculations such as thresholding and hysteresis.
+
+\subsection{I/O Expressions}
+
+\subsubsection{\texttt{imgread} expression}
+\label{sssec:imgread}
+The \texttt{imgread} expression reads in an \texttt{Image} object from
+a known image format located on the file system. The expression results
+in an \texttt{Image} object which can be assigned using the \texttt{=}
+operator (see section~\ref{sssec:equalop}). The resulting \texttt{Image}
+object has 3 Channels named \emph{Red}, \emph{Green}, and
+\emph{Blue}. Each of the channels correspond to the red, green, and blue
+image data read into the \texttt{Image} object. This expression is invoked
+as a ``C'' style function, and expects 1 parameter: either the path of the
+image file to read (expressed as a string constant); or the number of the
+command-line argument, an integer 1 or greater.
+\startsyn
+\texttt{imgread(} \emph{string-constant} \texttt{|} \emph{integer} \texttt{)}
+\stopsyn
+
+\subsubsection{\texttt{imgwrite} expression}
+\label{sssec:imgwrite}
+The \texttt{imgwrite} expression writes out an \texttt{Image} object to a known
+image format. It requires that the \texttt{Image} object has at least 3 named
+\texttt{Channels}: \emph{Red}, \emph{Green}, and \emph{Blue}.
+This expression has no type (null type), and is invoked as a ``C'' style function.
+It expects 3 parameters: the first parameter is an \texttt{Image} identifier, the
+second is the image format, and the third is the path to which the image
+should be written (or an integer which represents a command-line argument, as for
+\texttt{imgread}).
+\startsyn
+\texttt{imgwrite(} \emph{image-identifier} \texttt{,} \emph{string-constant} \texttt{,} \emph{string-constant} \texttt{|} \emph{integer} \texttt{)}
+\stopsyn
+
+\subsection{Assignment Expressions}
+\label{ssec:assignment}
+
+\subsubsection{\texttt{=} assignment operator}
+\label{sssec:equalop}
+Assigns the value of the right operand to the left operand, copying data as necessary.
+The types of both operands must match. Cannot be used with \texttt{Calc}s, which are
+defined once only (see \texttt{:=} below).
+
+The type of this expression is equal to the type of the left operand, and assignment
+operations may be chained together. For example:
+\begin{lstlisting}[language=CLAM]
+Image a;
+Image b;
+imgwrite(a = b = imgread("foo.jpg"), "png", "foo.png");
+\end{lstlisting}
+
+\subsubsection{\texttt{:=} assignment operator}
+\label{sssec:colonequalop}
+Assigns a calculation constant (see section~\ref{sssec:calcconstants}), or
+escaped ``C'' expression (see section~\ref{ssec:escapedC}) to a \texttt{Calc}
+object. Only used once for each \texttt{Calc}, with declaration.
+
+\subsubsection{\texttt{|=} assignment operator}
+\label{sssec:barequalop}
+Add a single Channel or a (possibly one-member) list of \texttt{Calc}s object to an \texttt{Image} or
+\texttt{Kernel} object. Assignments using this operator are ordered by statement
+order, and subsequent operations can rely on this order.

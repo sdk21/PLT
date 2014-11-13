@@ -1,0 +1,37 @@
+matrix A = { 3, 1; 9, 4 };
+matrix B = { 3; 6 };
+matrix X;
+
+print "\nSolving system of simultaneous linear equations:\n\n";
+print A[0,0] + " x1 + " + A[0,1] + " x2 = " + B[0] + "\n";
+print A[1,0] + " x1 + " + A[1,1] + " x2 = " + B[1] + "\n";
+
+print "\nA = \n" + A + "\n";
+print "\nB = \n" + B + "\n";
+
+scalar det_of_A = A[0,0]*A[1,1] - A[0,1]*A[1,0];
+
+print "\nDeterminant(A) = " + det_of_A + "\n";
+
+if(det_of_A != 0) {
+
+	matrix inv_of_A;
+
+	inv_of_A [0,0] = A[1,1];
+	inv_of_A [0,1] = -1*A[0,1];
+	inv_of_A [1,0] = -1*A[1,0];
+	inv_of_A [1,1] = A[0,0];
+	inv_of_A = inv_of_A / det_of_A;
+	X = inv_of_A * B;
+
+	print "\nInverse(A) = \n" + inv_of_A + "\n";
+	print "X = Inverse(A) * B = \n" + X + "\n";
+	print "Solution:\n";
+	print "x1 = " + X[0] + "\n";
+	print "x2 = " + X[1] + "\n";
+
+} else {
+
+	print "A is a singular matrix and its inverse does not exist. So, solution not found.\n";
+
+}

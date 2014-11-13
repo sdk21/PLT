@@ -1,0 +1,18 @@
+
+int entry()
+{
+print(fib(5));
+}
+
+int fib(int n)
+{
+int tmpreturn 0if (n >= 3)
+	{
+return tmptmp=(fib((n)-(1)))+(fib((n)-(2)));
+}
+
+if (n == 2)
+	return 1
+if (n == 1)
+	return 1
+}

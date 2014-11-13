@@ -1,0 +1,39 @@
+#!/bin/bash
+TEST_DESC="Copy an image to a new location."
+. _buildup.sh
+
+INPUT_IMG="ucla.png"
+OUTPUT_IMG="ucla_out.png"
+
+FAILED=0
+# Compile the imgcopy program
+compile_it
+if [ $ERRORS -eq 0 ]; then
+	run_it "$INPUT_IMG" "$OUTPUT_IMG"
+	if [ ! $ERRORS -eq 0 ]; then
+		error "$RUN_OUTPUT"
+	fi
+else
+	error "$COMPILE_OUTPUT"
+fi
+
+# Verify that it produced an output file
+if [ $ERRORS -eq 0 ]; then
+	if [ ! -f "$OUTPUT_IMG" ]; then
+		ERRORS=1
+		error "No output image file produced"
+	fi
+fi
+
+# Verify the file is identical to the input
+if [ $ERRORS -eq 0 ]; then
+	compare "$INPUT_IMG" "$OUTPUT_IMG"
+	ERRORS=$?
+	if [ $ERRORS -ne 0 ]; then
+		error "Image produced is not identical to original image"
+	fi
+
+	rm -f "$OUTPUT_IMG"
+fi
+
+. _breakdown.sh
