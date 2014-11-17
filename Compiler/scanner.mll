@@ -1,10 +1,14 @@
+(* Scanner
+    - Consumes program as symbol stream
+    - Produces token stream for parser
+*)
+
 { open Parser }
 
 let name = ['a'-'z' 'A'-'Z']+ 
 let whitespace = [' ' '\t' '\r' '\n'] 
 let integers = ['0'-'9']+
 let floats = ['0'-'9']+ '.' ['0'-'9']*
-let complex = floats '+' floats 'i'
 
 rule token = parse
 (* Whitespace *)
@@ -14,16 +18,19 @@ rule token = parse
 | '#'        { comment lexbuf }
 
 (* Built-in Constants *)
-| "i"        { I }      (* Indicates imaginary number *)
-| "e"        { E }      (* Euler's number *)
-| "pi"       { PI }     (* pi *)
+| "e"        { E }       (* Euler's number *)
+| "pi"       { PI }      (* pi *)
 
 (* Built-in Types *)
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
-| "com"      { COM }   (* Complex type *)
+| "com"      { COM }    (* Complex type *)
 | "qub"      { QUB }    (* Qubit type *)
 | "mat"      { MAT }    (* Matrix type *)
+
+(* Complex Number Tags *)
+| "c"        { C }      (* Start of complex number *)
+| "i"        { I }      (*  Imaginary component *)
 
 (* Function Declaration *)
 | "def"      { DEF }    (* Define function *)
@@ -90,7 +97,7 @@ rule token = parse
 
 (* Control Flow *)
 | "if"       { IF }     (* If statement *)
-| "for"      { FOR }    (* For loop (For i from x to y by z *)
+| "for"      { FOR }    (* For loop - for(i from x to y by z) *)
 | "from"     { FROM }
 | "to"       { TO }
 | "by"       { BY }

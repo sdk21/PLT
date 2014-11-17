@@ -1,7 +1,13 @@
+(* Abstract Syntax Tree (AST)
+    - Produced by parser
+    - Consumed by semantic analyzer
+*)
+
 (* Elementary Data Types *)
 type data_type =
     Int
   | Float
+  | Img
   | Com
   | Qub
   | Mat
@@ -50,7 +56,7 @@ type expr =
   | Mat of expr list list
   | Id of string
   | Unop of un_op * expr
-  | Binop of expr * bi_op *expr
+  | Binop of expr * bi_op * expr
   | Assign of string * expr
   | Call of string * expr list
   | Noexpr 
@@ -81,5 +87,6 @@ type func_decl =
     body : stmt list;
   }
 
+(* Program *)
 type program =
   var_decl list * func_decl list
