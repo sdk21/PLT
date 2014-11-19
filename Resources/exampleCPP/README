@@ -1,0 +1,19 @@
+This directory contains C++ files that seek to address the three example
+problems described in section 10.1 of the QLang Language Reference 
+Manual.
+
+Before you compile, you must have the Eigen matrix library installed on
+your computer. Currently, the Makefile assumes that the Eigen directory 
+is located in /usr/include/eigen3. If your library is installed elsewhere
+be sure to change line 4 (INCLUDES) to point to the Eigen directory. 
+
+To compile all three programs type 'make', or you can compile each 
+program separately by entering 'make #' where # is the number of the 
+program you wish to compile.
+
+............TODO............
+Would like to implement a tensor product function that will take any size
+matrix/vector.
+
+
+PART 3 IS CURRENTLY BROKEN
