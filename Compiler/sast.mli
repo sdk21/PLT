@@ -4,7 +4,8 @@
 *)
 
 
-include Ast
+open Ast
 
-
+type expr_wrapper =
+    Expr of sexpr * Ast.v_type
 
