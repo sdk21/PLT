@@ -7,8 +7,7 @@
 type data_type =
     Int
   | Float
-  | Img
-  | Com
+  | Comp
   | Qub
   | Mat
 
@@ -18,15 +17,14 @@ type un_op =
   | Re
   | Im
   | Norm
-  | Unit
   | Trans
   | Det
   | Adj
-  | Con
+  | Conj
+  | Unit
   | Sin
   | Cos
   | Tan
-  | Exp
 
 (* Binary Operators *)
 type bi_op =
@@ -35,6 +33,8 @@ type bi_op =
   | Mult
   | Div
   | Mod
+  | Expn
+  | Tens
   | Eq
   | Neq
   | Lt
@@ -44,13 +44,12 @@ type bi_op =
   | Or
   | And
   | Xor
-  | Tens
 
 (* Expressions *)
 type expr =
   Lit_int of int
   | Lit_float of float
-  | Com of float * float
+  | Comp of float * float
   | Qub_bra of expr
   | Qub_ket of expr
   | Mat of expr list list
@@ -80,7 +79,7 @@ type var_decl =
 type func_decl = 
   {
     ret_type : data_type;
-    ret_name : string;     (*==== Do we need this??=====*)
+    ret_name : string;
     func_name : string;
     formal_params : var_decl list;
     locals : var_decl list;
@@ -106,7 +105,7 @@ let string_of_word string_of = function
 let rec string_of_expr = function
     Lit_int(n) -> string_of_int n 
   | Lit_float(n) -> string_of_float n
-  | Com(f1,f2) ->  of float * float
+  | Comp(f1,f2) ->  of float * float
   | Qub_bra of expr
   | Qub_ket of expr
   | Mat of expr list list

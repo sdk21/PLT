@@ -12,7 +12,7 @@ type expr_wrapper =
 and  sexpr =
   Lit_int of int
   | Lit_float of float
-  | Com of float * float
+  | Comp of float * float
   | Qub_bra of expr_wrapper
   | Qub_ket of expr_wrapper
   | Mat of expr_wrapper list list
@@ -52,5 +52,3 @@ and sfunc_decl =
 (* Program *)
 type sprogram =
   svar_decl list * sfunc_decl list
->>>>>>> 309cad7abe549aff0aee5c75fda6b758be4b2757
-

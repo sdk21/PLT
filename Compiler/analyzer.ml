@@ -10,33 +10,74 @@ open Sast
 exception Except of string
 
 (* Variable Declarations *)
-type var_decl = { type : Ast.vtype;
+type var_decl = { typ : Ast.data_type;
                   name : string; }
 
 (* Symbol Table *)
 (* we may not need a parent symbol table if we don't have nested scope *)
 type symbol_table = { parent : symbol_table option;
-                      mutable variables : var_decl list; 
-                      int }
+                      mutable variables : var_decl list; }
 
 (* Environment *)
 type environment = { scope : symbol_table;
-                     formal_params : var_decl list option
-                     return_type : Ast.vtype }
+                     formal_params : var_decl list option;
+                     return_type : Ast.data_type; }
 
-(* Utility Functions *)
+(*******************
+ *Utility Functions*
+*******************)
 
-(* Lookup variable in symbol table and return its type *)
+(* Lookup variable in symbol table *)
 (* we may not need to make this recursive if we don't have nested scope *)
 let rec find_var (scope : symbol_table) name =
   try
-    let (_, t) = List.find (fun vdecl -> name = vdecl.name) scope.variables in t
+    let vdecl_found = List.find (fun vdecl -> name = vdecl.name) scope.variables in vdecl_found
   with Not_found ->
     match scope.parent with
       Some(parent) -> find_var parent name
       | _ -> raise Not_found
 
-(* Checks *)
+(************
+ *Exceptions*
+************)
+
+(* Throws errors associated with unary operators *)
+let unop_error t = match t with
+  Ast.Not -> raise (Except("Invalid use of 'Not(expr)'"))
+  | Ast.Re -> raise (Except("Invalid use of 'Re(expr)'"))
+  | Ast.Im -> raise (Except("Invalid use of 'Im(expr)'"))
+  | Ast.Norm -> raise (Except("Invalid use of 'Norm(expr)'"))
+  | Ast.Trans -> raise (Except("Invalid use of 'Trans(expr)'"))
+  | Ast.Det -> raise (Except("Invalid use of 'Det(expr)'"))
+  | Ast.Adj -> raise (Except("Invalid use of 'Adj(expr)'"))
+  | Ast.Conj -> raise (Except("Invalid use of 'Conjexpr)'"))
+  | Ast.Unit -> raise (Except("Invalid use of 'Unit(expr)'"))
+  | Ast.Sin -> raise (Except("Invalid use of 'Sin(expr)'"))
+  | Ast.Cos -> raise (Except("Invalid use of 'Cos(expr)'"))
+  | Ast.Tan -> raise (Except("Invalid use of 'Tan(expr)'"))
+
+(* Throws erros associated with binary operators *)
+let binop_error t = match t with
+  Ast.Add -> raise (Except("Invalid use of 'expr + expr'"))
+  | Ast.Sub -> raise (Except("Invalid use of 'expr - expr'"))
+  | Ast.Mult -> raise (Except("Invalid use of 'expr * expr'"))
+  | Ast.Div -> raise (Except("Invalid use of 'expr / expr'"))
+  | Ast.Mod -> raise (Except("Invalid use of 'expr % expr'"))
+  | Ast.Expn -> raise (Except("Invalid use of 'expr ^ expr'"))
+  | Ast.Or -> raise (Except("Invalid use of 'expr or expr'"))
+  | Ast.And -> raise (Except("Invalid use of 'expr and expr'"))
+  | Ast.Xor -> raise (Except("Invalid use of 'expr xor expr'"))
+  | Ast.Tens -> raise (Except("Invalid use of 'expr @ expr'"))
+  | Ast.Eq -> raise (Except("Invalid use of 'expr eq expr'"))
+  | Ast.Neq -> raise (Except("Invalid use of 'expr neq expr'"))
+  | Ast.Lt -> raise (Except("Invalid use of 'expr lt expr'"))
+  | Ast.Gt -> raise (Except("Invalid use of 'expr gt expr'"))
+  | Ast.Leq -> raise (Except("Invalid use of 'expr leq expr'"))
+  | Ast.Geq -> raise (Except("Invalid use of 'expr geq expr'"))
+
+(********
+ *Checks*
+********)
 
 (* Check IDs *)
 let check_id name env =
@@ -44,60 +85,147 @@ let check_id name env =
     try
       find_var env.scope name
      with Not_found ->
-       raise (Except("Undeclared identifier: " ^ name)) in
-         let t = vdecl.type in
-           Sast.Expr(Sast.Id(name), t)
-
-(* Checks unops *)
-let check_unop op e env =
-    let e = check_expr env e in
-    match e with
-      Sast.Expr(_, t) ->
-        if op = Ast.Uminus then
-        if t = Ast.Num then
-          Sast.Expr(Sast.Unop(op, e), Ast.Num)
-        else
-          if t = Ast.Func then
-            Sast.Expr(Sast.Unop(op, e), Ast.Func)
-          else
-            if t = Ast.Matrix then
-              Sast.Expr(Sast.Unop(op, e), Ast.Matrix)
-            else raise (Error("Illegal Unary Operator!"))
-        else
-        if op = Ast.Not then
-              if t = Ast.Num then
-            Sast.Expr(Sast.Unop(op, e), Ast.Num)
-          else
-            if t = Ast.Func then
-              Sast.Expr(Sast.Unop(op, e), Ast.Func)
-            else raise (Error("Illegal Unary Operator!"))
-        else raise (Error("Illegal Unary Operator!"))
-
-(* Checks binops *)
+       raise (Except("Undeclared identifier: " ^ name))
+  in
+    let typ = vdecl.typ in
+      Sast.Expr(Sast.Id(name), typ)
 
 (* Checks expressions *)
+(* Obviously not completed *)
+let check_expr e env = match e with
+  Ast.Lit_int(e) -> Sast.Expr(Sast.Lit_int(e), Ast.Int)
+  | _ -> raise (Except("Invalid expression"))
 
-  let check_expr env = function
-  Ast.Lit_int(x) -> Sast.Expr(Sast.Lit_int(x), Ast.Int)
-  | Ast.Lit_float(x) -> Sast.Expr(Sast.Lit_float(x), Ast.Float)
-  | Ast.Com(x) -> check_com x env
-  | Ast.Qub_bra(x) -> check_qub_bra x env
-  | Ast.Qub_ket(x) -> check_qub_ket x env
-  | Ast.Mat(x) -> check_mat x env
-  | Ast
+(* Checks unary operators *)
+let check_unop op e env =
+  let e = check_expr e env in 
+    match e with
+      Sast.Expr(_, t) ->
+        (match op with
+          Ast.Not ->
+            (match t with
+              Ast.Int -> Sast.Expr(Sast.Unop(op, e), Ast.Int)
+              | _ ->  unop_error op)
+          | Ast.Re ->
+            (match t with
+              Ast.Comp -> Sast.Expr(Sast.Unop(op, e), Ast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Im -> 
+            (match t with
+                Ast.Comp -> Sast.Expr(Sast.Unop(op, e), Ast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Norm ->
+            (match t with
+              Ast.Comp -> Sast.Expr(Sast.Unop(op, e), Ast.Comp)
+              | Ast.Mat -> Sast.Expr(Sast.Unop(op, e), Ast.Mat)
+              | Ast.Qub -> Sast.Expr(Sast.Unop(op, e), Ast.Qub)
+              | _ ->  unop_error op)
+          | Ast.Trans ->
+            (match t with
+              Ast.Mat -> Sast.Expr(Sast.Unop(op, e), Ast.Mat)
+              | _ ->  unop_error op)
+          | Ast.Det ->
+            (match t with
+              Ast.Mat -> Sast.Expr(Sast.Unop(op, e), Ast.Mat)
+              | _ ->  unop_error op)
+          | Ast.Adj ->
+            (match t with
+              Ast.Mat -> Sast.Expr(Sast.Unop(op, e), Ast.Mat)
+              | _ ->  unop_error op)
+          | Ast.Conj ->
+            (match t with
+              Ast.Mat -> Sast.Expr(Sast.Unop(op, e), Ast.Mat)
+              | _ ->  unop_error op)
+          | Ast.Unit -> 
+            (match t with
+              Ast.Mat -> Sast.Expr(Sast.Unop(op, e), Ast.Mat)
+              | _ ->  unop_error op)
+          | Ast.Sin -> 
+            (match t with
+              Ast.Int -> Sast.Expr(Sast.Unop(op, e), Ast.Int)
+              | Ast.Float -> Sast.Expr(Sast.Unop(op, e), Ast.Float)
+              | Ast.Comp -> Sast.Expr(Sast.Unop(op, e), Ast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Cos -> 
+            (match t with
+              Ast.Int -> Sast.Expr(Sast.Unop(op, e), Ast.Int)
+              | Ast.Float -> Sast.Expr(Sast.Unop(op, e), Ast.Float)
+              | Ast.Comp -> Sast.Expr(Sast.Unop(op, e), Ast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Tan -> 
+            (match t with
+              Ast.Int -> Sast.Expr(Sast.Unop(op, e), Ast.Int)
+              | Ast.Float -> Sast.Expr(Sast.Unop(op, e), Ast.Float)
+              | Ast.Comp -> Sast.Expr(Sast.Unop(op, e), Ast.Comp)
+              | _ ->  unop_error op))
 
-
-  Lit_int of int
-  | Lit_float of float
-  | Com of float * float
-  | Qub_bra of expr
-  | Qub_ket of expr
-  | Mat of expr list list
-  | Id of string
-  | Unop of un_op * expr
-  | Binop of expr * bi_op * expr
-  | Assign of string * expr
-  | Call of string * expr list
-  | Noexpr 
-
-
+(* Checks binary operators *)
+let check_binop e1 op e2 env =
+    let e1 = check_expr env e1 and e2 = check_expr env e2 in
+      match e1 with
+        Sast.Expr(_, t1) ->
+          (match e2 with
+            Sast.Expr(_, t2) ->
+              (match op with
+                Ast.Add | Ast.Sub | Ast.Mult | Ast.Div | Ast.Mod | Ast.Expn -> 
+                  (match t1 with
+                    Ast.Int -> 
+                      (match t2 with
+                        Ast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Int)
+                        | Ast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Float)
+                        | Ast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Comp)
+                        | _ -> binop_error op)
+                    | Ast.Float -> 
+                      (match t2 with
+                        Ast.Int | Ast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Float)
+                        | Ast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Comp)
+                        | _ -> binop_error op)
+                    | Ast.Comp -> 
+                      (match t2 with
+                        Ast.Int | Ast.Float | Ast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Comp)
+                        | _ -> binop_error op)
+                    | Ast.Qub ->
+                      (match t2 with 
+                        Ast.Qub -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Qub)
+                       |  _ -> binop_error op)
+                    | Ast.Mat ->
+                      (match t2 with
+                        Ast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Mat)
+                        | _ -> binop_error op))
+                | Ast.Tens -> 
+                  (match t1 with
+                    Ast.Mat ->
+                      (match t2 with
+                        Ast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Mat)
+                        |  _ -> binop_error op)
+                      | _ -> binop_error op)
+                | Ast.Eq | Ast.Neq | Ast.Lt | Ast.Gt | Ast.Leq | Ast.Geq ->
+                  (match t1 with
+                    Ast.Int ->
+                     (match t2 with
+                        Ast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Int)
+                       | _ -> binop_error op)
+                  | Ast.Float -> 
+                      (match t2 with
+                        Ast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Float)
+                        | _ -> binop_error op)
+                  | Ast.Comp -> 
+                      (match t2 with
+                        Ast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Float)
+                        | _ -> binop_error op)
+                  | Ast.Qub -> 
+                      (match t2 with
+                        Ast.Qub -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Qub)
+                        |  _ -> binop_error op)
+                  | Ast.Mat ->
+                      (match t2 with
+                        Ast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Mat)
+                        |  _ -> binop_error op))
+                | Ast.Or | Ast.And | Ast.Xor -> 
+                  (match t1 with
+                    Ast.Int ->
+                      (match t2 with
+                        Ast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Int)
+                        | Ast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Ast.Float)
+                        |  _ -> binop_error op)
+                    | _ -> binop_error op)))

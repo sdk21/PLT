@@ -11,7 +11,7 @@
 %token C I
 %token E
 %token PI
-%token INT FLOAT COM QUB MAT
+%token INT FLOAT COMP QUB MAT
 %token DEF
 %token RETURN
 %token ASSIGN
@@ -26,7 +26,7 @@
 %token <string> ID
 %token <int> INT_LIT
 %token <float> FLOAT_LIT
-%token <string> COM_LIT
+%token <string> COMP_LIT
 
 %right ASSIGN
 %left OR XOR
@@ -52,7 +52,7 @@ program:
 vtype:
   INT     { Int }
   | FLOAT { Float }
-  | COM   { Com }
+  | COMP  { Comp }
   | QUB   { Qub }
   | MAT   { Mat }
 
@@ -98,7 +98,7 @@ mat_row:
    expr { [$1] }
   | mat_row COMMA expr { $3 :: $1 }
 
-inner_com:
+inner_comp:
   FLOAT_LIT                    { [$1; 0.] }
   | FLOAT_LIT I                { [0.; $1] }
   | FLOAT_LIT PLUS FLOAT_LIT I { [$1; $3] }
@@ -107,7 +107,7 @@ expr:
   ID                               { Id($1) }
   | INT_LIT                        { Lit_int($1) }
   | FLOAT_LIT                      { Lit_float($1) }
-  | C LPAREN inner_com RPAREN      { Com(List.hd $3, List.hd (List.rev $3)) } 
+  | C LPAREN inner_comp RPAREN     { Comp(List.hd $3, List.hd (List.rev $3)) } 
   | LCAR expr BAR                  { Qub_bra($2) }
   | BAR expr RCAR                  { Qub_ket($2) }
   | E                              { Lit_float(e) }
@@ -123,18 +123,18 @@ expr:
   | TRANS LPAREN expr RPAREN       { Unop(Trans, $3) }
   | DET LPAREN expr RPAREN         { Unop(Det, $3) }
   | ADJ LPAREN expr RPAREN         { Unop(Adj, $3) }
-  | CONJ LPAREN expr RPAREN        { Unop(Con, $3) }
+  | CONJ LPAREN expr RPAREN        { Unop(Conj, $3) }
+  | UNIT LPAREN expr RPAREN        { Unop(Unit, $3) }
   | SIN LPAREN expr RPAREN         { Unop(Sin, $3) }
   | COS LPAREN expr RPAREN         { Unop(Cos, $3) }
   | TAN LPAREN expr RPAREN         { Unop(Tan, $3) }
-  | UNIT LPAREN expr RPAREN        { Unop(Unit, $3) }
-  | EXPN expr                      { Unop(Exp, $2) }
   | expr PLUS   expr               { Binop($1, Add,  $3) }
   | expr MINUS  expr               { Binop($1, Sub,  $3) }
   | expr TIMES  expr               { Binop($1, Mult, $3) }
   | expr DIV    expr               { Binop($1, Div,  $3) }
   | expr MOD    expr               { Binop($1, Mod,  $3) }
-  | expr TENS   expr               { Binop($1, Tens,  $3) }
+  | expr EXPN expr                 { Binop($1, Expn, $3) }
+  | expr TENS   expr               { Binop($1, Tens, $3) }
   | expr EQ     expr               { Binop($1, Eq,   $3) }
   | expr NEQ    expr               { Binop($1, Neq,  $3) }
   | expr LT     expr               { Binop($1, Lt,   $3) }

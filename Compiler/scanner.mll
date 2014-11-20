@@ -24,7 +24,7 @@ rule token = parse
 (* Built-in Types *)
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
-| "com"      { COM }    (* Complex type *)
+| "comp"     { COMP }   (* Complex type *)
 | "qub"      { QUB }    (* Qubit type *)
 | "mat"      { MAT }    (* Matrix type *)
 
@@ -80,12 +80,12 @@ rule token = parse
 | "xor"      { XOR }    (* Boolean xor *)
 
 (* Matrix Operators *)
-| "unit"     { UNIT }   (* Is unit matrix? *)
 | "norm"     { NORM }   (* Get norm *)
 | "trans"    { TRANS }  (* Get transpose *)
 | "det"      { DET }    (* Get determinant *) 
 | "adj"      { ADJ }    (* Get adjoint *)
 | "conj"     { CONJ }   (* Get complex conjugate *)
+| "unit"     { UNIT }   (* Is unit matrix? *)
 | '@'        { TENS }   (* Tensor product *)
 
 (* Built-in Functions  *)
