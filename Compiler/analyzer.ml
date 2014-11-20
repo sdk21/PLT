@@ -90,11 +90,26 @@ let check_id name env =
     let typ = vdecl.typ in
       Sast.Expr(Sast.Id(name), typ)
 
+
+(*
+(* Check Assignments *)
+let check_assign name l e env =
+
 (* Checks expressions *)
-(* Obviously not completed *)
-let check_expr e env = match e with
+let check_expr env = match function
   Ast.Lit_int(e) -> Sast.Expr(Sast.Lit_int(e), Ast.Int)
+  | Ast.Lit_float(e) -> Sast.Expr(Sast.Lit_float(e), Ast.Float)
+  | Ast.Comp(e1, e2) -> 
+  | Ast.Qub_bra(e) ->
+  | Ast.Qub_ket(e) ->
+  | Ast.Mat(e) ->
+  | Ast.Id(e) ->
+  | Ast.Unop(op, e) ->
+  | Ast.Binop(e1, op, e2) ->
+  | Ast.Assign(e1, e2) -> 
+  | Ast.Call(e1, e2) ->
   | _ -> raise (Except("Invalid expression"))
+*)
 
 (* Checks unary operators *)
 let check_unop op e env =
