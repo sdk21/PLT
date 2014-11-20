@@ -77,20 +77,6 @@ let check_unop op e env =
 
 (* Checks expressions *)
 
-let check_expr env = function
-  Ast.Lit_int(s) -> Sast.Expr(Sast.Litnum(s), Ast.Num)
-  | Ast.Litstring(s) -> Sast.Expr(Sast.Litstring(s), Ast.String)
-  | Ast.Litfunc(l, f_expr) -> Sast.Expr(Sast.Litfunc(l, check_fexpr l (convert_fexpr f_expr) env), Ast.Func)
-  | Ast.Litlist(l) -> check_list l env
-  | Ast.Litmatrix(l) -> check_matrix l env
-  | Ast.Access(s, el) -> check_access s el env
-  | Ast.Id(name) -> check_id name env
-  | Ast.Binop(e1, op, e2) -> check_binop e1 op e2 env
-  | Ast.Unop(op, e) -> check_unop op e env
-  | Ast.Call(name, args) -> check_scall name args env
-  | Ast.FCall(fcall) -> check_fcall fcall env
-  | _ -> raise (Error("Invalid expression"))
-
   let check_expr env = function
   Ast.Lit_int(x) -> Sast.Expr(Sast.Lit_int(x), Ast.Int)
   | Ast.Lit_float(x) -> Sast.Expr(Sast.Lit_float(x), Ast.Float)
