@@ -8,8 +8,8 @@ type data_type =
     Int
   | Float
   | Comp
-  | Qub
   | Mat
+  | Qub
 
 (* Unary Operators *) 
 type un_op =
@@ -49,9 +49,8 @@ type bi_op =
 type expr =
   Lit_int of int
   | Lit_float of float
-  | Comp of float * float
-  | Qub_bra of expr
-  | Qub_ket of expr
+  | Lit_comp of float * float
+  | Qub of expr * int
   | Mat of expr list list
   | Id of string
   | Unop of un_op * expr

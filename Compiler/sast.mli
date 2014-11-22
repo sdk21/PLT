@@ -5,16 +5,23 @@
 
 open Ast
 
+type sdata_type =
+    Int
+  | Float
+  | Comp
+  | Mat
+  | Qub_bra
+  | Qub_ket
+
 (* Expressions *)
 type expr_wrapper = 
-    Expr of sexpr * Ast.data_type
+    Expr of sexpr * Sast.data_type
 
 and  sexpr =
   Lit_int of int
   | Lit_float of float
-  | Comp of float * float
-  | Qub_bra of expr_wrapper
-  | Qub_ket of expr_wrapper
+  | Lit_comp of float * float
+  | Qub of expr_wrapper * sdata_type
   | Mat of expr_wrapper list list
   | Id of string
   | Unop of Ast.un_op * expr_wrapper

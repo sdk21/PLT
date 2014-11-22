@@ -107,9 +107,9 @@ expr:
   ID                               { Id($1) }
   | INT_LIT                        { Lit_int($1) }
   | FLOAT_LIT                      { Lit_float($1) }
-  | C LPAREN inner_comp RPAREN     { Comp(List.hd $3, List.hd (List.rev $3)) } 
-  | LCAR expr BAR                  { Qub_bra($2) }
-  | BAR expr RCAR                  { Qub_ket($2) }
+  | C LPAREN inner_comp RPAREN     { Lit_comp(List.hd $3, List.hd (List.rev $3)) } 
+  | LCAR expr BAR                  { Qub($2, 0) }
+  | BAR expr RCAR                  { Qub($2, 1) }
   | E                              { Lit_float(e) }
   | PI                             { Lit_float(pi) }
   | LBRACK mat_row_list RBRACK     { Mat($2) }
