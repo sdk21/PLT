@@ -80,9 +80,10 @@ let qub_error t = match t with
   0 -> raise (Except("Invalid use of <expr|"))
   | 1 -> raise (Except("Invalid use of |expr>"))
 
-(* Matrix errors 
+(* Matrix errors *)
 let matrix_error t1 t2 = match t2 with
-*)
+  0 -> raise (Except("Invalid type in matrix"))
+  | _ -> raise (Except("Type mismatch in matrix"))
 
 (********
  *Checks*
