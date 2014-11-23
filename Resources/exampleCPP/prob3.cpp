@@ -11,13 +11,16 @@ Matrix<complex<float>,4,1> tensorV2f(Matrix<complex<float>,2,1> a, Matrix<comple
 
 int main() {
 
+	//imaginary
 	complex<float> i = -1;
 	i = sqrt(i);
 
-	Vector2f top, bottom;
+	//top and bottom qubits
+	Matrix<complex<float>,2,1> top, bottom;
 	top << 1,0;
 	bottom << 0,1;
 
+	//hadamard, identity, and X
 	Matrix<complex<float>,2,2> H,I,X;
 	H << 1, 1,
 	     1, -1;
@@ -25,78 +28,52 @@ int main() {
 
 	I = Matrix<complex<float>,2,2>::Identity();
 
-
 	Matrix<complex<float>, 2, 2> Y;
 	Y << 0, -i, 
  	     i, 0;
-	/*
-	Y(0,0) = 0;
-	Y(1,0) = i;
-	Y(0,1) = -1;
-	Y(1,1) = 0;
-	*/
-	
-	cout << i << endl;
-	     
 
 	X << 0, 1,
 	     1, 0;
-	
-	//Matrix<complex<float>,4,1> output = tensorM2f(H,I) * tensorV2f(top, bottom);
-	Matrix<complex<float>,4,1> output;
+
+	//apply H on top
+	Matrix<complex<float>,4,1> output = tensorM2f(H,I) * tensorV2f(top, bottom);
 	output << 1,1,1,1;
 
+	//initialize CNOT
 	Matrix<complex<float>,4,4> CNOT;
 	CNOT.topLeftCorner(2,2) = I;
 	CNOT.topRightCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	CNOT.bottomLeftCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	CNOT.bottomRightCorner(2,2) = X;
 
+	//initialize CY
 	Matrix<complex<float>, 4, 4> CY;
 	CY.topLeftCorner(2,2) = Y;
 	CY.topRightCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	CY.bottomLeftCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	CY.bottomRightCorner(2,2) = I;
 
+	//applying control operators
 	output = CY * CNOT * output;
 
-	Matrix<complex<float>,1,2> colTest;
-	colTest << 0, 0;
-	Matrix<complex<float>,2,2> test = top*colTest;
-	Matrix<complex<float>,4,4> M = tensorM2f(test, I);
+	
+	Matrix<complex<float>,2,1> col0;
+	col0 << 1, 0;
+	Matrix<complex<float>,1,2> row0;
+	row0 << 1, 0;
+	Matrix<complex<float>,2,2> colTest;
+	//colTest << 0, 0;
+	colTest = col0 * row0;
+	cout << colTest << endl;
+
+	Matrix<complex<float>,4,4> M = tensorM2f(colTest, I);
+//	Matrix<complex<float>,2,2> test = top*colTest;
+//	Matrix<complex<float>,4,4> M = tensorM2f(test, I);
 
 	output = M * output;
 
 	cout << output.norm() << endl;
 
-/*
-	Vector4f mat0, mat1, mat2, mat3;
-	mat0 << 1, 0, 0, 0;
-	mat1 << 0, 1, 0, 0;
-	mat0 << 0, 0, 1, 0;
-	mat0 << 0, 0, 0, 1;
-
-	Matrix4f CNOT, HNOT, allGates;
-	CNOT << 1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		0, 0, 0, 1;
-
-	HNOT << 1/sqrt(2), 0, 0, 1/sqrt(2),
-		0, 1, 0, 0,
-		1, 0, 1, -1/sqrt(2), 
-		0, 0, 0, 0;
-
-	allGates = CNOT * HNOT * CNOT;
-
-	Matrix4f circuitMat;
-	circuitMat.col(0) = allGates * mat0;
-	circuitMat.col(1) = allGates * mat1;
-	circuitMat.col(2) = allGates * mat2;
-	circuitMat.col(3) = allGates * mat3;
-
-	cout << circuitMat << endl;
-  */	
 }
 
 Matrix<complex<float>,4,4> tensorM2f(Matrix<complex<float>,2,2> a, Matrix<complex<float>,2,2> b) {
