@@ -1,5 +1,7 @@
 #include <iostream>
 #include <Eigen/Dense>
+#include "constants.h"
+#include "tensorProduct.h"
 
 using namespace Eigen;
 using namespace std;
@@ -14,21 +16,10 @@ Matrix4f tensor2f(Matrix2f a, Matrix2f b);
 int main() {
 
 	// |00> column vector
-	VectorXf v(4);
+	Vector4cf v;
 	v << 1, 0, 0, 0;
 
-	// H matrix
-	Matrix2f H;
-	H << 1, 1,
-	     1, -1;
-	H *= (1/sqrt(2));
-
-	//X matrix
-	Matrix2f X;
-	X << 0, 1,
-	     1, 0;
-
-	cout << tensor2f(H,X) * v << endl;
+	cout << tensor(H,X) * v << endl;
   	
 }
 
