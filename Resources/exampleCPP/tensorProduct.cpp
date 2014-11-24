@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include "tensorProduct.h"
+#include "constants.h"
 
 
 using namespace Eigen;
@@ -20,18 +21,28 @@ MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2) {
 	int mat2cols = mat2.cols();
 
 	MatrixXcf output(mat1rows * mat2rows, mat1cols * mat2cols);
-	//cout << output.rows() << " " << output.cols() << endl;
 
+	//iterates through one matrix, multiplying each element with the whole
+	//2nd matrix
 	for(int m = 0; m < mat1rows; m++) {
 		for(int n = 0; n < mat1cols; n++) {
 			output.block(m*mat2cols,n*mat2rows,mat2rows,mat2cols) = 
 				mat1(m,n) * mat2;
-			//cout << mat1(m,n) << endl;
 		}
 	}
 
 	return output;
 	
+}
+
+Matrix4cf control(Matrix2cf mat) {
+	Matrix4cf output;
+	output.topLeftCorner(2,2) = I;
+	output.topRightCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
+	output.bottomLeftCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
+	output.bottomRightCorner(2,2) = mat;
+
+	return output;
 }
 
 /*

@@ -29,4 +29,4 @@ tp:
 
 .PHONY: clean
 clean: 
-	rm Prob1 Prob2 Prob3
+	rm Prob1 Prob2 Prob3 DeutschJozsa

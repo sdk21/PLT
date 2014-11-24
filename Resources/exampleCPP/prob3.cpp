@@ -30,11 +30,13 @@ int main() {
 	cout << endl;
 
 	//initialize CNOT
-	Matrix<complex<float>,4,4> CNOT;
+	Matrix<complex<float>,4,4> CNOT = control(X);
+	/*
 	CNOT.topLeftCorner(2,2) = I;
 	CNOT.topRightCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	CNOT.bottomLeftCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	CNOT.bottomRightCorner(2,2) = X;
+	*/
 	cout << "CNOT" << endl;
 	cout << CNOT<<endl;
 	cout << endl;

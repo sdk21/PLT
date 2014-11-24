@@ -13,7 +13,7 @@ int main() {
 	mat0 << 0, 0, 1, 0; // |10>
 	mat0 << 0, 0, 0, 1; // |11>
 
-	//controlled NOT, controlled Hadmard, 
+	//controlled NOT, controlled Hadamard, 
 	Matrix4cf CNOT, HNOT, allGates;
 	CNOT << 1, 0, 0, 0,
 		0, 1, 0, 0,
