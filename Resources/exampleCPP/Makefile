@@ -22,6 +22,9 @@ default: 1 2 3 dj
 dj:
 	$(CXX) deutschJozsa.cpp $(FILES) $(CXXFLAGS) -o DeutschJozsa
 
+grover:
+	$(CXX) groverSearch.cpp $(FILES) $(CXXFLAGS) -o GroverSearch
+
 tp:
 	$(CXX) tensorProduct.cpp $(CXXFLAGS) -o TPTest
 
@@ -29,4 +32,4 @@ tp:
 
 .PHONY: clean
 clean: 
-	rm Prob1 Prob2 Prob3 DeutschJozsa
+	rm Prob1 Prob2 Prob3 DeutschJozsa GroverSearch

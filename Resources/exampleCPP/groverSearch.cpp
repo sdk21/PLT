@@ -10,7 +10,7 @@ using namespace std;
 MatrixXcf grover(Matrix<complex<float>, Dynamic, 1> top, int x0) {
 
 	//bottom register qubit
-	Matrix2cf bottom;
+	Vector2cf bottom;
 	bottom << 0,1;
 
 	//tensor of top and bottom
@@ -27,10 +27,13 @@ MatrixXcf grover(Matrix<complex<float>, Dynamic, 1> top, int x0) {
 	int k = 1;
 
 	//define O operator
-	Matrix2cf = I;
-	O(x0+1, x0+1) = -1;
+	Matrix4cf O = Matrix4cf::Identity();
+	O(x0, x0) = -1;
+
+	MatrixXcf G = tensor(H * S * H, I);
 
 	//Grover iteration matrix
+	//cout << "G dim " << G.rows() << " " << G.cols() << endl;
 	MatrixXcf GO = (G*O);
 	for(int index = 1; index < k; index++) {
 		GO = GO * GO;
@@ -41,5 +44,14 @@ MatrixXcf grover(Matrix<complex<float>, Dynamic, 1> top, int x0) {
 	MatrixXcf result = tensor(H,H) * output;
 
 	return result;
+	//return bottom;
 
 }
+
+int main() {
+
+	cout << grover(Vector2cf(1,0),1) << endl;
+
+	return 0;
+}
+
