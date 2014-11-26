@@ -3,13 +3,7 @@
     - Produces compiled program
  *)
 
-
-<<<<<<< HEAD
-let rec eval = function 
-=======
-
 (*let rec eval = function 
->>>>>>> c6df57d9cd8ef9ac2a488f9033d96a5016391624
     Lit_int(x) -> 1
     | Binop(x1, op, x2) -> 2
     | Mat(x) -> 3
@@ -18,10 +12,7 @@ let _ =
   let lexbuf = Lexing.from_channel stdin in
   let expr = Parser.expr Scanner.token lexbuf in
   let result = eval expr in
-<<<<<<< HEAD
   print_endline (Ast.astprint result)
-=======
-  print_endline (string_of_int result)
 *)
 
 let _ =
@@ -44,4 +35,3 @@ let _ =
       print_string (Ast.string_of_program program)
   | Sast -> print_string (Ast.string_of_program program) (* Repeated just to remove error for now *)
   *)
->>>>>>> c6df57d9cd8ef9ac2a488f9033d96a5016391624

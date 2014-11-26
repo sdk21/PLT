@@ -115,7 +115,7 @@ expr:
   | LBRACK mat_row_list RBRACK     { Mat($2) }
   | LPAREN expr RPAREN             { $2 }
   | ID ASSIGN expr                 { Assign($1, $3) }
-  | ID LPAREN actual_params RPAREN { FCall($1, $3) }
+  | ID LPAREN actual_params RPAREN { Call($1, $3) }
   | MINUS expr                     { Unop(Neg, $2)}
   | NOT LPAREN expr RPAREN         { Unop(Not, $3) }
   | RE LPAREN expr RPAREN          { Unop(Re, $3) }

@@ -13,7 +13,8 @@ type data_type =
 
 (* Unary Operators *) 
 type un_op =
-  Not
+  Neg
+  | Not
   | Re
   | Im
   | Norm
@@ -70,8 +71,8 @@ type stmt =
 (* Variables Declaration *)
 type var_decl = 
   { 
-    var_type : data_type;
-    var_name : string;
+    typ : data_type;
+    name : string;
   }
 
 (* Function Declaration *)
@@ -105,7 +106,8 @@ let rec string_of_expr = function
   | Id(s) -> s
   | Unop(un1,exp1) -> 
     (match un1 with
-      Not -> " ! "
+      Neg -> " -"
+    | Not -> " ! "
     | Re -> " Re "
     | Im -> " Im "
     | Norm -> " Norm "
@@ -153,8 +155,8 @@ and string_of_stmts stmts =
 
 (* method for printing variable decls *)  
 let string_of_var_decl var_decl = 
-  "var_name: " ^ var_decl.var_name ^ "\nvar_type: " ^ 
-  ( match var_decl.var_type with
+  "name: " ^ var_decl.name ^ "\ntyp: " ^ 
+  ( match var_decl.typ with
 
     Int -> " int "
   | Float -> " float "
