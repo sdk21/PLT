@@ -57,8 +57,8 @@ vtype:
   | MAT   { Mat }
 
 vdecl:
-  vtype ID SEMI { { var_type = $1;
-                    var_name = $2 } } 
+  vtype ID SEMI { { typ = $1;
+                    name = $2 } } 
 vdecl_list:
   /* nothing */      { [] }
   | vdecl_list vdecl { $2 :: $1 }
@@ -68,10 +68,10 @@ formal_params:
   | formal_params_list { List.rev $1 }
 
 formal_params_list:
-  vtype ID                            { [{ var_type = $1; 
-                                          var_name = $2; }] }
-  | formal_params_list COMMA vtype ID { {  var_type = $3;
-                                           var_name = $4; } :: $1 }
+  vtype ID                            { [{ typ = $1; 
+                                           name = $2; }] }
+  | formal_params_list COMMA vtype ID { {  typ = $3;
+                                           name = $4; } :: $1 }
 
 actual_params:
   /* nothing */        { [] }
@@ -115,7 +115,8 @@ expr:
   | LBRACK mat_row_list RBRACK     { Mat($2) }
   | LPAREN expr RPAREN             { $2 }
   | ID ASSIGN expr                 { Assign($1, $3) }
-  | ID LPAREN actual_params RPAREN { Call($1, $3) }
+  | ID LPAREN actual_params RPAREN { FCall($1, $3) }
+  | MINUS expr                     { Unop(Neg, $2)}
   | NOT LPAREN expr RPAREN         { Unop(Not, $3) }
   | RE LPAREN expr RPAREN          { Unop(Re, $3) }
   | IM LPAREN expr RPAREN          { Unop(Im, $3) }

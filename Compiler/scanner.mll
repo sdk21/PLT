@@ -58,7 +58,7 @@ rule token = parse
 (* Algebraic Operators *)
 | '+'        { PLUS }   (* Addition *)
 | '-'        { MINUS }  (* Subtraction *)
-| '*'        { TIMES }   (* Multiplication *)
+| '*'        { TIMES }  (* Multiplication *)
 | '/'        { DIV }    (* Division *)
 | '%'        { MOD }    (* Modulus *)
 | '^'        { EXPN }   (* Exponentiation *)
