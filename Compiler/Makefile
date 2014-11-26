@@ -1,7 +1,7 @@
 OBJS = ast.cmo parser.cmo scanner.cmo qlc.cmo 
 
 qlc : $(OBJS)
-	ocamlc -o qlc $(OBJS)
+	ocamlc -g -o qlc $(OBJS)
 
 scanner.ml : scanner.mll
 	ocamllex scanner.mll
@@ -10,10 +10,10 @@ parser.ml parser.mli : parser.mly
 	ocamlyacc parser.mly
 
 %.cmo : %.ml
-	ocamlc -c $<
+	ocamlc -g -c $<
 
 %.cmi : %.mli
-	ocamlc -c $<
+	ocamlc -g -c $<
 
 .PHONY : clean
 clean :

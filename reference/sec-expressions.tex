@@ -72,7 +72,7 @@ The result is the evaluation of the trigonometric function tangent on the \texti
 \subsubsection{\textit{expression} $\hat{}$ \textit{expression}}
 The result is the exponentiation of the first \textit{expression} by the second \textit{expression}. The types of the expression must be of type \integ, \float, or  \complex. If the expressions are of the same type, the result has the same type as the \textit{expressions}. Otherwise, if at least one \textit{expression} is a \complex, the result is of type \complex; if neither expressions are comp, but at least one is \float, the result is of type \float.
 \subsubsection{\textit{expression} * \textit{expression}}
-The result is the product of the \textit{expressions}. The type considerations are the same as they are for \textit{expression} $\hat{}$ \textit{expression}
+The result is the product of the \textit{expressions}. The type considerations are the same as they are for \textit{expression} $\hat{}$ \textit{expression} except that it also allows for matrices.
 \subsubsection{\textit{expression} / \textit{expression}}
 The result is the quotient of the \textit{expressions}, where the first \textit{expression} is the dividend and the second is the divisor. The type considerations are the same as they are for \textit{expression} $\hat{}$ \textit{expression}. Integer division is rounded towards 0 and truncated. \new{(If an error occured because of a division by zero, a runtime exception is raised.)}
 \subsubsection{\textit{expression} \% \textit{expression}}
