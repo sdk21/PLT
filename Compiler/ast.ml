@@ -99,7 +99,9 @@ let rec string_of_expr = function
     Lit_int(n) -> string_of_int n
   | Lit_float(n) -> string_of_float n
   | Lit_comp(f1,f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
-  | Qub(ex1,n) -> "Qub of " ^ string_of_expr ex1 ^ " and " ^string_of_int n
+  | Qub(ex1,n) -> let typ = string_of_int n in (match typ with
+                  "0" -> "Qub-bra of "^ string_of_expr ex1 
+                  | "1" -> "Qub-ket of "^ string_of_expr ex1)
   | Mat(exp_list_list) ->  " <Matrix here> "(*String.concat "\n" (List.map string_of_expr exp_list_list) *)
   | Id(s) -> s
   | Unop(un1,exp1) -> 
@@ -129,7 +131,7 @@ let rec string_of_expr = function
     ) ^ string_of_expr ex2
 
   | Assign(str,expr) -> str ^ "=" ^ string_of_expr expr
-  | Call(str,expr_list) -> "Calling " ^ str ^ "on " ^string_of_exprs expr_list
+  | Call(str,expr_list) -> "Calling " ^ str ^ " on " ^string_of_exprs expr_list
   | Noexpr -> ""
   
 and string_of_exprs exprs = 
