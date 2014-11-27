@@ -5,7 +5,7 @@
 
 { open Parser }
 
-let name = ['a'-'z' 'A'-'Z']+ 
+let name = ['a'-'z' 'A'-'Z' '_']+ 
 let whitespace = [' ' '\t' '\r' '\n'] 
 let integers = ['0'-'9']+
 let floats = ['0'-'9']+ '.' ['0'-'9']*

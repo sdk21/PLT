@@ -39,14 +39,10 @@
 %right EXPN
 %nonassoc RE IM NORM TRANS DET ADJ CONJ SIN COS TAN UNIT
 
-%start stmt_list
-%type <Ast.stmt_list> stmt_list
+%start program
+%type <Ast.program> program
 
 %%
-
-program:
-   /* nothing */ { [] }
- | program fdecl { $2 :: $1 }
 
 vtype:
   INT     { Int }
@@ -81,21 +77,21 @@ actual_params_list:
   | actual_params_list COMMA expr { $3 :: $1 }
 
 fdecl:
-   DEF vtype ID EQ ID LPAREN formal_params RPAREN LBRACE vdecl_list stmt_list RBRACE
-     { { ret_type = $2;
-         ret_name = $3;
-         func_name = $5;
-	 formal_params = $7;
-	 locals = List.rev $10;
-	 body = List.rev $11; } }
-
-mat_row_list:
-  LPAREN mat_row RPAREN { [List.rev $2] }
-  | mat_row_list LPAREN mat_row RPAREN { $3 :: $1 }
+   DEF ID LPAREN formal_params RPAREN COLON vtype ID LBRACE vdecl_list stmt_list RBRACE
+     { { func_name = $2;
+         formal_params = $4;
+         ret_type = $7;
+         ret_name = $8;
+	       locals = List.rev $10;
+	       body = List.rev $11; } }
 
 mat_row:
    expr { [$1] }
   | mat_row COMMA expr { $3 :: $1 }
+
+mat_row_list:
+  LPAREN mat_row RPAREN { [List.rev $2] }
+  | mat_row_list LPAREN mat_row RPAREN { $3 :: $1 }
 
 inner_comp:
   FLOAT_LIT                    { [$1; 0.] }
@@ -160,3 +156,7 @@ stmt:
 stmt_list:
   /* nothing  */ { [] }
   | stmt_list stmt { $2 :: $1 }
+
+  program:
+   /* nothing */ { [] }
+ | program fdecl { $2 :: $1 }

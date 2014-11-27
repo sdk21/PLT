@@ -12,7 +12,7 @@ function ast_test {
 }
 
 # Expressions
-<<EXPRESSIONS
+<<COMMENT
 ast_test '1'
 ast_test '1.'
 ast_test '1.0'
@@ -67,7 +67,7 @@ ast_test '1 * 2'
 ast_test '1 / 2'
 ast_test '1 % 2'
 ast_test '1^2'
-EXPRESSIONS
+
 
 # Statements
 ast_test '1 + 2;'
@@ -79,3 +79,36 @@ ast_test 'for(j from 1 to 10 by 1){1 + 2;3 * 4;}'
 
 # Statement Lists
 ast_test '1 + 2;3 * 4;172 - 12;'
+COMMENT
+
+# Program
+ast_test 'def func_test(int a) : int ret_name { 1 + 2; 3*4; }'
+ast_test 'def func_test(int a, int b) : int ret_name { 1 + 2; 3*4; }'
+ast_test 'def func_test(int a, int b) : int ret_name
+			{
+				int test_int;
+				1 + 2;
+				3*4;
+			}'
+ast_test 'def func_test(int a, int b) : int ret_name
+			{
+				int test_int;
+				1 + 2;
+				3*4;
+			}
+			def new_test(qub q, mat m) : int ret_name
+			{
+				float test_float;
+				comp test_comp;
+				1 + 2;
+				3*4;
+			}'
+
+
+
+
+
+
+
+
+

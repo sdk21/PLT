@@ -95,7 +95,6 @@ type program =
   func_decl list
 
 (* Pretty Printer *)
-
 let string_of_word string_of = function 
     Some(x) -> string_of x 
   | None -> ""
@@ -105,8 +104,8 @@ let rec string_of_expr = function
   | Lit_float(n) -> string_of_float n
   | Lit_comp(f1,f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
   | Qub(ex1,n) -> let typ = string_of_int n in (match typ with
-                  "0" -> "Qub-bra of "^ string_of_expr ex1 
-                  | _ -> "Qub-ket of "^ string_of_expr ex1)
+                      "0" -> "Qub-bra of "^ string_of_expr ex1 
+                    | _ -> "Qub-ket of "^ string_of_expr ex1)
   | Mat(exp_list_list) ->  " <Matrix here> "(*String.concat "\n" (List.map string_of_expr exp_list_list) *)
   | Id(s) -> s
   | Unop(un1,exp1) -> 
@@ -123,27 +122,24 @@ let rec string_of_expr = function
     | Unit -> " Unit "
     | Sin -> " Sin "
     | Cos -> " Cos "
-    | Tan -> " Tan "
-      ) ^ string_of_expr exp1 
+    | Tan -> " Tan ") ^ string_of_expr exp1 
 
   | Binop(ex1,binop,ex2) -> string_of_expr ex1 ^ 
     (match binop with 
-    Add -> " + "    | Sub -> " - "     | Mult -> " * " 
-    | Div -> " / "    | Mod -> " % " | Expn -> " ^ " | Tens -> " @ "
-    | Eq-> " == " | Neq -> " != "    | Lt -> " < "
-    | Leq -> " <= "   | Gt -> " > " | Geq -> " >= "
-    | Xor -> " XOR " | And -> " && "    | Or -> " || "
-    ) ^ string_of_expr ex2
-
+      Add -> " + "    | Sub -> " - "     | Mult -> " * " 
+    | Div -> " / "    | Mod -> " % "     | Expn -> " ^ " | Tens -> " @ "
+    | Eq-> " == "     | Neq -> " != "    | Lt -> " < "
+    | Leq -> " <= "   | Gt -> " > "      | Geq -> " >= "
+    | Xor -> " XOR "  | And -> " && "    | Or -> " || ") ^ string_of_expr ex2
   | Assign(str,expr) -> str ^ "=" ^ string_of_expr expr
   | Call(str,expr_list) -> "Calling " ^ str ^ " on " ^string_of_exprs expr_list
   | Noexpr -> ""
   
 and string_of_exprs exprs = 
-  String.concat "\n" (List.map string_of_expr exprs) (*==== check this too!========*)
+  String.concat "\n" (List.map string_of_expr exprs)
 
 let rec string_of_stmt = function
-  Expr(exp) -> string_of_expr exp
+    Expr(exp) -> string_of_expr exp ^ "\n"
   | Block(stmt_list) -> "{\n" ^ string_of_stmts stmt_list ^ "\n}"
   | If(expr,stmt) -> "If condition : " ^ string_of_expr expr ^ "\nstatement :\n" ^ string_of_stmt stmt
   | For(ex1,ex2,ex3,ex4,stmt) -> "For args : " ^ string_of_expr ex1 ^ " " ^ string_of_expr ex2 ^ " "^ string_of_expr ex3 ^ 
@@ -155,34 +151,28 @@ and string_of_stmts stmts =
 
 (* method for printing variable decls *)  
 let string_of_var_decl var_decl = 
-  "name: " ^ var_decl.name ^ "\ntyp: " ^ 
-  ( match var_decl.typ with
-
-    Int -> " int "
-  | Float -> " float "
-  | Comp -> " comp "
-  | Mat -> " mat "
-  | Qub -> " qub "
-  )
-  ^ "\n"
+  "vdecl: typ: " ^ 
+    (match var_decl.typ with
+      Int -> "int "
+    | Float -> "float "
+    | Comp -> "comp "
+    | Mat -> "mat "
+    | Qub -> "qub ") ^ "name: " ^ var_decl.name ^ "\n"
   
-(* method for printing function decls *)    
+(* method for printing func_decls *)    
 let string_of_fdecl fdecl =
-  "\nfreturn_type: " ^ 
-( match fdecl.ret_type with
+  "fdecl:\nret_type: " ^ 
+    (match fdecl.ret_type with
+      Int -> " int "
+    | Float -> " float "
+    | Comp -> " comp "
+    | Mat -> " mat "
+    | Qub -> " qub ")
+      ^ "\nret_name: " ^ fdecl.ret_name ^ "\nfunc_name: "  ^ fdecl.func_name ^  "\n(\n" ^
+      String.concat "" (List.map string_of_var_decl fdecl.formal_params) ^ ")\n{\n" ^
+      String.concat "" (List.map string_of_var_decl fdecl.locals) ^
+      String.concat "" (List.map string_of_stmt fdecl.body) ^ "}"
 
-    Int -> " int "
-  | Float -> " float "
-  | Comp -> " comp "
-  | Mat -> " mat "
-  | Qub -> " qub "
-  )
-   ^ "\nfreturn_name" ^ fdecl.ret_name ^ "\nfname: "  ^ fdecl.func_name ^  "(" ^
-  String.concat " " (List.map string_of_var_decl fdecl.formal_params) ^ ")\n{\n" ^
-  String.concat " " (List.map string_of_var_decl fdecl.locals) ^ " "^
-  String.concat " " (List.map string_of_stmt fdecl.body) ^
-  "}"
-
-(* method for printing program - list of var_decl and func_decl *)  
+(* method for printing program - func_decl list *)  
 let string_of_program (funcs) = 
-  "FUNCTIONS: " ^ String.concat "\n" (List.map string_of_fdecl funcs)
+  "program:\n" ^ String.concat "\n" (List.map string_of_fdecl funcs)
