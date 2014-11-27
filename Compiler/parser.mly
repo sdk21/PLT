@@ -39,8 +39,8 @@
 %right EXPN
 %nonassoc RE IM NORM TRANS DET ADJ CONJ SIN COS TAN UNIT
 
-%start expr
-%type <Ast.expr> expr
+%start stmt_list
+%type <Ast.stmt_list> stmt_list
 
 %%
 

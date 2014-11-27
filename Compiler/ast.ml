@@ -67,6 +67,10 @@ type stmt =
   | If of expr * stmt
   | For of expr * expr * expr * expr * stmt
   | While of expr * stmt
+
+(* Statement Lists *)
+type stmt_list =
+  stmt list
  
 (* Variables Declaration *)
 type var_decl = 
@@ -90,18 +94,19 @@ type func_decl =
 type program =
   func_decl list
 
+(* Pretty Printer *)
+
 let string_of_word string_of = function 
     Some(x) -> string_of x 
   | None -> ""
 
- (* Need to work on expr and stmts *)
 let rec string_of_expr = function
     Lit_int(n) -> string_of_int n
   | Lit_float(n) -> string_of_float n
   | Lit_comp(f1,f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
   | Qub(ex1,n) -> let typ = string_of_int n in (match typ with
                   "0" -> "Qub-bra of "^ string_of_expr ex1 
-                  | "1" -> "Qub-ket of "^ string_of_expr ex1)
+                  | _ -> "Qub-ket of "^ string_of_expr ex1)
   | Mat(exp_list_list) ->  " <Matrix here> "(*String.concat "\n" (List.map string_of_expr exp_list_list) *)
   | Id(s) -> s
   | Unop(un1,exp1) -> 
@@ -124,7 +129,7 @@ let rec string_of_expr = function
   | Binop(ex1,binop,ex2) -> string_of_expr ex1 ^ 
     (match binop with 
     Add -> " + "    | Sub -> " - "     | Mult -> " * " 
-    | Div -> " / "    | Mod -> " % " | Expn -> " Expn " | Tens -> " Tens "
+    | Div -> " / "    | Mod -> " % " | Expn -> " ^ " | Tens -> " @ "
     | Eq-> " == " | Neq -> " != "    | Lt -> " < "
     | Leq -> " <= "   | Gt -> " > " | Geq -> " >= "
     | Xor -> " XOR " | And -> " && "    | Or -> " || "
@@ -138,11 +143,11 @@ and string_of_exprs exprs =
   String.concat "\n" (List.map string_of_expr exprs) (*==== check this too!========*)
 
 let rec string_of_stmt = function
-  Expr(exp1) -> string_of_expr exp1 
+  Expr(exp) -> string_of_expr exp
   | Block(stmt_list) -> "{\n" ^ string_of_stmts stmt_list ^ "\n}"
-  | If(expr,stmt) -> "If condition : " ^ string_of_expr expr ^ "\nstatement : " ^ string_of_stmt stmt
+  | If(expr,stmt) -> "If condition : " ^ string_of_expr expr ^ "\nstatement :\n" ^ string_of_stmt stmt
   | For(ex1,ex2,ex3,ex4,stmt) -> "For args : " ^ string_of_expr ex1 ^ " " ^ string_of_expr ex2 ^ " "^ string_of_expr ex3 ^ 
-                                 " "^ string_of_expr ex4 ^ "\nstatement : " ^ string_of_stmt stmt 
+                                 " "^ string_of_expr ex4 ^ "\nstatement :\n" ^ string_of_stmt stmt 
   | While(expr,stmt) -> "While condition : " ^ string_of_expr expr ^ "\nstatement : " ^ string_of_stmt stmt
 
 and string_of_stmts stmts = 

@@ -1,16 +1,18 @@
 #! /bin/bash
 function test {
-	echo $2
-	echo $2 | ./qlc -$1;
+	echo "$2"
+	echo "$2" | ./qlc -$1;
 	echo
 	echo ---------------
 }
 
 # Ast Tests
 function ast_test {
-	test a $1
+	test a "$1"
 }
 
+# Expressions
+<<EXPRESSIONS
 ast_test '1'
 ast_test '1.'
 ast_test '1.0'
@@ -25,8 +27,55 @@ ast_test '[(1)]'
 ast_test '[(1,2,3)]'
 ast_test '[(1,2,3)]'
 ast_test '[(1,2,3)(1)(1,2,3)]'
-ast_test 'id'
+ast_test '[(1.2,2.3,3.)(1.7)(1.0,2.,3.1)]'
 ast_test 'id '
 ast_test '-1'
+ast_test '-1.32'
+ast_test '-c(1.+1.2i)' #issue
 ast_test 'Not(1)'
-ast_test 'Re(1)'
+ast_test 'Not(1.)'
+ast_test 'Re(c(1.+1.2i))'
+ast_test 'Im(c(1.+1.2i))'
+ast_test 'Norm([(1,2,3)(1)(1,2,3)])'
+ast_test 'Norm(c(1.+1.2i))'
+ast_test 'Norm(<010|)'
+ast_test 'Norm(|010>)'
+ast_test 'Trans([(1,2,3)(1)(1,2,3)])'
+ast_test 'Trans(|010>)'
+ast_test 'Det([(1,2,3)(1)(1,2,3)])'
+ast_test 'Det(|010>)'
+ast_test 'Adj([(1,2,3)(1)(1,2,3)])'
+ast_test 'Adj(|010>)'
+ast_test 'Conj([(1,2,3)(1)(1,2,3)])'
+ast_test 'Conj(|010>)'
+ast_test 'Conj(c(1.+1.2i))'
+ast_test 'Unit([(1,2,3)(1)(1,2,3)])'
+ast_test 'Unit(|010>)'
+ast_test 'Sin(1)'
+ast_test 'Sin(1.2)'
+ast_test 'Sin(c(1.+1.2i))'
+ast_test 'Cos(1)'
+ast_test 'Cos(1.2)'
+ast_test 'Cos(c(1.+1.2i))'
+ast_test 'Tan(1)'
+ast_test 'Tan(1.2)'
+ast_test 'Tan(c(1.+1.2i))'
+
+ast_test '1 + 2'
+ast_test '1 - 2'
+ast_test '1 * 2'
+ast_test '1 / 2'
+ast_test '1 % 2'
+ast_test '1^2'
+EXPRESSIONS
+
+# Statements
+ast_test '1 + 2;'
+ast_test '{1 + 2;}'
+ast_test '{1 + 2;3 * 4;}'
+ast_test 'if(7 gt 2){3 * 4;}'
+ast_test 'for(j from 1 to 10){1 + 2;3 * 4;}'
+ast_test 'for(j from 1 to 10 by 1){1 + 2;3 * 4;}'
+
+# Statement Lists
+ast_test '1 + 2;3 * 4;172 - 12;'
