@@ -88,19 +88,17 @@ type func_decl =
 
 (* Program *)
 type program =
-  var_decl list * func_decl list
-
+  func_decl list
 
 let string_of_word string_of = function 
     Some(x) -> string_of x 
   | None -> ""
 
-
  (* Need to work on expr and stmts *)
 let rec string_of_expr = function
-    Lit_int(n) -> string_of_int n 
+    Lit_int(n) -> string_of_int n
   | Lit_float(n) -> string_of_float n
-  | Lit_comp(f1,f2) -> string_of_float f1 ^ " + i " ^ string_of_float f2
+  | Lit_comp(f1,f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
   | Qub(ex1,n) -> "Qub of " ^ string_of_expr ex1 ^ " and " ^string_of_int n
   | Mat(exp_list_list) ->  " <Matrix here> "(*String.concat "\n" (List.map string_of_expr exp_list_list) *)
   | Id(s) -> s
@@ -134,11 +132,8 @@ let rec string_of_expr = function
   | Call(str,expr_list) -> "Calling " ^ str ^ "on " ^string_of_exprs expr_list
   | Noexpr -> ""
   
-
-
 and string_of_exprs exprs = 
   String.concat "\n" (List.map string_of_expr exprs) (*==== check this too!========*)
-
 
 let rec string_of_stmt = function
   Expr(exp1) -> string_of_expr exp1 
@@ -147,8 +142,6 @@ let rec string_of_stmt = function
   | For(ex1,ex2,ex3,ex4,stmt) -> "For args : " ^ string_of_expr ex1 ^ " " ^ string_of_expr ex2 ^ " "^ string_of_expr ex3 ^ 
                                  " "^ string_of_expr ex4 ^ "\nstatement : " ^ string_of_stmt stmt 
   | While(expr,stmt) -> "While condition : " ^ string_of_expr expr ^ "\nstatement : " ^ string_of_stmt stmt
-
-
 
 and string_of_stmts stmts = 
   String.concat "\n" (List.map string_of_stmt stmts) 
@@ -183,9 +176,6 @@ let string_of_fdecl fdecl =
   String.concat " " (List.map string_of_stmt fdecl.body) ^
   "}"
 
-
 (* method for printing program - list of var_decl and func_decl *)  
-let string_of_program (vars, funcs) = 
-  "VARS: \n" ^ String.concat " " (List.map string_of_var_decl vars) ^ " \n\nFUNCTIONS: " ^
-  String.concat "\n" (List.map string_of_fdecl funcs) 
-
+let string_of_program (funcs) = 
+  "FUNCTIONS: " ^ String.concat "\n" (List.map string_of_fdecl funcs)

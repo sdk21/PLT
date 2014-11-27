@@ -39,15 +39,14 @@
 %right EXPN
 %nonassoc RE IM NORM TRANS DET ADJ CONJ SIN COS TAN UNIT
 
-%start program
-%type <Ast.program> program
+%start expr
+%type <Ast.expr> expr
 
 %%
 
 program:
-   /* nothing */ { [], [] }
- | program vdecl { ($2 :: fst $1), snd $1 }
- | program fdecl { fst $1, ($2 :: snd $1) }
+   /* nothing */ { [] }
+ | program fdecl { $2 :: $1 }
 
 vtype:
   INT     { Int }
