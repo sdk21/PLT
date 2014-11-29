@@ -68,7 +68,6 @@ ast_test '1 / 2'
 ast_test '1 % 2'
 ast_test '1^2'
 
-
 # Statements
 ast_test '1 + 2;'
 ast_test '{1 + 2;}'
@@ -81,7 +80,7 @@ ast_test 'for(j from 1 to 10 by 1){1 + 2;3 * 4;}'
 ast_test '1 + 2;3 * 4;172 - 12;'
 COMMENT
 
-# Program
+# Programs
 ast_test 'def func_test(int a) : int ret_name { 1 + 2; 3*4; }'
 ast_test 'def func_test(int a, int b) : int ret_name { 1 + 2; 3*4; }'
 ast_test 'def func_test(int a, int b) : int ret_name

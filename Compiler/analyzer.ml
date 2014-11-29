@@ -32,9 +32,16 @@ let root_environment =
  *Exceptions*
 ************)
 
-(* Expressions *)
-let expr_error =
-  raise (Except("Invalid expression"))
+(* Matrix errors *)
+let matrix_error t1 t2 = match t2 with
+  0 -> raise (Except("Invalid type in matrix"))
+  | _ -> raise (Except("Type mismatch in matrix"))
+
+(* Qubit erros *)
+let qub_error t = match t with
+  0 -> raise (Except("Invalid use of <expr|"))
+  | 1 -> raise (Except("Invalid use of |expr>"))
+  | _ -> raise (Except("Invalid use qubits"))
 
 (* Unary operator errors *)
 let unop_error t = match t with
@@ -71,16 +78,15 @@ let binop_error t = match t with
   | Ast.Leq -> raise (Except("Invalid use of 'expr leq expr'"))
   | Ast.Geq -> raise (Except("Invalid use of 'expr geq expr'"))
 
-(* Qubit erros *)
-let qub_error t = match t with
-  0 -> raise (Except("Invalid use of <expr|"))
-  | 1 -> raise (Except("Invalid use of |expr>"))
-  | _ -> raise (Except("Invalid use qubits"))
+(* Expressions *)
+let expr_error =
+  raise (Except("Invalid expression"))
 
-(* Matrix errors *)
-let matrix_error t1 t2 = match t2 with
-  0 -> raise (Except("Invalid type in matrix"))
-  | _ -> raise (Except("Type mismatch in matrix"))
+(* Statements *)
+
+(* Program *)
+let program_error s =
+  raise (Except("Invalid program caused by " ^ s ^ " declaration"))
 
 (*******************
  *Utility Functions*
@@ -101,9 +107,6 @@ let rec lookup_func name args env =
   try
     let fdecl_found = List.find (fun fdecl -> name = fdecl.sfunc_name) scope.variables in fdecl_found
   with Not_found -> raise Not_found
-
-  (* Determines if function is present in environment *)
-  let rec func_present name args 
 
 (********
  *Checks*
@@ -376,15 +379,61 @@ and check_stmt env = function
     | Ast.For(e1, e2, e3, e4, s) -> check_for e1 e2 e3 e4 s env
     | Ast.While(e, s) -> e s env
 
-
 and add_fdecl fdecl env =
-  fdecl :: env.functions
+  let sfdecl = fdecl_to_sdecl in 
+    fdecl :: env.functions;
 
-and check_fdecl fdecl env =
-  let found = 
-    try
-      lookup_func fdecl.func_name
-    with Not_found ->  add_decl found
+
+let fdecl_to_sdecl fdecl = 
+  {
+    sret_type = fdecl.ret_type;
+    sret_name = 
+  }
+
+
+and sfunc_decl = 
+  {
+    sret_type : sdata_type;
+    sret_name : string;
+    sfunc_name : string;
+    sformal_params : svar_decl list;
+    slocals : svar_decl list;
+    sbody : sstmt list;
+  }
+
+let rec check_locals locals val env = match locals with
+  [] -> false
+  | _ -> if (List.exists (fun x -> x = v) l)
+           then true
+         else
+           check_locals (List.tl l) (List.hd l)
+
+let rec check_fparams fparams val env = match fparams with
+  [] -> false
+  | _ -> if (List.exists (fun x -> x = v) l)
+           then true
+         else
+           check_fparams (List.tl l) (List.hd l)
+
+and rec check_fdecl name env =  
+  try
+    List.find (fun fdecl -> name = fdecl.sfunc_name) scope.variables; true;
+  with Not_found -> false
+
+and check_function fdecl env = 
+  let fail = check_fdecl fdecl.func_name env in match fail with
+    true -> raise program_error fdecl.name
+    | false ->
+        let l = fdecl.formal_params in
+          let fail = check_fparams (List.tl l) (List.hd l) env in match fail with
+            true -> raise program_error fdecl.name
+            | false ->
+                let l = fdecl.locals in
+                  let fail = check_locals (List.tl l) (List.hd l) in match fail with
+                    true -> raise program_error fdecl.name
+                    | false ->  add_fdecl fdecl env
+
+and check_vdecl vdecl env
 
   let vdecl =
     try
@@ -397,19 +446,6 @@ and check_fdecl fdecl env =
 
   Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
 
-  type environment = { scope : symbol_table;
-                     mutable functions : Sast.sfunc_decl list; }
-
-and sfunc_decl = 
-  {
-    sret_type : sdata_type;
-    sret_name : string;
-    sfunc_name : string;
-    sformal_params : svar_decl list;
-    slocals : svar_decl list;
-    sbody : sstmt list;
-  }
-
 let check_program fdecls =
   let env = root_environment in
-    List.map (check_fdecl fdecls env)
+    List.map (check_functions fdecls env);
