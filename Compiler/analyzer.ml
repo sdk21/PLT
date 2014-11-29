@@ -12,9 +12,12 @@ exception Except of string
 (* Symbol Table *)
 (* we may not need a parent symbol table if we don't have nested scope *)
 type symbol_table = { parent : symbol_table option;
-                      formal_params : Sast.svar_decl list option;
-                      return_type : Sast.sdata_type;
-                      mutable variables : Sast.svar_decl list; }
+                      ret_type : Ast.data_type;
+                      ret_name : string;
+                      func_name : string;
+                      formal_params : Ast.var_decl list option;
+                      locals : Ast.var_decl list option;
+                      mutable variables : Ast.var_decl list; }
 
 (* Environment *)
 type environment = { scope : symbol_table;
@@ -27,6 +30,38 @@ let root_symbol_table =
 (* Root environment *)
 let root_environment = 
   {scope = root_symbol_table; functions = None}
+
+let fdecl_to_sdecl fdecl = 
+  {
+    sret_type = fdecl.ret_type;
+    sret_name = fdecl.ret_name;
+    sfunc_name = fdecl.func_name;
+    sformal_params = fdecl.formal_params;
+    slocals = fdecl.locals;
+    sbody = fdecl.body;
+  }
+
+  let new_symbol_table parent ret_type ret_name func_name formal_params locals =
+  {
+    parent = Some(parent);
+    ret_type = ret_type;
+    ret_name = ret_name;
+    func_name = func_name;
+    formal_params = formal_params;
+    locals = locals;
+    variables = [];
+  }
+
+  let update_env scope func =
+  {
+    scope = scope;
+    functions = func :: functions; 
+  }
+
+let rec check_fdecl name env =  
+  try
+    List.find (fun fdecl -> name = fdecl.func_name) scope.variables; true;
+  with Not_found -> false
 
 (************
  *Exceptions*
@@ -83,6 +118,8 @@ let expr_error =
   raise (Except("Invalid expression"))
 
 (* Statements *)
+let if_error =
+  raise (Except("Invalid use of if (predicate must evaluate to 1 (true) or 0 (false)"))
 
 (* Program *)
 let program_error s =
@@ -112,7 +149,21 @@ let rec lookup_func name args env =
  *Checks*
 ********)
 
-  (* Checks expressions *)
+(*
+(* Check variable declarations *)
+and check_vdecl vdecl env =
+    try
+      lookup_var name env.scope
+     with Not_found ->
+       raise (Except("Undeclared identifier: " ^ name))
+  in
+    let t = vdecl.styp in
+      Sast.Expr(Sast.Id(name), t)
+
+  Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
+*)
+
+(* Checks expressions *)
 let rec check_expr env = function
   Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
   | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
@@ -207,6 +258,7 @@ and check_assign name e env =
               else
                 raise (Except("Invalid assignment"))
 
+(* Check function calls *)
 and check_call name args env = 
   let fdecl =
     try
@@ -372,53 +424,46 @@ and check_binop e1 op e2 env =
                         |  _ -> binop_error op)
                     | _ -> binop_error op)))
 
+and rec check_block l env =
+  List.iter (check_stmt l env)
+
+and rec check_if e s env =
+    let e = check_expr env e in
+      match e with
+        Sast.Expr(_, t) ->
+          (match t with 
+            Sast.Int ->
+            | _ -> if_error )
+
+and rec check_for e1 e2 e3 e4 e5 s =
+
+and rec check_while e s env =
+
 and check_stmt env = function
-    Ast.Expr(e) -> check_expr e env
-    | Ast.Block(l) -> check_block l env
-    | Ast.If(e, s) -> check_if e s env
-    | Ast.For(e1, e2, e3, e4, s) -> check_for e1 e2 e3 e4 s env
-    | Ast.While(e, s) -> e s env
+  Ast.Expr(e) -> Sast.Expr(check_expr env e)
+  | Ast.Block(l) -> Sast.Block(check_block l env)
+  | Ast.If(e, s) -> Sast.If(check_if e s env)
+  | Ast.For(e1, e2, e3, e4, s) -> Sast.For(check_for e1 e2 e3 e4 s env)
+  | Ast.While(e, s) -> Sast.While(check_while e s env)
 
 and add_fdecl fdecl env =
-  let sfdecl = fdecl_to_sdecl in 
-    fdecl :: env.functions;
+  let new_scope = new_symbol_table env.scope fdecl.ret_type fdecl.ret_name fdecl.func_name fdecl.formal_params fdecl.locals in
+    let new_env = update_env new_scope fdecl in
+      List.map (check_body fdecl.body)
 
-
-let fdecl_to_sdecl fdecl = 
-  {
-    sret_type = fdecl.ret_type;
-    sret_name = 
-  }
-
-
-and sfunc_decl = 
-  {
-    sret_type : sdata_type;
-    sret_name : string;
-    sfunc_name : string;
-    sformal_params : svar_decl list;
-    slocals : svar_decl list;
-    sbody : sstmt list;
-  }
-
-let rec check_locals locals val env = match locals with
+and rec check_locals locals val env = match locals with
   [] -> false
   | _ -> if (List.exists (fun x -> x = v) l)
            then true
          else
            check_locals (List.tl l) (List.hd l)
 
-let rec check_fparams fparams val env = match fparams with
+and rec check_fparams fparams val env = match fparams with
   [] -> false
   | _ -> if (List.exists (fun x -> x = v) l)
            then true
          else
            check_fparams (List.tl l) (List.hd l)
-
-and rec check_fdecl name env =  
-  try
-    List.find (fun fdecl -> name = fdecl.sfunc_name) scope.variables; true;
-  with Not_found -> false
 
 and check_function fdecl env = 
   let fail = check_fdecl fdecl.func_name env in match fail with
@@ -433,19 +478,6 @@ and check_function fdecl env =
                     true -> raise program_error fdecl.name
                     | false ->  add_fdecl fdecl env
 
-and check_vdecl vdecl env
-
-  let vdecl =
-    try
-      lookup_var name env.scope
-     with Not_found ->
-       raise (Except("Undeclared identifier: " ^ name))
-  in
-    let t = vdecl.styp in
-      Sast.Expr(Sast.Id(name), t)
-
-  Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
-
 let check_program fdecls =
   let env = root_environment in
-    List.map (check_functions fdecls env);
+    List.map (check_function fdecls env);

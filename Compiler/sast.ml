@@ -34,8 +34,7 @@ and  sexpr =
 
 (* Statements *)
 and sstmt =
-  Expr of expr_wrapper
-  | Block of sstmt list
+    Block of sstmt list
   | If of expr_wrapper * sstmt
   | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
   | While of expr_wrapper * sstmt
