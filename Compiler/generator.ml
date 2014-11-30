@@ -69,37 +69,30 @@ and cppVarDecl vardeclist =
 
 and cppExpr = function
   Binop(expr1, op, expr2, _) -> writeBinop expr1 op expr2
+  | Lit_int(lit, _) -> "%s " lit
+  | Lit_float(flit, _) -> "%s " flit 
+
+
   (*
-  | Lit_int(lit, _) -> 
-  | Lit_float(flit, _) ->
   | Lit_comp(comlit, _) ->
   | Qub of expr_wrapper
   | Mat of expr_wrapper list list
   | Id(str) of string
   | Unop(op,  of Ast.un_op * expr_wrapper
-  | Assign(name, expr) of string * expr_wrapper
-  | Call of string * expr_wrapper list
-  | Noexpr
   *)
 
-(*
-and cppStmt = function
-    Sexpr(sexpr) -> writeExpr sexpr
-    | Block (stmtlist) -> 
-            List.fold_left (fun a b -> a ^ (cppStmt b)) "" stmtlist    
-    | If(expr , stmt) -> writeIfStmt expr stmt
-    | For(var,init, final, increment, stmt) -> 
-            writeForStmt var init final increment stmt
-    | While(expr, stmt) -> writeWhileStmt expr stmt
-*)
+  | Assign(name, expr) -> "%s = %s" name cppExpr expr
+ (* | Call of string * expr_wrapper list *)
+  | Noexpr -> ""
+  
 
 (* For generating statements *)
 and cppStmt stmts = match stmts with
 Sast.Sexpr(sexpr) -> cppExpr expr ^ ";\n"  
   | Sast.Block(sstmt list) -> cppStmtBlock sstmt list
   | Sast.If(expr_wrapper * sstmt) -> writeIfStmt expr_wrapper sstmt
-  | Sast.For(expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt) 
-     -> writeForStmt expr_wrapper sstmt
+  | Sast.For(var,init, final, increment, stmt) -> 
+            writeForStmt var init final increment stmt
   | Sast.While(expr_wrapper * sstmt) -> writeWhileStmt expr_wrapper sstmt
 
 
