@@ -22,7 +22,7 @@ let rec writeToFile fileName progString =
 and gen_program fileName prog =
     let cppString = writeCpp prog in
     let out = sprintf "
-    headers #include <Eigen> #include <stdio>
+    #include <Eigen> #include <stdio>
     %s
     " cppString in 
     writeToFile fileName out;
@@ -41,9 +41,9 @@ and cpp_funcList func =
     let cppfunc = sprintf "
     %s %s (%s){
         %s
-        return ^ %s
+        return %s
     }
-    " cppRtnType cppFName cppFParam cppFBody cppRtnType
+    " cppRtnType cppFName cppFParam cppFBody cppRtnValue
 
 and cppReturnType  = function
 
