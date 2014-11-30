@@ -82,6 +82,7 @@ and cppExpr = function
   | Noexpr
   *)
 
+(*
 and cppStmt = function
     Sexpr(sexpr) -> writeExpr sexpr
     | Block (stmtlist) -> 
@@ -90,20 +91,21 @@ and cppStmt = function
     | For(var,init, final, increment, stmt) -> 
             writeForStmt var init final increment stmt
     | While(expr, stmt) -> writeWhileStmt expr stmt
+*)
 
 (* For generating statements *)
-and writeStmts stmts = match stmts with
-Sast.Sexpr(sexpr) -> writeExpr expr ^ ";\n"
-  | Sast.Block(sstmt list) -> writeStmtBlock sstmt list
+and cppStmt stmts = match stmts with
+Sast.Sexpr(sexpr) -> cppExpr expr ^ ";\n"  
+  | Sast.Block(sstmt list) -> cppStmtBlock sstmt list
   | Sast.If(expr_wrapper * sstmt) -> writeIfStmt expr_wrapper sstmt
   | Sast.For(expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt) 
      -> writeForStmt expr_wrapper sstmt
   | Sast.While(expr_wrapper * sstmt) -> writeWhileStmt expr_wrapper sstmt
 
 
-and writeStmtBlock sstmtl = 
+and cppStmtBlock sstmtl = 
 let slist = List.fold_left (fun output element ->
-    let stmt = writeStmts  element in
+    let stmt = cppStmt  element in
     output ^ stmt ^ "\n") "" slist in
     "\n{\n" ^ slist ^ "}\n"
 
@@ -120,8 +122,8 @@ and writeIfStmt expr stmt =
 	*)
 
 and writeWhileStmt expr stmt = 
-let condString = writeCondition expr 
-  and stmtString = writeStmts stmt in 
+let condString = cppExpr expr  
+  and stmtString = cppStmt stmt in 
     sprintf "while (%s)\n%s\n" condString stmtString
 
 and writeForStmt var init final increment stmt =
