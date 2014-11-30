@@ -82,7 +82,6 @@ and cppExpr = function
   | Noexpr
   *)
 
-
 and cppStmt = function
     Sexpr(sexpr) -> writeExpr sexpr
     | Block (stmtlist) -> 
@@ -91,6 +90,23 @@ and cppStmt = function
     | For(var,init, final, increment, stmt) -> 
             writeForStmt var init final increment stmt
     | While(expr, stmt) -> writeWhileStmt expr stmt
+
+(* For generating statements *)
+and writeStmts stmts = match stmts with
+Sast.Sexpr(sexpr) -> writeExpr expr ^ ";\n"
+  | Sast.Block(sstmt list) -> writeStmtBlock sstmt list
+  | Sast.If(expr_wrapper * sstmt) -> writeIfStmt expr_wrapper sstmt
+  | Sast.For(expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt) 
+     -> writeForStmt expr_wrapper sstmt
+  | Sast.While(expr_wrapper * sstmt) -> writeWhileStmt expr_wrapper sstmt
+
+
+and writeStmtBlock sstmtl = 
+let slist = List.fold_left (fun output element ->
+    let stmt = writeStmts  element in
+    output ^ stmt ^ "\n") "" slist in
+    "\n{\n" ^ slist ^ "}\n"
+
 
 (*
 and writeIfStmt expr stmt = 
@@ -101,6 +117,12 @@ and writeIfStmt expr stmt =
 			%s
 		} " cond body
 	in 
+	*)
+
+and writeWhileStmt expr stmt = 
+let condString = writeCondition expr 
+  and stmtString = writeStmts stmt in 
+    sprintf "while (%s)\n%s\n" condString stmtString
 
 and writeForStmt var init final increment stmt =
     let varname = var 
@@ -113,8 +135,6 @@ and writeForStmt var init final increment stmt =
     for (int %s = %s; %s < %s ; %s = %s + %s){
         %s
         }" varname initvaluevarname finalvalue varname varname incrementval stmtbody
-	*)
-
 
 and writeBinop expr1 op expr2 = 
     let e1 = cppExpr expr1 and e2 = cppExpr expr2 in 
@@ -136,3 +156,6 @@ and writeBinop expr1 op expr2 =
 		| And 	-> sprintf "%s && %s" e1 e2
 		(*| Xor 	-> sprintf "%s ^ %s" e1 e2*)
 	in binopFunc e1 op e2
+
+
+
