@@ -49,6 +49,7 @@ and cppReturnType  = function
 
 and cppReturnValue = function
 
+
 and cppVarDecl = function
 
 and cppStmt = function 
@@ -56,4 +57,34 @@ and cppStmt = function
     | For(var,init, final, increment, stmt) -> 
             writeForStmt var init final increment stmt
     | While(expr, stmt) -> writeWhileStmt expr stmt  
+
+
+
+and writeWhileStmt expr stmt = 
+let condString = writeCondition expr 
+  and stmtString = writeStmts stmt in 
+    sprintf "while (%s)\n%s\n" condString stmtString
+
+
+
+(* For generating statements *)
+and writeStmts stmts = match stmts with
+Sast.Sexpr(sexpr) -> writeExpr expr ^ ";\n"
+  | Sast.Block(sstmt list) -> writeStmtBlock sstmt list
+  | Sast.If(expr_wrapper * sstmt) -> writeIfStmt expr_wrapper sstmt
+  | Sast.For(expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt) 
+     -> writeForStmt expr_wrapper sstmt
+  | Sast.While(expr_wrapper * sstmt) -> writeWhileStmt expr_wrapper sstmt
+
+
+and writeStmtBlock sstmtl = 
+let slist = List.fold_left (fun output element ->
+    let stmt = writeStmts  element in
+    output ^ stmt ^ "\n") "" slist in
+    "\n{\n" ^ slist ^ "}\n"
+  
+
+
+
+
      
