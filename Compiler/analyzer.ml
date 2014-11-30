@@ -60,6 +60,10 @@ let qub_error t = match t with
   | 1 -> raise (Except("Invalid use of |expr>"))
   | _ -> raise (Except("Invalid use qubits"))
 
+(* Variable declaration errors *)
+let var_decl_error n =
+  raise (Except("Invalid variable declaration: " ^ n ^ " was already declared" ))
+
 (* Unary operator errors *)
 let unop_error t = match t with
   Ast.Neg -> raise (Except("Invalid use of '-expr'"))
@@ -105,7 +109,7 @@ let expr_error =
 
 (* Statements *)
 let if_error =
-  raise (Except("Invalid use of if (predicate must evaluate to 1 (true) or 0 (false)"))
+  raise (Except("Invalid use of 'if' (predicate must evaluate to 1 (true) or 0 (false)"))
 
 (* Program *)
 let program_error s =
@@ -115,8 +119,15 @@ let program_error s =
  *Utility Functions*
 *******************)
 
+(* Check if variable exists in symbol table *)
+let var_exists name scope =
+  List.exists (fun vdecl -> name = vdecl.sname) scope.vars
+
+(* Check if function exists in environment *)
+let func_exists name env =
+  List.exists (fun fdecl -> name = fdecl.sfunc_name) env.functions
+
 (* Lookup variable in symbol table *)
-(* we may not need to make this recursive if we don't have nested scope *)
 let rec lookup_var name scope =
   let vdecl_found = 
     try
@@ -127,10 +138,6 @@ let rec lookup_var name scope =
         | _ -> raise Not_found
    in vdecl_found
 
-(* Check if variable exists in symbol table *)
-let var_exists name scope =
-  List.exists (fun vdecl -> name = vdecl.sname) scope.vars
-
 (* Lookup function in environment *)
 let lookup_func name env =
   let fdecl_found = 
@@ -140,24 +147,21 @@ let lookup_func name env =
   in
     fdecl_found
 
-  (* Check if function exists in environment *)
-let func_exists name env =
-  List.exists (fun fdecl -> name = fdecl.sfunc_name) env.functions
-
 (********
  *Checks*
 ********)
 
 (* Check variable declarations *)
 and check_vdecl vdecl env =
-  let vdecl =
-    try
-      lookup_var vdecl.sname env.scope
-     with Not_found ->
-       raise (Except("Undeclared identifier: " ^ vdecl.sname))
-  in
-    let t = vdecl.styp in
-      Sast.Expr(Sast.Id(vdecl.sname), t)
+  if (var_exists vdecl.name)
+    then var_decl_error vdecl.name
+  else
+    match vdecl.typ with 
+    Ast.Int -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Int)
+    | Ast.Float -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Float)
+    | Ast.Comp -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Comp)
+    | Ast.Mat -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Mat)
+    | Ast.Qub -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Qub)
 
 (* Checks expressions *)
 let rec check_expr env = function
@@ -453,14 +457,15 @@ and check_binop e1 op e2 env =
                           |  _ -> binop_error op)
                       | _ -> binop_error op)))
 
-(*
+
+(* Everything below here needs extensive work *)
+
 and rec check_block l env = 0
 
 and rec check_for e1 e2 e3 e4 e5 s = 0
 
 and rec check_while e s env = 0
-*)
-(*
+
 and rec check_if e s env =
     let e = check_expr env e in
       match e with
@@ -496,18 +501,7 @@ and rec check_fparams fparams val env = match fparams with
            check_fparams (List.tl l) (List.hd l)
 
 and check_function fdecl env = 
-  let fail = func_exists fdecl.func_name env in match fail with
-    true -> program_error fdecl.name
-    | false ->
-        let l = fdecl.formal_params in
-          let fail = check_fparams (List.tl l) (List.hd l) env in match fail with
-            true -> program_error fdecl.name
-            | false ->
-                let l = fdecl.locals in
-                  let fail = check_locals (List.tl l) (List.hd l) in match fail with
-                    true -> program_error fdecl.name
-                    | false ->  add_fdecl fdecl env
-*)
+
 let check_program fdecls =
   let env = root_environment in
     List.map (check_function fdecls env);
