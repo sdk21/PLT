@@ -71,6 +71,9 @@ type stmt =
 (* Statement Lists *)
 type stmt_list =
   stmt list
+
+(* Functions *)
+
  
 (* Variables Declaration *)
 type var_decl = 
