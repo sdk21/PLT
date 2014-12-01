@@ -1,4 +1,4 @@
-(*
+
 open Sast
 open Printf
 
@@ -70,19 +70,16 @@ and cppVarDecl vardeclist =
 
 and cppExpr = function
   Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
-  | Lit_int(lit) -> lit
-  | Lit_float(flit) -> flit 
-  | Lit_comp(comlit) -> comlit (* Not sure how to do this *)
+  | Lit_int(lit) -> lit ^ " "
+  | Lit_float(flit) -> flit ^ " "
+  | Lit_comp(comlit) -> comlit ^ " "(* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
-
-
-
   (*
   | Qub of expr_wrapper
   | Mat of expr_wrapper list list
- *)
+  *)
   | Id(str) -> str 
-  | Assign(name, expr) ->  name  ^ cppExpr expr
+  | Assign(name, expr) ->  name  ^ " = " ^ cppExpr expr
  (* | Call of string * expr_wrapper list *)
   | Noexpr -> ""
   
@@ -171,4 +168,4 @@ and writeUnop op expr =
         | Tan   -> sprintf "  tan((double)%s)" exp
 
     in unopFunc op exp
-*)
+
