@@ -1,4 +1,3 @@
-(*
 open Sast
 open Printf
 
@@ -31,8 +30,7 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
-    #include "../cpp/constants.h"
-    #include "../cpp/tensorProduct.h"
+    #include "../cpp/qlang.h"
 
     using namespace Eigen;
     using namespace std;
@@ -74,11 +72,11 @@ and cppExpr = function
   | Lit_float(flit) -> flit 
   | Lit_comp(comlit) -> comlit (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
+  | Qub(expr) -> writeQubit expr
 
 
 
   (*
-  | Qub of expr_wrapper
   | Mat of expr_wrapper list list
  *)
   | Id(str) -> str 
@@ -169,6 +167,9 @@ and writeUnop op expr =
         | Sin   -> sprintf "  sin((double)%s)" exp
         | Cos   -> sprintf "  cos((double)%s)" exp
         | Tan   -> sprintf "  tan((double)%s)" exp
-
     in unopFunc op exp
-*)
+
+(*probably doesn't work yet due to string format of expr*)
+and writeQubit expr =
+    let exp = cppExpr expr in
+	sprintf "genQubit(%s)" exp
