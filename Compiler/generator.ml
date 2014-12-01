@@ -1,3 +1,4 @@
+(*
 open Sast
 open Printf
 
@@ -171,6 +172,4 @@ and writeUnop op expr =
         | Tan   -> sprintf "  tan((double)%s)" exp
 
     in unopFunc op exp
-
-
-
+*)
