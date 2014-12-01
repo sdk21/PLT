@@ -14,5 +14,8 @@ let _ =
         match action with 
           Ast ->  print_string (Ast.string_of_program program)
           | Sast -> print_string (Ast.string_of_program program)
-          | Gen -> print_string (Ast.string_of_program program)
+          | Gen ->
+                let anotp = Analyzer.check_program in
+                let _ = Generator.gen_program "output" anotp in 
+                  print_string "success!"
           | Debug -> print_string (Ast.string_of_program program)

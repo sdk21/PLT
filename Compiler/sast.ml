@@ -36,7 +36,8 @@ and  sexpr =
 
 (* Statements *)
 and sstmt =
-    Block of sstmt list
+    Sexpr of sexpr
+  | Block of sstmt list
   | If of expr_wrapper * sstmt
   | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
   | While of expr_wrapper * sstmt
@@ -51,7 +52,7 @@ and svar_decl =
 (* Function Declaration *)
 and sfunc_decl = 
   {
-    sret_typ : sdata_type;
+    sret_type : sdata_type;
     sret_name : string;
     sfunc_name : string;
     sformal_params : svar_decl list;
