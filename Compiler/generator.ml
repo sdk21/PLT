@@ -30,8 +30,8 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
-    #include "constants.h"
-    #include "tensorProduct.h"
+    #include "../cpp/constants.h"
+    #include "../cpp/tensorProduct.h"
 
     using namespace Eigen;
     using namespace std;
@@ -71,41 +71,31 @@ and cppVar var =
     sprintf " %s %s" vartype var.sname
    
 and cppExpr = function
-  Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
-  | Lit_int(lit, _) ->  
-  | Lit_float(flit, _) ->
-  | Lit_comp(comlit, _) ->
-  | Qub (expr_wrapper) ->
-  | Mat of (expr_wrap) -> writeMatrix expr_wrap
-  | Id(str) ->
-  | Unop(op, ex) ->
-  | Assign(name, expr) ->
-  | Call ( string, expr) ->
-  | Noexpr
-  
-
-and cppStmt = function
-    Sexpr(sexpr) -> writeExpr sexpr
-    | Block (stmtlist) -> 
-            List.fold_left (fun a b -> a ^ (cppStmt b)) "" stmtlist    
-    | If(expr , stmt) -> writeIfStmt expr stmt
-    | For(var,init, final, increment, stmt) -> 
-            writeForStmt var init final increment stmt
-    | While(expr, stmt) -> writeWhileStmt expr stmt
+  Binop(expr1, op, expr2, _) -> writeBinop expr1 op expr2
+  | Lit_int(lit, _) -> lit
+  | Lit_float(flit, _) -> flit 
+  | Lit_comp(comlit, _) -> comlit (* Not sure how to do this *)
+  (*| Qub of expr_wrapper*)
+  | Mat (expr_wrap) -> writeMatrix expr_wrap
+  | Id(str) -> str 
+  | Unop(op, expr) ->  writeUnop op expr
+  | Assign(name, expr) ->  name  ^ cppExpr expr
+ (* | Call of string * expr_wrapper list *)
+  | Noexpr -> ""
 
 (* For generating statements *)
-and writeStmts stmts = match stmts with
-  Sast.Sexpr(sexpr) -> writeExpr expr ^ ";\n"
-  | Sast.Block(sstmt list) -> writeStmtBlock sstmt list
+and cppStmt stmts = match stmts with
+Sast.Sexpr(sexpr) -> cppExpr expr ^ ";\n"  
+  | Sast.Block(sstmt list) -> cppStmtBlock sstmt list
   | Sast.If(expr_wrapper * sstmt) -> writeIfStmt expr_wrapper sstmt
-  | Sast.For(expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt) 
-     -> writeForStmt expr_wrapper sstmt
+  | Sast.For(var,init, final, increment, stmt) -> 
+            writeForStmt var init final increment stmt
   | Sast.While(expr_wrapper * sstmt) -> writeWhileStmt expr_wrapper sstmt
 
 
-and writeStmtBlock sstmtl = 
+and cppStmtBlock sstmtl = 
 let slist = List.fold_left (fun output element ->
-    let stmt = writeStmts  element in
+    let stmt = cppStmt  element in
     output ^ stmt ^ "\n") "" slist in
     "\n{\n" ^ slist ^ "}\n"
 
@@ -118,8 +108,8 @@ and writeIfStmt expr stmt =
 		} " cond body 
 	
 and writeWhileStmt expr stmt = 
-let condString = writeCondition expr 
-  and stmtString = writeStmts stmt in 
+let condString = cppExpr expr  
+  and stmtString = cppStmt stmt in 
     sprintf "while (%s)\n%s\n" condString stmtString
 
 and writeForStmt var init final increment stmt =
@@ -163,7 +153,24 @@ and writeRow row_expr =
     let rowStr = List.fold_left (fun a b -> a ^ (cppExpr b) ^ "," ) row_expr in
     sprintf "%s" rowStr
 
+and writeUnop op expr = 
+    let exp = cppExpr expr in 
+        let unopFunc op exp = match op with
+        Neg     -> sprintf "  -%s" exp
+        | Not   -> sprintf "  !(%s)" exp
+        | Re    -> sprintf "  %s" exp  (* work from here *)
+        | Im    -> sprintf "  %s" exp
+        | Norm  -> sprintf "  %s" exp
+        | Trans -> sprintf "  %s" exp
+        | Det   -> sprintf "  %s" exp
+        | Adj   -> sprintf "  %s" exp
+        | Conj  -> sprintf "  %s" exp
+        | Unit  -> sprintf "  %s" exp  (* till here *)
+        | Sin   -> sprintf "  sin((double)%s)" exp
+        | Cos   -> sprintf "  cos((double)%s)" exp
+        | Tan   -> sprintf "  tan((double)%s)" exp
 
+    in unopFunc op exp
 
 and cppVarDecl vardeclist =
    let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
