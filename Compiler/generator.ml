@@ -69,19 +69,19 @@ and cppVarDecl vardeclist =
 
 and cppExpr = function
   Binop(expr1, op, expr2, _) -> writeBinop expr1 op expr2
-  | Lit_int(lit, _) -> "%s " lit
-  | Lit_float(flit, _) -> "%s " flit 
+  | Lit_int(lit, _) -> lit
+  | Lit_float(flit, _) -> flit 
+  | Lit_comp(comlit, _) -> comlit (* Not sure how to do this *)
+
 
 
   (*
-  | Lit_comp(comlit, _) ->
   | Qub of expr_wrapper
   | Mat of expr_wrapper list list
-  | Id(str) of string
-  | Unop(op,  of Ast.un_op * expr_wrapper
-  *)
-
-  | Assign(name, expr) -> "%s = %s" name cppExpr expr
+ *)
+  | Id(str) -> str 
+  | Unop(op, expr) ->  writeUnop op expr
+  | Assign(name, expr) ->  name  ^ cppExpr expr
  (* | Call of string * expr_wrapper list *)
   | Noexpr -> ""
   
@@ -151,6 +151,26 @@ and writeBinop expr1 op expr2 =
 		| And 	-> sprintf "%s && %s" e1 e2
 		(*| Xor 	-> sprintf "%s ^ %s" e1 e2*)
 	in binopFunc e1 op e2
+
+
+and writeUnop op expr = 
+    let exp = cppExpr expr in 
+        let unopFunc op exp = match op with
+        Neg     -> sprintf "  -%s" exp
+        | Not   -> sprintf "  !(%s)" exp
+        | Re    -> sprintf "  %s" exp  (* work from here *)
+        | Im    -> sprintf "  %s" exp
+        | Norm  -> sprintf "  %s" exp
+        | Trans -> sprintf "  %s" exp
+        | Det   -> sprintf "  %s" exp
+        | Adj   -> sprintf "  %s" exp
+        | Conj  -> sprintf "  %s" exp
+        | Unit  -> sprintf "  %s" exp  (* till here *)
+        | Sin   -> sprintf "  sin((double)%s)" exp
+        | Cos   -> sprintf "  cos((double)%s)" exp
+        | Tan   -> sprintf "  tan((double)%s)" exp
+
+    in unopFunc op exp
 
 
 
