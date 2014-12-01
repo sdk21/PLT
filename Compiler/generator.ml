@@ -72,7 +72,7 @@ and cppExpr = function
   Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
   | Lit_int(lit) -> lit ^ " "
   | Lit_float(flit) -> flit ^ " "
-  | Lit_comp(comlit) -> comlit ^ " "(* Not sure how to do this *)
+  | Lit_comp(comlit) -> " (" ^ writeUnop Re comlit "," ^ writeUnop Im comlit ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
   (*
   | Qub of expr_wrapper
