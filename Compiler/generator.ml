@@ -30,8 +30,8 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
-    #include "constants.h"
-    #include "tensorProduct.h"
+    #include "../cpp/constants.h"
+    #include "../cpp/tensorProduct.h"
 
     using namespace Eigen;
     using namespace std;
