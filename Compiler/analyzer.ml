@@ -34,9 +34,9 @@ let root_environment =
   { scope = root_symbol_table;
     functions = []; }
 
-(************
- *Exceptions*
-************)
+(**************
+ * Exceptions *
+**************)
 
 exception Except of string
 
@@ -110,7 +110,6 @@ let while_error =
  * Utility Functions *
 *********************)
 
-(* Check if variable exists in symbol table *)
 let var_exists name scope =
   let formal =
     List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param
@@ -122,11 +121,9 @@ let var_exists name scope =
       in
         local
 
-(* Check if function exists in environment *)
 let func_exists name env =
   List.exists (fun fdecl -> name = fdecl.sfunc_name) env.functions
 
-(* Lookup variable in symbol table *)
 let rec lookup_var name scope =
   let vdecl_found = 
     try
@@ -141,7 +138,6 @@ let rec lookup_var name scope =
     in
       vdecl_found
 
-(* Lookup function in environment *)
 let lookup_func name env =
   let fdecl_found = 
     try
@@ -662,4 +658,4 @@ and check_program fdecls =
   let env =
     List.fold_left check_function root_environment (List.rev fdecls)
   in
-    env
+    env.functions
