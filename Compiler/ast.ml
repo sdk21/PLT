@@ -71,9 +71,6 @@ type stmt =
 (* Statement Lists *)
 type stmt_list =
   stmt list
-
-(* Functions *)
-
  
 (* Variables Declaration *)
 type var_decl = 
@@ -85,7 +82,7 @@ type var_decl =
 (* Function Declaration *)
 type func_decl = 
   {
-    ret_type : data_type;
+    ret_typ : data_type;
     ret_name : string;
     func_name : string;
     formal_params : var_decl list;
@@ -164,8 +161,8 @@ let string_of_var_decl var_decl =
   
 (* method for printing func_decls *)    
 let string_of_fdecl fdecl =
-  "fdecl:\nret_type: " ^ 
-    (match fdecl.ret_type with
+  "fdecl:\nret_typ: " ^ 
+    (match fdecl.ret_typ with
       Int -> " int "
     | Float -> " float "
     | Comp -> " comp "

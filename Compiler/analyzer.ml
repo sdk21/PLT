@@ -61,8 +61,12 @@ let qub_error t = match t with
   | _ -> raise (Except("Invalid use qubits"))
 
 (* Variable declaration errors *)
-let var_decl_error n =
-  raise (Except("Invalid variable declaration: " ^ n ^ " was already declared" ))
+let var_decl_error s =
+  raise (Except("Invalid variable declaration: " ^ s ^ " was already declared" ))
+
+(* Function declaration errors *)
+let func_decl_error s =
+  raise (Except("Invalid function declaration: " ^ s ^ " was already declared" ))
 
 (* Unary operator errors *)
 let unop_error t = match t with
@@ -108,12 +112,14 @@ let expr_error =
     raise (Except("Undeclared function or function signature mismatch"))
 
 (* Statements *)
-let if_error =
-  raise (Except("Invalid use of 'if' (predicate must evaluate to 1 (true) or 0 (false)"))
+let for_error =
+  raise (Except("Invalid use of 'for'"))
 
-(* Program *)
-let program_error s =
-  raise (Except("Invalid program caused by " ^ s ^ " declaration"))
+let while_error =
+  raise (Except("Invalid use of 'while'"))
+
+let if_error =
+  raise (Except("Invalid use of 'if'"))
 
 (*******************
  *Utility Functions*
@@ -147,34 +153,26 @@ let lookup_func name env =
   in
     fdecl_found
 
+let vdecl_to_sdecl vdecl =
+    match vdecl.typ with
+      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; }
+      | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; }
+      | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; }
+      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; }
+      | Ast.Qub -> { styp = Sast.Qub; sname = vdecl.name; }
+
 (********
  *Checks*
 ********)
 
 (* Check variable declarations *)
-and check_vdecl vdecl env =
-  if (var_exists vdecl.name)
-    then var_decl_error vdecl.name
-  else
-    match vdecl.typ with 
-    Ast.Int -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Int)
-    | Ast.Float -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Float)
-    | Ast.Comp -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Comp)
-    | Ast.Mat -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Mat)
-    | Ast.Qub -> Sast.Expr(Sast.Id(vdecl.sname), Sast.Qub)
-
-(* Checks expressions *)
-let rec check_expr env = function
-  Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
-  | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
-  | Ast.Lit_comp(f1, f2) -> Sast.Expr(Sast.Lit_comp(f1, f2), Sast.Comp)
-  | Ast.Qub(e, bk) -> check_qub e bk env
-  | Ast.Id(s) -> check_id s env
-  | Ast.Unop(op, e) -> check_unop op e env
-  | Ast.Binop(e1, op, e2) -> check_binop e1 op e2 env
-  | Ast.Assign(s, e) -> check_assign s e env
-  | Ast.Call(s, l) -> check_call s l env
-  | _ -> expr_error
+let rec check_vdecl vdecl env =
+  let found =
+    var_exists vdecl.name env.scope
+  in
+    match found with
+    true -> var_decl_error vdecl.name
+    | false -> vdecl_to_sdecl vdecl
 
 (* Checks qubit expression (all 0s and 1s?) *)
 and check_qub_expr e env =
@@ -207,7 +205,7 @@ and check_qub e bk env =
 
 (* Check matricies
 and check_mat l env = 
-  List.map (check_mat_exprs_helper l env);
+  List.map (fun mat_expr -> mat_expr env) l;
 
 (* Check matrix expressions helper *)
 and check_mat_exprs_helper l env =
@@ -258,6 +256,19 @@ and check_assign name e env =
                 then Sast.Expr(Sast.Assign(name, e), t1)
               else
                 raise (Except("Invalid assignment"))
+
+(* Checks expressions *)
+and check_expr env = function
+  Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
+  | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
+  | Ast.Lit_comp(f1, f2) -> Sast.Expr(Sast.Lit_comp(f1, f2), Sast.Comp)
+  | Ast.Qub(e, bk) -> check_qub e bk env
+  | Ast.Id(s) -> check_id s env
+  | Ast.Unop(op, e) -> check_unop op e env
+  | Ast.Binop(e1, op, e2) -> check_binop e1 op e2 env
+  | Ast.Assign(s, e) -> check_assign s e env
+  | Ast.Call(s, l) -> check_call s l env
+  | _ -> expr_error
 
 (* Check function call parameters *)
 and check_call_params formal_params params =
@@ -457,27 +468,64 @@ and check_binop e1 op e2 env =
                           |  _ -> binop_error op)
                       | _ -> binop_error op)))
 
+and check_block stmts env =
+    let sstmts =
+      List.map (fun stmt -> check_stmt env stmt) stmts
+    in
+      Sast.Block(sl)
 
-(* Everything below here needs extensive work *)
+and check_for e1 e2 e3 e4 e5 s =
+  let se1 =
+    check_expr env e1
+  in
+    let se2 =
+      check_expr env e2
+    in
+      match se2 with
+        Sast.Expr(_, Sast.Int) ->
+          let se3 =
+            check_expr env e3
+          in
+            match se3 with
+              Sast.Expr(_, Sast.Int) ->
+                let se4 =
+                  check_expr env e4
+                in
+                  match se4 with
+                    Sast.Expr(_, Sast.Int) ->
+                      let se5 =
+                        check_expr env e5
+                      in
+                        match se5 with
+                          Sast.Expr(_, Sast.Int) ->
+                            let ss =
+                              check_stmt env in
+                                match ss with
+                                  Sast.E
+                          | _ -> for_error
+                    | _ -> for_error
+              | _ -> for_error
+        | _ -> for_error
 
-and rec check_block l env = 0
+and check_while e s env = 0
 
-and rec check_for e1 e2 e3 e4 e5 s = 0
 
-and rec check_while e s env = 0
-
-and rec check_if e s env =
-    let e = check_expr env e in
-      match e with
-        Sast.Expr(_, t) ->
-          (match t with 
-            Sast.Int ->
-            | _ -> if_error )
+and check_if e s env =
+    let se =
+      check_expr env e
+    in
+      match se with
+        Sast.Expr(_, Sast.Int) ->
+          let ss =
+            check_stmt s env
+          in
+            Sast.If(se, ss)
+        | _ -> if_error )
 
 and check_stmt env = function
   Ast.Expr(e) -> Sast.Expr(check_expr env e)
   | Ast.Block(l) -> Sast.Block(check_block l env)
-  | Ast.If(e, s) -> Sast.If(check_if e s env)
+  | Ast.If(e, s) -> check_if e s env
   | Ast.For(e1, e2, e3, e4, s) -> Sast.For(check_for e1 e2 e3 e4 s env)
   | Ast.While(e, s) -> Sast.While(check_while e s env)
 
@@ -486,22 +534,149 @@ and add_fdecl fdecl env =
     let new_env = update_env new_scope fdecl env in
       List.map (check_body fdecl.body)
 
-and rec check_locals locals val env = match locals with
-  [] -> false
-  | _ -> if (List.exists (fun x -> x = v) l)
-           then true
-         else
-           check_locals (List.tl l) (List.hd l)
+(* Converts formal_param to sformal_param *)
+and formal_to_sformal scope formal_param  =
+  let found =
+    var_exists formal_param.name scope
+  in
+    match found with
+      true -> var_decl_error formal_param.name
+      | false ->
+          let sdecl = 
+            vdecl_to_sdecl formal_param
+          in
+            let new_vars = 
+              sdecl :: scope.vars
+            in
+              let new_scope =
+                { parent = scope.parent;
+                  ret_typ = scope.ret_typ;
+                  ret_nam = scope.ret_nam;
+                  func_nam = scope.func_nam;
+                  vars =  new_vars; }
+              in
+                new_scope
 
-and rec check_fparams fparams val env = match fparams with
-  [] -> false
-  | _ -> if (List.exists (fun x -> x = v) l)
-           then true
-         else
-           check_fparams (List.tl l) (List.hd l)
+(* Converts formal_params to sformal_params *)
+and formals_to_sformals scope formal_params =
+  let new_scope = 
+    List.fold_left formal_to_sformal scope formal_params
+  in
+    new_scope
 
+(* Converts local to slocal *)
+and local_to_slocal scope local =
+  let found =
+    var_exists local.name scope
+  in
+    match found with
+      true -> var_decl_error local.name
+      | false ->
+          let sdecl = 
+            vdecl_to_sdecl local
+          in
+            let new_vars = 
+              sdecl :: scope.vars
+            in
+              let new_scope =
+                { parent = scope.parent;
+                  ret_typ = scope.ret_typ;
+                  ret_nam = scope.ret_nam;
+                  func_nam = scope.func_nam;
+                  vars =  new_vars; }
+              in
+                new_scope
+
+(* Converts locals to sclocals *)
+and locals_to_slocals scope locals =
+  let new_scope = 
+    List.fold_left local_to_slocal scope locals
+  in
+    new_scope
+
+(* Converts ret_typ to sret_typ *)
+and ret_to_sret scope ret_typ =
+  let sret_typ = 
+    match ret_typ with
+      Ast.Int -> Sast.Int
+      | Ast.Float -> Sast.Float
+      | Ast.Comp -> Sast.Comp
+      | Ast.Mat -> Sast.Mat
+      | Ast.Qub -> Sast.Qub
+  in
+    let new_scope =
+      { parent = scope.parent;
+        ret_typ = Some(sret_typ);
+        ret_nam = scope.ret_nam;
+        func_nam = scope.func_nam;
+        vars =  scope.vars; }
+    in
+      new_scope
+
+(* Converts ret_name to sret_name *)
+and rname_to_srname scope ret_name =
+    let new_scope =
+      { parent = scope.parent;
+        ret_typ = scope.ret_typ;
+        ret_nam = Some(ret_name);
+        func_nam = scope.func_nam;
+        vars =  scope.vars; }
+    in
+      new_scope
+
+(* Converts fname to sfname *)
+and fname_to_sfname scope func_name =
+    let new_scope =
+      { parent = scope.parent;
+        ret_typ = scope.ret_typ;
+        ret_nam = scope.ret_nam;
+        func_nam = Some(func_name);
+        vars =  scope.vars; }
+    in
+      new_scope
+
+(* Converts fdecl to sdecl *)
+and fdecl_to_sdecl fdecl env = 
+  let new_scope = 
+    formals_to_sformals env.scope fdecl.formal_params
+  in
+    let new_scope =
+      locals_to_slocals new_scope fdecl.locals
+    in
+      let new_scope =
+        ret_to_sret new_scope fdecl.ret_typ
+      in
+        let new_scope =
+          rname_to_srname new_scope fdecl.ret_name
+        in
+          let new_scope =
+            fname_to_sfname new_scope fdecl.func_name
+          in
+            let new_env =
+              { scope = new_scope; functions = env.functions; }
+            in
+              let stmts =
+                List.map (fun stmt -> check_stmt new_env stmt) fdecl.body
+              in
+                {sret_typ = ret_typ; sret_name = ret_name; sfunc_name = func_name; body = stmts; }
+
+(* Converts fdecls to sdecls *)
 and check_function fdecl env = 
-
-let check_program fdecls =
-  let env = root_environment in
-    List.map (check_function fdecls env);
+  let found =
+    func_exists fdecl.func_name
+  in
+    match found with
+      true -> func_decl_error fdecl.func_name
+      | false ->
+          let sfdecl =
+            fdecl_to_sdecl fdecl
+          in
+            let env =
+              env_update_fdecls sfdecl
+            in
+              env
+and check_program fdecls =
+  let new_env = 
+    List.fold_left check_function env (List.rev fdecls)
+  in
+    new_env.functions

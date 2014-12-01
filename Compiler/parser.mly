@@ -80,7 +80,7 @@ fdecl:
    DEF ID LPAREN formal_params RPAREN COLON vtype ID LBRACE vdecl_list stmt_list RBRACE
      { { func_name = $2;
          formal_params = $4;
-         ret_type = $7;
+         ret_typ = $7;
          ret_name = $8;
 	       locals = List.rev $10;
 	       body = List.rev $11; } }
@@ -151,7 +151,6 @@ stmt:
   | FOR LPAREN expr FROM expr TO expr by RPAREN stmt { For($3, $5, $7, $8, $10) }
   | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
   | IF LPAREN expr RPAREN stmt                       { If($3, $5) }
-
 
 stmt_list:
   /* nothing  */ { [] }
