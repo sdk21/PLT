@@ -49,8 +49,8 @@ and cpp_funcList func =
     and cppRtnValue = cppReturnValue func.sret_name
     and cppFName = func.sfunc_name
     and cppFParam = cppVarDecl func.sformal_params
-    and cppFBody = cppStmt func.sbody in
-    and cppLocals = cppLocalVar func.slocals
+    and cppFBody = cppStmt func.sbody 
+    and cppLocals = cppLocalVar func.slocals in
     let cppfunc = sprintf "
     %s %s (%s){
         %s
@@ -58,29 +58,31 @@ and cpp_funcList func =
     }
     " cppRtnType cppFName cppFParam cppFBody cppRtnValue
 
-and cppReturnType  = function
+and cppReturnType rtntype  = cpp_from_type rtntype 
 
-
-and cppReturnValue = function
+and cppReturnValue rtnval = rtnval
 
 and cppVarDecl vardeclist =
    let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
    sprintf "%s" varDecStr 
 
+and cppVar var =
+    let vartype = cpp_from_type var.styp in 
+    sprintf " %s %s" vartype var.sname
+   
 and cppExpr = function
-  Binop(expr1, op, expr2, _) -> writeBinop expr1 op expr2
-  (*
-  | Lit_int(lit, _) -> 
+  Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
+  | Lit_int(lit, _) ->  
   | Lit_float(flit, _) ->
   | Lit_comp(comlit, _) ->
-  | Qub of expr_wrapper
-  | Mat of expr_wrapper list list
-  | Id(str) of string
-  | Unop(op,  of Ast.un_op * expr_wrapper
-  | Assign(name, expr) of string * expr_wrapper
-  | Call of string * expr_wrapper list
+  | Qub (expr_wrapper) ->
+  | Mat of (expr_wrap) -> writeMatrix expr_wrap
+  | Id(str) ->
+  | Unop(op, ex) ->
+  | Assign(name, expr) ->
+  | Call ( string, expr) ->
   | Noexpr
-  *)
+  
 
 and cppStmt = function
     Sexpr(sexpr) -> writeExpr sexpr
@@ -93,7 +95,7 @@ and cppStmt = function
 
 (* For generating statements *)
 and writeStmts stmts = match stmts with
-Sast.Sexpr(sexpr) -> writeExpr expr ^ ";\n"
+  Sast.Sexpr(sexpr) -> writeExpr expr ^ ";\n"
   | Sast.Block(sstmt list) -> writeStmtBlock sstmt list
   | Sast.If(expr_wrapper * sstmt) -> writeIfStmt expr_wrapper sstmt
   | Sast.For(expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt) 
@@ -107,34 +109,30 @@ let slist = List.fold_left (fun output element ->
     output ^ stmt ^ "\n") "" slist in
     "\n{\n" ^ slist ^ "}\n"
 
-
-(*
 and writeIfStmt expr stmt = 
 	let cond = cppExpr expr 
 	and body = writeCpp stmt in (*probably not right function call*)
 	sprintf "
 		if(%s) {
 			%s
-		} " cond body
-	in 
-	*)
-
+		} " cond body 
+	
 and writeWhileStmt expr stmt = 
 let condString = writeCondition expr 
   and stmtString = writeStmts stmt in 
     sprintf "while (%s)\n%s\n" condString stmtString
 
 and writeForStmt var init final increment stmt =
-    let varname = var 
-    and initvalue = string_of_int init
-    and finalvalue = string_of_int final
-    and incrementval = string_of_int increment
+    let varname = cppExpr var 
+    and initvalue = cppExpr init
+    and finalvalue = cppExpr final
+    and incrementval = cppExpr increment
     and stmtbody = cppStmt stmt
     in
     sprintf "
     for (int %s = %s; %s < %s ; %s = %s + %s){
         %s
-        }" varname initvaluevarname finalvalue varname varname incrementval stmtbody
+        }" varname initvalue varname finalvalue varname varname incrementval stmtbody
 
 and writeBinop expr1 op expr2 = 
     let e1 = cppExpr expr1 and e2 = cppExpr expr2 in 
@@ -157,5 +155,17 @@ and writeBinop expr1 op expr2 =
 		(*| Xor 	-> sprintf "%s ^ %s" e1 e2*)
 	in binopFunc e1 op e2
 
+and writeMatrix expr_wrap = 
+    let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
+    sprintf "%s" matrixStr
 
+and writeRow row_expr =
+    let rowStr = List.fold_left (fun a b -> a ^ (cppExpr b) ^ "," ) row_expr in
+    sprintf "%s" rowStr
+
+
+
+and cppVarDecl vardeclist =
+   let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
+   sprintf "%s" varDecStr 
 
