@@ -3,7 +3,6 @@
     - Consumed by semantic analyzer
 *)
 
-(* Elementary Data Types *)
 type data_type =
     Int
   | Float
@@ -11,7 +10,6 @@ type data_type =
   | Mat
   | Qub
 
-(* Unary Operators *) 
 type un_op =
   Neg
   | Not
@@ -27,7 +25,6 @@ type un_op =
   | Cos
   | Tan
 
-(* Binary Operators *)
 type bi_op =
   Add
   | Sub
@@ -46,7 +43,6 @@ type bi_op =
   | And
   | Xor
 
-(* Expressions *)
 type expr =
   Lit_int of int
   | Lit_float of float
@@ -58,9 +54,7 @@ type expr =
   | Binop of expr * bi_op * expr
   | Assign of string * expr
   | Call of string * expr list
-  | Noexpr 
 
-(* Statements *)
 type stmt =
   Expr of expr
   | Block of stmt list
@@ -68,24 +62,18 @@ type stmt =
   | For of expr * expr * expr * expr * stmt
   | While of expr * stmt
 
-(* Statement Lists *)
 type stmt_list =
   stmt list
-
-(* Functions *)
-
  
-(* Variables Declaration *)
 type var_decl = 
   { 
     typ : data_type;
     name : string;
   }
 
-(* Function Declaration *)
 type func_decl = 
   {
-    ret_type : data_type;
+    ret_typ : data_type;
     ret_name : string;
     func_name : string;
     formal_params : var_decl list;
@@ -93,7 +81,6 @@ type func_decl =
     body : stmt list;
   }
 
-(* Program *)
 type program =
   func_decl list
 
@@ -164,8 +151,8 @@ let string_of_var_decl var_decl =
   
 (* method for printing func_decls *)    
 let string_of_fdecl fdecl =
-  "fdecl:\nret_type: " ^ 
-    (match fdecl.ret_type with
+  "fdecl:\nret_typ: " ^ 
+    (match fdecl.ret_typ with
       Int -> " int "
     | Float -> " float "
     | Comp -> " comp "

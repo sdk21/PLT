@@ -16,6 +16,7 @@ type sdata_type =
   | Qub
   | Qub_bra
   | Qub_ket
+  | Void
 
 (* Expressions *)
 type expr_wrapper = 
@@ -36,7 +37,7 @@ and  sexpr =
 
 (* Statements *)
 and sstmt =
-    Sexpr of sexpr
+    Sexpr of expr_wrapper
   | Block of sstmt list
   | If of expr_wrapper * sstmt
   | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
@@ -52,7 +53,7 @@ and svar_decl =
 (* Function Declaration *)
 and sfunc_decl = 
   {
-    sret_type : sdata_type;
+    sret_typ : sdata_type;
     sret_name : string;
     sfunc_name : string;
     sformal_params : svar_decl list;

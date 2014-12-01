@@ -1,3 +1,4 @@
+
 open Sast
 open Printf
 
@@ -71,15 +72,17 @@ and cppVar var =
     sprintf " %s %s" vartype var.sname
    
 and cppExpr = function
-  Binop(expr1, op, expr2, _) -> writeBinop expr1 op expr2
-  | Lit_int(lit, _) -> lit
-  | Lit_float(flit, _) -> flit 
-  | Lit_comp(comlit, _) -> comlit (* Not sure how to do this *)
-  (*| Qub of expr_wrapper*)
+  Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
+  | Lit_int(lit) -> lit ^ " "
+  | Lit_float(flit) -> flit ^ " "
+  | Lit_comp(comlit) -> " (" ^ writeUnop Re comlit "," ^ writeUnop Im comlit ^ ") " (* Not sure how to do this *)
+  | Unop(op, expr) ->  writeUnop op expr
+  (*
+  | Qub of expr_wrapper
+  *)
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
-  | Unop(op, expr) ->  writeUnop op expr
-  | Assign(name, expr) ->  name  ^ cppExpr expr
+  | Assign(name, expr) ->  name  ^ " = " ^ cppExpr expr
  (* | Call of string * expr_wrapper list *)
   | Noexpr -> ""
 
@@ -101,12 +104,12 @@ let slist = List.fold_left (fun output element ->
 
 and writeIfStmt expr stmt = 
 	let cond = cppExpr expr 
-	and body = writeCpp stmt in (*probably not right function call*)
+	and body = cppStmt stmt in (*probably not right function call*)
 	sprintf "
 		if(%s) {
 			%s
-		} " cond body 
-	
+		} " cond body
+
 and writeWhileStmt expr stmt = 
 let condString = cppExpr expr  
   and stmtString = cppStmt stmt in 
@@ -158,14 +161,14 @@ and writeUnop op expr =
         let unopFunc op exp = match op with
         Neg     -> sprintf "  -%s" exp
         | Not   -> sprintf "  !(%s)" exp
-        | Re    -> sprintf "  %s" exp  (* work from here *)
-        | Im    -> sprintf "  %s" exp
-        | Norm  -> sprintf "  %s" exp
-        | Trans -> sprintf "  %s" exp
-        | Det   -> sprintf "  %s" exp
-        | Adj   -> sprintf "  %s" exp
-        | Conj  -> sprintf "  %s" exp
-        | Unit  -> sprintf "  %s" exp  (* till here *)
+        | Re    -> sprintf "  real(%s)" exp 	(* assumes exp is matrix*)
+        | Im    -> sprintf "  imag(%s)" exp
+        | Norm  -> sprintf "  norm(%s)" exp
+        | Trans -> sprintf "  %s.transpose()" exp
+        | Det   -> sprintf "  %s.determinant()" exp
+        | Adj   -> sprintf "  %s.adjoint()" exp
+        | Conj  -> sprintf "  %s.conjugate()" exp
+        | Unit  -> sprintf "  %s" exp  		(* till here *)
         | Sin   -> sprintf "  sin((double)%s)" exp
         | Cos   -> sprintf "  cos((double)%s)" exp
         | Tan   -> sprintf "  tan((double)%s)" exp
@@ -175,4 +178,3 @@ and writeUnop op expr =
 and cppVarDecl vardeclist =
    let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
    sprintf "%s" varDecStr 
-

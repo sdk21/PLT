@@ -11,37 +11,25 @@ let integers = ['0'-'9']+
 let floats = ['0'-'9']+ '.' ['0'-'9']*
 
 rule token = parse
-(* Whitespace *)
   whitespace { token lexbuf }
-
-(* Comments *)
 | '#'        { comment lexbuf }
 
-(* Built-in Constants *)
-| "e"        { E }       (* Euler's number *)
-| "pi"       { PI }      (* pi *)
+| "e"        { E }      (* Euler's number *)
+| "pi"       { PI }     (* pi *)
 
-(* Built-in Types *)
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
 | "comp"     { COMP }   (* Complex type *)
 | "qub"      { QUB }    (* Qubit type *)
 | "mat"      { MAT }    (* Matrix type *)
 
-(* Complex Number Tags *)
 | "c"        { C }      (* Start of complex number *)
 | "i"        { I }      (*  Imaginary component *)
 
-(* Function Declaration *)
 | "def"      { DEF }    (* Define function *)
-
-(* Function Return *)
 | "return"   { RETURN }
 
-(* Assignment *)
 | '='        { ASSIGN } (* Assignment *)
-
-(* Punctuation *)
 | ','        { COMMA }  (* Separate list elements *)
 | ':'        { COLON }  (* Separate matrix rows *)
 | ';'        { SEMI }   (* Separate matrix columns *)
@@ -55,7 +43,6 @@ rule token = parse
 | '>'        { RCAR }   (* Close -ket *)
 | '|'        { BAR }    (* Close bra- and Open -ket *)
 
-(* Algebraic Operators *)
 | '+'        { PLUS }   (* Addition *)
 | '-'        { MINUS }  (* Subtraction *)
 | '*'        { TIMES }  (* Multiplication *)
@@ -63,7 +50,6 @@ rule token = parse
 | '%'        { MOD }    (* Modulus *)
 | '^'        { EXPN }   (* Exponentiation *)
 
-(* Relational Operators *)
 | "eq"       { EQ }     (* Equal to (structural) *)
 | "neq"      { NEQ }    (* Not equal to (structural) *) 
 | "lt"       { LT }     (* Less than *)
@@ -71,7 +57,6 @@ rule token = parse
 | "leq"      { LEQ }    (* Less than or equal to *)
 | "geq"      { GEQ }    (* Greater than or equal to *)
 
-(* Boolean Values & Operators *)
 | "true"     { TRUE }   (* Boolean true *)
 | "false"    { FALSE }  (* Boolean false *)
 | "not"      { NOT }    (* Boolean not *)
@@ -79,7 +64,6 @@ rule token = parse
 | "or"       { OR }     (* Boolean or *)
 | "xor"      { XOR }    (* Boolean xor *)
 
-(* Matrix Operators *)
 | "norm"     { NORM }   (* Get norm *)
 | "trans"    { TRANS }  (* Get transpose *)
 | "det"      { DET }    (* Get determinant *) 
@@ -88,14 +72,12 @@ rule token = parse
 | "unit"     { UNIT }   (* Is unit matrix? *)
 | '@'        { TENS }   (* Tensor product *)
 
-(* Built-in Functions  *)
 | "im"       { IM }     (* Is imaginary number? *)
 | "re"       { RE }     (* Is real number *)
 | "sin"      { SIN }    (* Sine *)
 | "cos"      { COS }    (* Cosine *)
 | "tan"      { TAN }    (* Tangent *)
 
-(* Control Flow *)
 | "if"       { IF }     (* If statement *)
 | "for"      { FOR }    (* For loop - for(i from x to y by z) *)
 | "from"     { FROM }
@@ -105,20 +87,13 @@ rule token = parse
 | "break"    { BREAK }  (* Break For or While loop *)
 | "continue" { CONT }   (* Continue to For or While loop *)
 
-(* Identifiers *)
 | name as id { ID(id) } 
-
-(* Numbers *)
 | integers as lxm  { INT_LIT(int_of_string lxm) }
 | floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
 
-(* End of File *)
 | eof        { EOF }    (* End of File *)
-
-(* Illegal Input *)
 | _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
 
-(* Comment Parsing *)
 and comment = parse
   ['r' '\n']  { token lexbuf }
 | _           { comment lexbuf } 
