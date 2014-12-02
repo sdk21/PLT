@@ -10,23 +10,18 @@ type sdata_type =
   | Float
   | Comp
   | Mat
-  | Mat_int
-  | Mat_float
-  | Mat_comp
-  | Qub
-  | Qub_bra
-  | Qub_ket
+  | Qubb
+  | Qubk
   | Void
 
-(* Expressions *)
 type expr_wrapper = 
     Expr of sexpr * sdata_type
 
 and  sexpr =
-  Lit_int of int
+    Lit_int of int
   | Lit_float of float
   | Lit_comp of float * float
-  | Qub of expr_wrapper
+  | Lit_qub of int
   | Mat of expr_wrapper list list
   | Id of string
   | Unop of Ast.un_op * expr_wrapper
@@ -35,7 +30,6 @@ and  sexpr =
   | Call of string * expr_wrapper list
   | Noexpr
 
-(* Statements *)
 and sstmt =
     Sexpr of expr_wrapper
   | Block of sstmt list
@@ -43,14 +37,12 @@ and sstmt =
   | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
   | While of expr_wrapper * sstmt
  
-(* Variables Declaration *)
 and svar_decl = 
   { 
     styp : sdata_type;
     sname : string;
   }
 
-(* Function Declaration *)
 and sfunc_decl = 
   {
     sret_typ : sdata_type;
@@ -61,6 +53,104 @@ and sfunc_decl =
     sbody : sstmt list;
   }
 
-(* Program *)
 type sprogram =
   sfunc_decl list
+
+(* Prety Printer *)
+let rec string_of_unop op e =
+  (match op with
+  Neg -> " -"
+  | Not -> " ! "
+  | Re -> " Re "
+  | Im -> " Im "
+  | Norm -> " Norm "
+  | Trans -> " Trans "
+  | Det -> " Det "
+  | Adj -> " Adj "
+  | Conj -> " Conj "
+  | Unit -> " Unit "
+  | Sin -> " Sin "
+  | Cos -> " Cos "
+  | Tan -> " Tan ") ^ string_of_expr_wrapper e
+
+and string_of_binop e1 op e2 =
+  string_of_expr_wrapper e1 ^ 
+    (match op with 
+      Add -> " + "    | Sub -> " - "     | Mult -> " * " 
+      | Div -> " / "    | Mod -> " % "     | Expn -> " ^ " | Tens -> " @ "
+      | Eq-> " == "     | Neq -> " != "    | Lt -> " < "
+      | Leq -> " <= "   | Gt -> " > "      | Geq -> " >= "
+      | Xor -> " XOR "  | And -> " && "    | Or -> " || ") ^ string_of_expr_wrapper e2
+
+and string_of_sexpr = function
+    Lit_int(i) -> string_of_int i
+    | Lit_float(f) -> string_of_float f
+    | Lit_comp(f1, f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
+    | Lit_qub(i) -> string_of_int i
+    | Id(s) -> s
+    | Unop(op, e) -> string_of_unop op e
+    | Binop(e1, op, e2) -> string_of_binop e1 op e2
+    | Assign(name, e) -> name ^ " = " ^ string_of_expr_wrapper e
+    | Call(name, params) -> "Calling " ^ name ^ " on " ^ string_of_sexprs params
+    | Mat(e) -> ""
+    | Noexpr -> ""
+
+and string_of_expr_wrapper w =
+  let sexpr =
+    match w with
+        Expr(Lit_int(i), Int) -> Lit_int(i)
+      | Expr(Lit_float(f), Float) -> Lit_float(f)
+      | Expr(Lit_comp(f1, f2), Comp) -> Lit_comp(f1, f2)
+      | Expr(Mat(l), Mat) -> Lit_int(1)
+      | Expr(Id(name), typ) -> Id(name)
+      | Expr(Unop(op, e), _) -> Unop(op, e) 
+      | Expr(Binop(e1, op, e2), _) -> Binop(e1, op, e2)
+      | Expr(Assign(name, e), t1) -> Assign(name, e)
+      | Expr(Call(name, params), _) -> Call(name, params)
+      | Expr(Lit_qub(i), _) -> Lit_qub(i)
+      | _ -> Noexpr
+    in
+      string_of_sexpr sexpr
+
+and string_of_svar_decl svar_decl = 
+  "svdecl: styp: " ^ 
+    (match svar_decl.styp with
+      Int -> "int," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Float -> "float," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Comp -> "comp," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Mat -> "mat," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Qubb -> "qubb," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Qubk -> "qubk," ^ " name: " ^ svar_decl.sname ^ "  "
+    | _ -> "")
+
+and string_of_sexprs e = 
+  String.concat "\n" (List.map string_of_expr_wrapper e)
+
+and string_of_sstmt = function
+    Sexpr(e) -> string_of_expr_wrapper e ^ "\n"
+  | Block(l) -> "{\n" ^ string_of_sstmts l ^ "\n}"
+  | If(e,s) -> "If condition : " ^ string_of_expr_wrapper e ^ "\nstatement :\n" ^ string_of_sstmt s
+  | For(e1, e2, e3, e4, s) -> "For args : " ^ string_of_expr_wrapper e1 ^ " " ^ string_of_expr_wrapper e2 ^ " "^ string_of_expr_wrapper e3 ^ 
+                                 " "^ string_of_expr_wrapper e4 ^ "\nstatement :\n" ^ string_of_sstmt s 
+  | While(e,s) -> "While condition : " ^ string_of_expr_wrapper e ^ "\nstatement : " ^ string_of_sstmt s
+
+and string_of_sstmts sstmts = 
+  String.concat "\n" (List.map string_of_sstmt sstmts) 
+
+and string_of_sfdecl sfdecl =
+  "\nsfdecl:\nsret_typ: " ^ 
+    (match sfdecl.sret_typ with
+      Int -> " int "
+    | Float -> " float "
+    | Comp -> " comp "
+    | Mat -> " mat "
+    | Qubb -> " qubb "
+    | Qubk -> " qubk "
+    | _ -> "") ^
+      "\nret_name: " ^ sfdecl.sret_name ^ "\nfunc_name: "  ^ sfdecl.sfunc_name ^  "\n(" ^
+        String.concat "" (List.map string_of_svar_decl sfdecl.sformal_params) ^ ")\n{\n" ^
+          String.concat "" (List.map string_of_svar_decl sfdecl.slocals) ^ "\n" ^
+            String.concat "" (List.map string_of_sstmt sfdecl.sbody) ^ "}"
+ 
+and string_of_program (l) = 
+  "program:\n" ^ String.concat "\n" (List.map string_of_sfdecl l)

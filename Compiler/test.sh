@@ -78,7 +78,6 @@ ast_test 'for(j from 1 to 10 by 1){1 + 2;3 * 4;}'
 
 # Statement Lists
 ast_test '1 + 2;3 * 4;172 - 12;'
-COMMENT
 
 # Programs
 ast_test 'def func_test(int a) : int ret_name { 1 + 2; 3*4; }'
@@ -102,12 +101,32 @@ ast_test 'def func_test(int a, int b) : int ret_name
 				1 + 2;
 				3*4;
 			}'
+COMMENT
+			
+# Sast Tests
+function sast_test {
+	test s "$1"
+}
 
+# Programs
+sast_test 'def func_test(int a, int b) : int ret_name_test
+			{
+				int test_int;
+				float test_float;
 
+				1 + 2;
+				3*4;
+			}
+			def func_test2(int a, int b) : int ret_name_test
+			{
+				int test_int;
+				float test_float;
+				qubb qb;
+				qubk qk;
 
-
-
-
-
-
-
+				<010|;
+				|0011>;
+				test_int = 1 + 2;
+				test_int + 1;
+				3*4;
+			}'

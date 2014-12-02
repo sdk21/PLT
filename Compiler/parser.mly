@@ -11,7 +11,7 @@
 %token C I
 %token E
 %token PI
-%token INT FLOAT COMP QUB MAT
+%token INT FLOAT COMP QUBB QUBK MAT
 %token DEF
 %token RETURN
 %token ASSIGN
@@ -23,6 +23,7 @@
 %token IM RE SIN COS TAN
 %token IF ELIF ELSE FOR FROM TO BY WHILE BREAK CONT
 %token EOF
+
 %token <string> ID
 %token <int> INT_LIT
 %token <float> FLOAT_LIT
@@ -48,7 +49,8 @@ vtype:
   INT     { Int }
   | FLOAT { Float }
   | COMP  { Comp }
-  | QUB   { Qub }
+  | QUBB  { Qubb }
+  | QUBK  { Qubk }
   | MAT   { Mat }
 
 vdecl:
@@ -103,8 +105,8 @@ expr:
   | INT_LIT                        { Lit_int($1) }
   | FLOAT_LIT                      { Lit_float($1) }
   | C LPAREN inner_comp RPAREN     { Lit_comp(List.hd $3, List.hd (List.rev $3)) } 
-  | LCAR expr BAR                  { Qub($2, 0) }
-  | BAR expr RCAR                  { Qub($2, 1) }
+  | LCAR INT_LIT BAR               { Lit_qub($2, 0) }
+  | BAR INT_LIT RCAR               { Lit_qub($2, 1) }
   | E                              { Lit_float(e) }
   | PI                             { Lit_float(pi) }
   | LBRACK mat_row_list RBRACK     { Mat($2) }
@@ -156,6 +158,9 @@ stmt_list:
   /* nothing  */ { [] }
   | stmt_list stmt { $2 :: $1 }
 
-  program:
-   /* nothing */ { [] }
- | program fdecl { $2 :: $1 }
+ rev_program:
+  /* nothing */ { [] }
+ | rev_program fdecl { $2 :: $1 }
+
+program:
+  rev_program { List.rev $1 }

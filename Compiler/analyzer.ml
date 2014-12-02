@@ -45,8 +45,8 @@ let matrix_error t1 t2 = match t2 with
   | _ -> raise (Except("Type mismatch in matrix"))
 
 let qub_error t = match t with
-  0 -> raise (Except("Invalid use of <expr|"))
-  | 1 -> raise (Except("Invalid use of |expr>"))
+  1 -> raise (Except("Invalid use of <expr|"))
+  | 0 -> raise (Except("Invalid use of |expr>"))
   | _ -> raise (Except("Invalid use qubits"))
 
 let var_error s =
@@ -91,20 +91,20 @@ let binop_error t = match t with
   | Ast.Leq -> raise (Except("Invalid use of 'expr leq expr'"))
   | Ast.Geq -> raise (Except("Invalid use of 'expr geq expr'"))
 
-let expr_error =
-  raise (Except("Invalid expression"))
+let expr_error t = match t with
+  _ -> raise (Except("Invalid expression"))
 
-let call_error = 
-  raise (Except("Undeclared function or function signature mismatch"))
+let call_error t = match t with
+  _ -> raise (Except("Undeclared function or function signature mismatch"))
 
-let if_error =
-  raise (Except("Invalid use of 'if'"))
+let if_error t = match t with
+  _ -> raise (Except("Invalid use of 'if'"))
 
-let for_error =
-  raise (Except("Invalid use of 'for'"))
+let for_error t = match t with
+  _ -> raise (Except("Invalid use of 'for'"))
 
-let while_error =
-  raise (Except("Invalid use of 'while'"))
+let while_error t = match t with
+  _ -> raise (Except("Invalid use of 'while'"))
 
 (*********************
  * Utility Functions *
@@ -150,32 +150,26 @@ let lookup_func name env =
  * Checks *
 **********)
 
-let rec check_qub_expr e env =
-  let r = e mod 10 in
+let rec check_qub_expr i =
+  let r = i mod 10 in
    if (r = 0 || r = 1)
     then
-     let e = e / 10 in
-       if (e != 0)
+     let i = i / 10 in
+       if (i != 0)
         then
-         check_qub_expr e env
+         check_qub_expr i
        else 1
     else 0
 
-and check_qub e bk env =
-  let e1 = check_expr env e in
-    match e1 with
-      Sast.Expr(e2, t) ->
-        (match e2 with
-          Sast.Lit_int(i) ->
-            if (check_qub_expr i env = 1)
-              then
-                (match bk with
-                  0 -> Sast.Expr(Sast.Qub(e1), Sast.Qub_bra)
-                  | 1 -> Sast.Expr(Sast.Qub(e1), Sast.Qub_ket)
-                  | _ -> qub_error bk)
-            else
-              qub_error bk
-          | _ -> qub_error bk)
+and check_qub i t =
+  if (check_qub_expr i = 1)
+    then
+      (match t with
+          0 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubb)
+        | 1 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubk)
+        | _ -> qub_error 2)
+  else
+    qub_error t
 
 (* Checks matricies
 and check_mat l env = 
@@ -216,7 +210,7 @@ and check_id name env =
 and check_unop op e env =
   let e = check_expr env e in 
     match e with
-      Sast.Expr(_, t) ->
+      Sast.Expr(q, t) ->
         (match op with
           Ast.Neg ->
             (match t with
@@ -240,8 +234,8 @@ and check_unop op e env =
             (match t with
               Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
               | Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
-              | Sast.Qub_bra -> Sast.Expr(Sast.Unop(op, e), Sast.Qub_bra)
-              | Sast.Qub_ket -> Sast.Expr(Sast.Unop(op, e), Sast.Qub_ket)
+              | Sast.Qubb -> Sast.Expr(Sast.Unop(op, e), Sast.Qubb)
+              | Sast.Qubk -> Sast.Expr(Sast.Unop(op, e), Sast.Qubk)
               | _ ->  unop_error op)
           | Ast.Trans ->
             (match t with
@@ -310,13 +304,13 @@ and check_binop e1 op e2 env =
                       (match t2 with
                         Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
                         | _ -> binop_error op)
-                    | Sast.Qub_bra ->
+                    | Sast.Qubb ->
                       (match t2 with 
-                        Sast.Qub_bra -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qub_bra)
+                        Sast.Qubb -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qubb)
                        |  _ -> binop_error op)
-                    | Sast.Qub_ket ->
+                    | Sast.Qubk ->
                       (match t2 with 
-                        Sast.Qub_ket -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qub_ket)
+                        Sast.Qubk -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qubk)
                        |  _ -> binop_error op)
                     | _ -> binop_error op)
                 | Ast.Tens ->
@@ -325,13 +319,13 @@ and check_binop e1 op e2 env =
                       (match t2 with
                         Sast.Mat->Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
                         | _ -> binop_error op)
-                    | Sast.Qub_bra -> 
+                    | Sast.Qubb -> 
                       (match t2 with
-                        Sast.Qub_bra -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qub_bra)
+                        Sast.Qubb -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qubb)
                         | _ -> binop_error op)
-                    | Sast.Qub_ket ->
+                    | Sast.Qubk ->
                       (match t2 with
-                        Sast.Qub_ket -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qub_ket)
+                        Sast.Qubk -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Qubk)
                         | _ -> binop_error op)
                     | _ -> binop_error op)
                 | Ast.Mod | Ast.Expn ->
@@ -410,30 +404,30 @@ and check_call name params env =
   let fdecl =
     try
       lookup_func name env
-    with Not_found -> call_error
+    with Not_found -> call_error 1
   in
     let params =
       List.map (check_expr env) params
     in
       if ((List.length fdecl.sformal_params) != (List.length params))
-        then call_error
+        then call_error 1
       else
         if ((check_call_params fdecl.sformal_params params) = true)
           then Sast.Expr(Sast.Call(name, params), fdecl.sret_typ)
         else
-          call_error
+          call_error 1
 
 and check_expr env = function
   Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
   | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
   | Ast.Lit_comp(f1, f2) -> Sast.Expr(Sast.Lit_comp(f1, f2), Sast.Comp)
-  | Ast.Qub(e, bk) -> check_qub e bk env
+  | Ast.Lit_qub(i, t) -> check_qub i t
   | Ast.Id(s) -> check_id s env
   | Ast.Unop(op, e) -> check_unop op e env
   | Ast.Binop(e1, op, e2) -> check_binop e1 op e2 env
   | Ast.Assign(s, e) -> check_assign s e env
   | Ast.Call(s, l) -> check_call s l env
-  | _ -> expr_error
+  | _ -> expr_error 1
 
 and check_block stmts env =
     let sstmts =
@@ -451,7 +445,7 @@ and check_if e s env =
             check_stmt env s
           in
             Sast.If(se, ss)
-        | _ -> if_error
+        | _ -> if_error 1
 
 and check_for e1 e2 e3 e4 s env =
   let se1 =
@@ -477,10 +471,10 @@ and check_for e1 e2 e3 e4 s env =
                         let ss =
                           check_stmt env s in
                             Sast.For(se1, se2, se3, se4, ss)
-                      | _ -> for_error)
-                | _ -> for_error)
-          | _ -> for_error)
-    | _ -> for_error
+                      | _ -> for_error 1)
+                | _ -> for_error 1)
+          | _ -> for_error 1)
+    | _ -> for_error 1
 
 and check_while e s env =
   let se =
@@ -492,8 +486,8 @@ and check_while e s env =
           Ast.Eq | Ast.Neq | Ast.Lt | Ast.Gt | Ast.Leq | Ast.Geq ->
             let ss = check_stmt env s in
               Sast.While(se, ss)
-          | _ -> while_error)
-    | _ -> while_error
+          | _ -> while_error 1)
+    | _ -> while_error 1
 
 and check_stmt env = function
   Ast.Expr(e) -> Sast.Sexpr(check_expr env e)
@@ -508,7 +502,8 @@ and vdecl_to_sdecl vdecl =
       | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; }
       | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; }
       | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; }
-      | Ast.Qub -> { styp = Sast.Qub; sname = vdecl.name; }
+      | Ast.Qubb -> { styp = Sast.Qubb; sname = vdecl.name; }
+      | Ast.Qubk -> { styp = Sast.Qubk; sname = vdecl.name; }
 
 and formal_to_sformal scope formal_param  =
   let found =
@@ -535,7 +530,7 @@ and formal_to_sformal scope formal_param  =
 
 and formals_to_sformals scope formal_params =
   let new_scope = 
-    List.fold_left formal_to_sformal scope formal_params
+    List.fold_left formal_to_sformal scope (List.rev formal_params)
   in
     new_scope
 
@@ -564,7 +559,7 @@ and local_to_slocal scope local =
 
 and locals_to_slocals scope locals =
   let new_scope = 
-    List.fold_left local_to_slocal scope locals
+    List.fold_left local_to_slocal scope (List.rev locals)
   in
     new_scope
 
@@ -575,7 +570,8 @@ and ret_to_sret scope ret_typ =
       | Ast.Float -> Sast.Float
       | Ast.Comp -> Sast.Comp
       | Ast.Mat -> Sast.Mat
-      | Ast.Qub -> Sast.Qub
+      | Ast.Qubb -> Sast.Qubb
+      | Ast.Qubk -> Sast.Qubk
   in
     let new_scope =
       { parent = scope.parent;
@@ -603,7 +599,7 @@ and fname_to_sfname scope func_name =
       { parent = scope.parent;
         ret_typ = scope.ret_typ;
         ret_nam = scope.ret_nam;
-        func_nam = scope.func_nam;
+        func_nam = func_name;
         formal_param = scope.formal_param;
         local = scope.local; }
     in

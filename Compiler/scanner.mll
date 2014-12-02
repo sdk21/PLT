@@ -5,7 +5,7 @@
 
 { open Parser }
 
-let name = ['a'-'z' 'A'-'Z' '_']+ 
+let name = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 let whitespace = [' ' '\t' '\r' '\n'] 
 let integers = ['0'-'9']+
 let floats = ['0'-'9']+ '.' ['0'-'9']*
@@ -20,7 +20,8 @@ rule token = parse
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
 | "comp"     { COMP }   (* Complex type *)
-| "qub"      { QUB }    (* Qubit type *)
+| "qubb"     { QUBB }   (* Qubit type (bra) *)
+| "qubk"     { QUBK }   (* Qubit type (ket) *)
 | "mat"      { MAT }    (* Matrix type *)
 
 | "c"        { C }      (* Start of complex number *)
@@ -87,11 +88,11 @@ rule token = parse
 | "break"    { BREAK }  (* Break For or While loop *)
 | "continue" { CONT }   (* Continue to For or While loop *)
 
-| name as id { ID(id) } 
+| name     as id   { ID(id) } 
 | integers as lxm  { INT_LIT(int_of_string lxm) }
 | floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
 
-| eof        { EOF }    (* End of File *)
+| eof              { EOF }
 | _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
 
 and comment = parse
