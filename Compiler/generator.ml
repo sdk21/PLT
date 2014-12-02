@@ -31,8 +31,6 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
-    #include \"../cpp/constants.h\"
-    #include \"../cpp/tensorProduct.h\"
     #include \"../cpp/qlang.h\"
 
     using namespace Eigen;
