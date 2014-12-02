@@ -52,10 +52,11 @@ and cpp_funcList func =
     and cppLocals = cppLocalVar func.slocals in
     let cppfunc = sprintf "
     %s %s (%s){
+	%s %s
         %s
         return  %s
     }
-    " cppRtnType cppFName cppFParam cppFBody cppRtnValue
+    " cppRtnType cppFName cppFParam cppRtnType cppRtnValue cppFBody cppRtnValue
 
 and cppReturnType rtntype  = cpp_from_type rtntype 
 
