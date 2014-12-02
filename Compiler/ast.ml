@@ -103,7 +103,7 @@ let rec string_of_expr = function
   | Lit_qub(n,t) -> let typ = string_of_int t in (match typ with
                       "0" -> "Qub-bra of "^ string_of_int n 
                     | _ -> "Qub-ket of "^ string_of_int n)
-  | Mat(exp_list_list) ->  " <Matrix here> "(*String.concat "\n" (List.map string_of_expr exp_list_list) *)
+  | Mat(l) ->  string_of_mat l
   | Id(s) -> s
   | Unop(un1,exp1) -> 
     (match un1 with
@@ -131,6 +131,18 @@ let rec string_of_expr = function
   | Assign(str,expr) -> str ^ " = " ^ string_of_expr expr
   | Call(str,expr_list) -> "Calling " ^ str ^ " on " ^string_of_exprs expr_list
   | Noexpr -> ""
+
+and string_of_mat l =
+  let row_strs = 
+    List.map string_of_row l
+  in
+    "[" ^ String.concat "" row_strs ^ "]"
+
+and string_of_row r =
+  let row_str = 
+    String.concat "," (List.map string_of_expr r)
+  in
+    "(" ^ row_str ^ ")"
   
 and string_of_exprs exprs = 
   String.concat "\n" (List.map string_of_expr exprs)

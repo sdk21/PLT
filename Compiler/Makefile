@@ -1,4 +1,5 @@
 OBJS = ast.cmo sast.cmo parser.cmo scanner.cmo analyzer.cmo qlc.cmo
+#generator.cmo
 
 qlc : $(OBJS)
 	ocamlc -g -o qlc $(OBJS)
@@ -26,8 +27,10 @@ analyzer.cmx: sast.cmx ast.cmx
 #generator.cmx: sast.cmx
 parser.cmo: ast.cmo parser.cmi 
 parser.cmx: ast.cm parser.cmi 
-qlc.cmo: scanner.cmo sast.cmo parser.cmi generator.cmo ast.cmo analyzer.cmo
-qlc.cmx: scanner.cmx sast.cmo parser.cmx generator.cmx ast.cmx analyzer.cmx
+qlc.cmo: scanner.cmo sast.cmo parser.cmi ast.cmo analyzer.cmo
+#generator.cmo
+qlc.cmx: scanner.cmx sast.cmo parser.cmx ast.cmx analyzer.cmx
+#generator.cmx
 sast.cmo: ast.cmo
 sast.cmx: ast.cmx
 scanner.cmo: parser.cmi 

@@ -105,7 +105,7 @@ COMMENT
 			
 # Sast Tests
 function sast_test {
-	test s "$1"
+	test s  "$1"
 }
 
 # Programs
@@ -113,7 +113,11 @@ sast_test 'def func_test(int a, int b) : int ret_name_test
 			{
 				int test_int;
 				float test_float;
-
+				
+				a + 1;
+				1 + a;
+				[(1,2,3)(4,5,6)];	
+				[(1.7,2.02,3.112)(4.0,5.2,6.0)];
 				1 + 2;
 				3*4;
 			}

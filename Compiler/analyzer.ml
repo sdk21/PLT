@@ -40,9 +40,10 @@ let root_environment =
 
 exception Except of string
 
-let matrix_error t1 t2 = match t2 with
+let matrix_error t = match t with
   0 -> raise (Except("Invalid type in matrix"))
-  | _ -> raise (Except("Type mismatch in matrix"))
+  | 1 -> raise (Except("Type mismatch in matrix"))
+  | _ -> raise (Except("Invalid matrix"))
 
 let qub_error t = match t with
   1 -> raise (Except("Invalid use of <expr|"))
@@ -171,31 +172,49 @@ and check_qub i t =
   else
     qub_error t
 
-(* Checks matricies
-and check_mat l env = 
-  List.map (fun mat_expr -> mat_expr env) l;
+and check_mat l env =
+  let e =
+    (List.hd (List.hd l))
+  in
+    let Sast.Expr(_,t) =
+          check_expr env e
+        in
+          let rev_smat =
+            List.map (fun row -> check_mat_helper row t env) l
+          in
+            let smat =
+              List.rev(rev_smat) in
+                match t with
+                  Sast.Int -> Sast.Expr(Sast.Mat(smat), Sast.Mati)
+                  | Sast.Float -> Sast.Expr(Sast.Mat(smat), Sast.Matf)
+                  | Sast.Comp -> Sast.Expr(Sast.Mat(smat), Sast.Matc)
+                  | _ -> matrix_error 2
 
-(* Checks matrix expressions helper *)
-and check_mat_exprs_helper l env =
-  let e = (List.hd l) in
-    let Sast.Expr(_, t) = check_expr e env in 
-      match t with
-        Sast.Int -> check_mat_exprs l Sast.Int env
-        | Sast.Float -> check_mat_exprs l Sast.Float env
-        | Sast.Comp -> check_mat_exprs l Sast.Comp env
-        | _ -> matrix_error t 0
+and check_mat_helper r t env =
+  let rev_srow =
+    check_row (List.tl r) [] t env
+  in
+   List.rev(rev_srow)
 
-(* Checks matrix expressions *)
-and check_mat_exprs l t1 env =
-  let e = (List.hd l) in
-    let Sast.Expr(_, t2) = check_expr e env in 
-      match t2 with
-        t1 -> let row_tail = (List.tl l) in
-                match row_tail with
-                  [] -> 1
-                  | _ -> check_mat_exprs row_tail t1 env
-        | _ -> matrix_error t1 t2
-*)
+and check_row l1 l2 t env =
+  let e = (List.hd l1) in
+    let se =
+      check_expr env e
+    in
+      match se with
+        Sast.Expr(_, t2) ->
+          if t = t2 then
+            let row_tail =
+              (List.tl l1)
+            in
+              let l2 =
+                se :: l2
+                in
+                  (match row_tail with
+                    [] -> l2
+                    | _ -> check_row row_tail l2 t2 env)
+          else
+            matrix_error 1
 
 and check_id name env =
   let vdecl =
@@ -422,6 +441,7 @@ and check_expr env = function
   | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
   | Ast.Lit_comp(f1, f2) -> Sast.Expr(Sast.Lit_comp(f1, f2), Sast.Comp)
   | Ast.Lit_qub(i, t) -> check_qub i t
+  | Ast.Mat(l) -> check_mat l env
   | Ast.Id(s) -> check_id s env
   | Ast.Unop(op, e) -> check_unop op e env
   | Ast.Binop(e1, op, e2) -> check_binop e1 op e2 env
