@@ -1,4 +1,3 @@
-
 open Sast
 open Printf
 open String
@@ -32,8 +31,12 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
+<<<<<<< HEAD
     #include \"../cpp/constants.h\"
     #include \"../cpp/tensorProduct.h\"
+=======
+    #include "../cpp/qlang.h"
+>>>>>>> f1bbdfe7d40f4125452edbb87d631e77aad00897
 
     using namespace Eigen;
     using namespace std;
@@ -79,13 +82,11 @@ and cppExpr = function
   | Lit_float(flit) -> flit ^ " "
   | Lit_comp(comlit) -> " (" ^ writeUnop Re comlit "," ^ writeUnop Im comlit ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
-  (*
-  | Qub of expr_wrapper
-  *)
+  | Qub(expr) -> writeQubit expr
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr expr
- (* | Call of string * expr_wrapper list *)
+  | Call(string,expr_wrapper list) -> string ^  writeArgs expr_wrapper list 
   | Noexpr -> ""
 
 (* For generating statements *)
@@ -103,6 +104,14 @@ let slist = List.fold_left (fun output element ->
     let stmt = cppStmt  element in
     output ^ stmt ^ "\n") "" slist in
     "\n{\n" ^ slist ^ "}\n"
+
+
+and writeArgs argList =
+let args = List.fold_left (fun output element ->
+    let el = cppExpr element in 
+    output ^ el ^ "," ) "" args in 
+    "(" ^ String.sub args 0 ((String.length args)-1) ^ ") "
+
 
 and writeIfStmt expr stmt = 
 	let cond = cppExpr expr 
@@ -175,6 +184,10 @@ and writeUnop op expr =
         | Sin   -> sprintf "  sin((double)%s)" exp
         | Cos   -> sprintf "  cos((double)%s)" exp
         | Tan   -> sprintf "  tan((double)%s)" exp
-
     in unopFunc op exp
+
+(*probably doesn't work yet due to string format of expr*)
+and writeQubit expr =
+    let exp = cppExpr expr in
+	sprintf "genQubit(%s)" exp
 
