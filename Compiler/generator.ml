@@ -31,12 +31,9 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
-<<<<<<< HEAD
     #include \"../cpp/constants.h\"
     #include \"../cpp/tensorProduct.h\"
-=======
-    #include "../cpp/qlang.h"
->>>>>>> f1bbdfe7d40f4125452edbb87d631e77aad00897
+    #include \"../cpp/qlang.h\"
 
     using namespace Eigen;
     using namespace std;
