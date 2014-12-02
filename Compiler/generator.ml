@@ -1,6 +1,7 @@
 
 open Sast
 open Printf
+open String
 
 (* type_of from Sast *)
 let type_of (a : Sast.expr_wrapper) : Sast.sdata_type =
@@ -31,8 +32,8 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
-    #include "../cpp/constants.h"
-    #include "../cpp/tensorProduct.h"
+    #include \"../cpp/constants.h\"
+    #include \"../cpp/tensorProduct.h\"
 
     using namespace Eigen;
     using namespace std;
@@ -65,11 +66,12 @@ and cppReturnValue rtnval = rtnval
 
 and cppVarDecl vardeclist =
    let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
-   sprintf "%s" varDecStr 
+   let varDectrun = String.sub varDecStr 0 ((String.length varDecStr)-1) in
+   sprintf "%s" varDectrun
 
 and cppVar var =
     let vartype = cpp_from_type var.styp in 
-    sprintf " %s %s" vartype var.sname
+    sprintf " %s %s," vartype var.sname
    
 and cppExpr = function
   Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
@@ -150,7 +152,8 @@ and writeBinop expr1 op expr2 =
 
 and writeMatrix expr_wrap = 
     let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
-    sprintf "%s" matrixStr
+    let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-2) in
+    sprintf "%s\n;" submatrix 
 
 and writeRow row_expr =
     let rowStr = List.fold_left (fun a b -> a ^ (cppExpr b) ^ "," ) row_expr in
@@ -175,6 +178,3 @@ and writeUnop op expr =
 
     in unopFunc op exp
 
-and cppVarDecl vardeclist =
-   let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
-   sprintf "%s" varDecStr 
