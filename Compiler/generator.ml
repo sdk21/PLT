@@ -13,12 +13,16 @@ let cpp_from_type (ty: Sast.sdata_type) : string =
     | Float -> "float"
     | Comp -> "complex"
     | Mat -> "Matrix"
+(*
     | Mat_int -> "Matrix"
     | Mat_float -> "Matrix"
     | Mat_comp -> "Matrix"
     | Qub -> "Matrix"
     | Qub_bra -> "Matrix"
     | Qub_ket -> "Matrix"
+*)
+    | Qubb -> "Matrix"
+    | Qubk -> "Matrix"
 
 let rec writeToFile fileName progString =
     let file = open_out (fileName ^ ".cpp") in
@@ -45,13 +49,13 @@ and writeCpp funcList =
     sprintf "%s" outStr
 
 and cpp_funcList func =
-    let cppRtnType = cppReturnType func.sret_type
+    let cppRtnType = cppReturnType func.sret_typ
     and cppRtnValue = cppReturnValue func.sret_name
     and cppFName = func.sfunc_name
     and cppFParam = cppVarDecl func.sformal_params
     and cppFBody = cppStmt func.sbody 
     and cppLocals = cppLocalVar func.slocals in
-    let cppfunc = sprintf "
+    sprintf "
     %s %s (%s){
 	%s %s;
         %s
@@ -62,6 +66,7 @@ and cpp_funcList func =
 and cppReturnType rtntype  = cpp_from_type rtntype 
 
 and cppReturnValue rtnval = rtnval
+
 
 and cppVarDecl vardeclist =
    let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
@@ -82,17 +87,17 @@ and cppExpr = function
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr expr
-  | Call(string,expr_wrapper list) -> string ^  writeArgs expr_wrapper list 
+  | Call(str,expr_wrapper) -> str ^  writeArgs expr_wrapper  
   | Noexpr -> ""
 
 (* For generating statements *)
 and cppStmt stmts = match stmts with
 Sast.Sexpr(sexpr) -> cppExpr expr ^ ";\n"  
-  | Sast.Block(sstmt list) -> cppStmtBlock sstmt list
-  | Sast.If(expr_wrapper * sstmt) -> writeIfStmt expr_wrapper sstmt
+  | Sast.Block(sstmt) -> cppStmtBlock sstmt list
+  | Sast.If(expr_wrapper , sstmt) -> writeIfStmt expr_wrapper sstmt
   | Sast.For(var,init, final, increment, stmt) -> 
             writeForStmt var init final increment stmt
-  | Sast.While(expr_wrapper * sstmt) -> writeWhileStmt expr_wrapper sstmt
+  | Sast.While(expr_wrapper , sstmt) -> writeWhileStmt expr_wrapper sstmt
 
 
 and cppStmtBlock sstmtl = 
@@ -186,4 +191,3 @@ and writeUnop op expr =
 and writeQubit expr =
     let exp = cppExpr expr in
 	sprintf "genQubit(%s)" exp
-
