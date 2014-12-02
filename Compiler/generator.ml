@@ -1,4 +1,3 @@
-
 open Sast
 open Printf
 open String
@@ -32,8 +31,7 @@ and gen_program fileName prog =
     #include <cmath>
     #include <complex>
     #include <iostream>
-    #include "../cpp/constants.h"
-    #include "../cpp/tensorProduct.h"
+    #include "../cpp/qlang.h"
 
     using namespace Eigen;
     using namespace std;
@@ -51,8 +49,8 @@ and cpp_funcList func =
     and cppRtnValue = cppReturnValue func.sret_name
     and cppFName = func.sfunc_name
     and cppFParam = cppVarDecl func.sformal_params
-    and cppFBody = cppStmt func.sbody in
-    and cppLocals = cppLocalVar func.slocals
+    and cppFBody = cppStmt func.sbody 
+    and cppLocals = cppLocalVar func.slocals in
     let cppfunc = sprintf "
     %s %s (%s){
         %s
@@ -60,30 +58,30 @@ and cpp_funcList func =
     }
     " cppRtnType cppFName cppFParam cppFBody cppRtnValue
 
-and cppReturnType  = function
+and cppReturnType rtntype  = cpp_from_type rtntype 
 
-
-and cppReturnValue = function
+and cppReturnValue rtnval = rtnval
 
 and cppVarDecl vardeclist =
    let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
    sprintf "%s" varDecStr 
 
+and cppVar var =
+    let vartype = cpp_from_type var.styp in 
+    sprintf " %s %s" vartype var.sname
+   
 and cppExpr = function
   Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
   | Lit_int(lit) -> lit ^ " "
   | Lit_float(flit) -> flit ^ " "
   | Lit_comp(comlit) -> " (" ^ writeUnop Re comlit "," ^ writeUnop Im comlit ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
-  (*
-  | Qub of expr_wrapper
-  | Mat of expr_wrapper list list
-  *)
+  | Qub(expr) -> writeQubit expr
+  | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr expr
   | Call(string,expr_wrapper list) -> string ^  writeArgs expr_wrapper list 
   | Noexpr -> ""
-  
 
 (* For generating statements *)
 and cppStmt stmts = match stmts with
@@ -101,13 +99,14 @@ let slist = List.fold_left (fun output element ->
     output ^ stmt ^ "\n") "" slist in
     "\n{\n" ^ slist ^ "}\n"
 
+
 and writeArgs argList =
 let args = List.fold_left (fun output element ->
     let el = cppExpr element in 
     output ^ el ^ "," ) "" args in 
     "(" ^ String.sub args 0 ((String.length args)-1) ^ ") "
 
-(*
+
 and writeIfStmt expr stmt = 
 	let cond = cppExpr expr 
 	and body = cppStmt stmt in (*probably not right function call*)
@@ -115,7 +114,6 @@ and writeIfStmt expr stmt =
 		if(%s) {
 			%s
 		} " cond body
-	*)
 
 and writeWhileStmt expr stmt = 
 let condString = cppExpr expr  
@@ -123,16 +121,16 @@ let condString = cppExpr expr
     sprintf "while (%s)\n%s\n" condString stmtString
 
 and writeForStmt var init final increment stmt =
-    let varname = var 
-    and initvalue = string_of_int init
-    and finalvalue = string_of_int final
-    and incrementval = string_of_int increment
+    let varname = cppExpr var 
+    and initvalue = cppExpr init
+    and finalvalue = cppExpr final
+    and incrementval = cppExpr increment
     and stmtbody = cppStmt stmt
     in
     sprintf "
     for (int %s = %s; %s < %s ; %s = %s + %s){
         %s
-        }" varname initvaluevarname finalvalue varname varname incrementval stmtbody
+        }" varname initvalue varname finalvalue varname varname incrementval stmtbody
 
 and writeBinop expr1 op expr2 = 
     let e1 = cppExpr expr1 and e2 = cppExpr expr2 in 
@@ -155,6 +153,13 @@ and writeBinop expr1 op expr2 =
 		(*| Xor 	-> sprintf "%s ^ %s" e1 e2*)
 	in binopFunc e1 op e2
 
+and writeMatrix expr_wrap = 
+    let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
+    sprintf "%s" matrixStr
+
+and writeRow row_expr =
+    let rowStr = List.fold_left (fun a b -> a ^ (cppExpr b) ^ "," ) row_expr in
+    sprintf "%s" rowStr
 
 and writeUnop op expr = 
     let exp = cppExpr expr in 
@@ -172,6 +177,13 @@ and writeUnop op expr =
         | Sin   -> sprintf "  sin((double)%s)" exp
         | Cos   -> sprintf "  cos((double)%s)" exp
         | Tan   -> sprintf "  tan((double)%s)" exp
-
     in unopFunc op exp
 
+(*probably doesn't work yet due to string format of expr*)
+and writeQubit expr =
+    let exp = cppExpr expr in
+	sprintf "genQubit(%s)" exp
+
+and cppVarDecl vardeclist =
+   let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
+   sprintf "%s" varDecStr 
