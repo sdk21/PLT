@@ -1,5 +1,6 @@
 open Sast
 open Printf
+open String
 
 (* type_of from Sast *)
 let type_of (a : Sast.expr_wrapper) : Sast.sdata_type =
@@ -80,7 +81,7 @@ and cppExpr = function
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr expr
- (* | Call of string * expr_wrapper list *)
+  | Call(string,expr_wrapper list) -> string ^  writeArgs expr_wrapper list 
   | Noexpr -> ""
 
 (* For generating statements *)
@@ -98,6 +99,14 @@ let slist = List.fold_left (fun output element ->
     let stmt = cppStmt  element in
     output ^ stmt ^ "\n") "" slist in
     "\n{\n" ^ slist ^ "}\n"
+
+
+and writeArgs argList =
+let args = List.fold_left (fun output element ->
+    let el = cppExpr element in 
+    output ^ el ^ "," ) "" args in 
+    "(" ^ String.sub args 0 ((String.length args)-1) ^ ") "
+
 
 and writeIfStmt expr stmt = 
 	let cond = cppExpr expr 
