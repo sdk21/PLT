@@ -2,16 +2,11 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
-#include "tensorProduct.h"
-#include "constants.h"
+#include "qlang.h"
 
 using namespace Eigen;
 using namespace std;
 
-/*
-Matrix<complex<float>, Dynamic, Dynamic> tensor(Matrix<complex<float>, Dynamic,
-	Dynamic> mat1, Matrix<complex<float>, Dynamic, Dynamic> mat2) {
-	*/
 MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2) {
 
 	int mat1rows = mat1.rows();
