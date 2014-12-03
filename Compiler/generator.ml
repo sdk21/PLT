@@ -49,25 +49,26 @@ and cpp_funcList func =
     let cppRtnType = cpp_from_type func.sret_typ
     and cppRtnValue = func.sret_name
     and cppFName = func.sfunc_name
-    and cppFParam = cppVarDecl func.sformal_params
+    and cppFParam = cppVarDecl func.sformal_params ","
     and cppFBody = cppStmtList func.sbody 
-    and cppLocals = cppVarDecl func.slocals in
+    and cppLocals = cppVarDecl func.slocals ";\n\t" in
     sprintf "
     %s %s (%s){
+	%s %s;
 	%s 
         %s
         return %s;
     }
-    " cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
+    " cppRtnType cppFName cppFParam cppRtnType cppRtnValue cppLocals cppFBody cppRtnValue
 
-and cppVarDecl vardeclist =
-   let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b)) "" vardeclist in
+and cppVarDecl vardeclist delim =
+   let varDecStr = List.fold_left (fun a b -> a ^ (cppVar b delim)) "" vardeclist in
    let varDectrun = String.sub varDecStr 0 ((String.length varDecStr)-1) in
-   sprintf "%s" varDectrun
+   sprintf "%s " varDectrun
 
-and cppVar var =
+and cppVar var delim =
     let vartype = cpp_from_type var.styp in 
-    sprintf " %s %s," vartype var.sname
+    sprintf " %s %s%s" vartype var.sname delim
 
 and cppStmtList astmtlist =    
     let outStr = List.fold_left (fun a b -> a ^ (cppStmt b)) "" astmtlist in
