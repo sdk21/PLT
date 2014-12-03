@@ -10,6 +10,9 @@ type sdata_type =
   | Float
   | Comp
   | Mat
+  | Mati
+  | Matf
+  | Matc
   | Qubb
   | Qubk
   | Void
@@ -82,18 +85,30 @@ and string_of_binop e1 op e2 =
       | Leq -> " <= "   | Gt -> " > "      | Geq -> " >= "
       | Xor -> " XOR "  | And -> " && "    | Or -> " || ") ^ string_of_expr_wrapper e2
 
+and string_of_mat l =
+  let row_strs = 
+    List.map string_of_row l
+  in
+    "[" ^ String.concat "" row_strs ^ "]"
+
+and string_of_row r =
+  let row_str = 
+    String.concat "," (List.map string_of_expr_wrapper r)
+  in
+    "(" ^ row_str ^ ")"
+
 and string_of_sexpr = function
     Lit_int(i) -> string_of_int i
     | Lit_float(f) -> string_of_float f
     | Lit_comp(f1, f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
     | Lit_qub(i) -> string_of_int i
+    | Mat(l) ->  string_of_mat l
     | Id(s) -> s
     | Unop(op, e) -> string_of_unop op e
     | Binop(e1, op, e2) -> string_of_binop e1 op e2
     | Assign(name, e) -> name ^ " = " ^ string_of_expr_wrapper e
     | Call(name, params) -> "Calling " ^ name ^ " on " ^ string_of_sexprs params
-    | Mat(e) -> ""
-    | Noexpr -> ""
+    | Noexpr -> "noexpr"
 
 and string_of_expr_wrapper w =
   let sexpr =
@@ -101,7 +116,9 @@ and string_of_expr_wrapper w =
         Expr(Lit_int(i), Int) -> Lit_int(i)
       | Expr(Lit_float(f), Float) -> Lit_float(f)
       | Expr(Lit_comp(f1, f2), Comp) -> Lit_comp(f1, f2)
-      | Expr(Mat(l), Mat) -> Lit_int(1)
+      | Expr(Mat(l), Mati) -> Mat(l)
+      | Expr(Mat(l), Matf) -> Mat(l)
+      | Expr(Mat(l), Matc) -> Mat(l)
       | Expr(Id(name), typ) -> Id(name)
       | Expr(Unop(op, e), _) -> Unop(op, e) 
       | Expr(Binop(e1, op, e2), _) -> Binop(e1, op, e2)
@@ -147,10 +164,10 @@ and string_of_sfdecl sfdecl =
     | Qubb -> " qubb "
     | Qubk -> " qubk "
     | _ -> "") ^
-      "\nret_name: " ^ sfdecl.sret_name ^ "\nfunc_name: "  ^ sfdecl.sfunc_name ^  "\n(" ^
+      "\nsret_name: " ^ sfdecl.sret_name ^ "\nsfunc_name: "  ^ sfdecl.sfunc_name ^  "\n(" ^
         String.concat "" (List.map string_of_svar_decl sfdecl.sformal_params) ^ ")\n{\n" ^
           String.concat "" (List.map string_of_svar_decl sfdecl.slocals) ^ "\n" ^
             String.concat "" (List.map string_of_sstmt sfdecl.sbody) ^ "}"
  
-and string_of_program (l) = 
+and string_of_sprogram (l) = 
   "program:\n" ^ String.concat "\n" (List.map string_of_sfdecl l)

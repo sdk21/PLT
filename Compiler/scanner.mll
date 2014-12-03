@@ -14,9 +14,6 @@ rule token = parse
   whitespace { token lexbuf }
 | '#'        { comment lexbuf }
 
-| "e"        { E }      (* Euler's number *)
-| "pi"       { PI }     (* pi *)
-
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
 | "comp"     { COMP }   (* Complex type *)
