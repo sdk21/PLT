@@ -17,6 +17,6 @@ let _ =
             let sprogram =
               Analyzer.check_program program
             in
-              print_string (Sast.string_of_program sprogram)
+              print_string (Sast.string_of_sprogram sprogram)
           | Gen -> Generator.gen_program "out" (Analyzer.check_program program)
           | Debug -> print_string "debug"
