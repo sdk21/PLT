@@ -179,20 +179,18 @@ and check_mat l env =
     let Sast.Expr(_,t) =
           check_expr env e
         in
-          let rev_smat =
+          let smat =
             List.map (fun row -> check_mat_helper row t env) l
           in
-            let smat =
-              List.rev(rev_smat) in
-                match t with
-                  Sast.Int -> Sast.Expr(Sast.Mat(smat), Sast.Mati)
-                  | Sast.Float -> Sast.Expr(Sast.Mat(smat), Sast.Matf)
-                  | Sast.Comp -> Sast.Expr(Sast.Mat(smat), Sast.Matc)
-                  | _ -> matrix_error 2
+	    match t with
+	    Sast.Int -> Sast.Expr(Sast.Mat(smat), Sast.Mati)
+	    | Sast.Float -> Sast.Expr(Sast.Mat(smat), Sast.Matf)
+	    | Sast.Comp -> Sast.Expr(Sast.Mat(smat), Sast.Matc)
+	    | _ -> matrix_error 2
 
 and check_mat_helper r t env =
   let rev_srow =
-    check_row (List.tl r) [] t env
+    check_row r [] t env
   in
    List.rev(rev_srow)
 

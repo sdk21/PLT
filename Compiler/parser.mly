@@ -64,7 +64,6 @@ formal_params_list:
                                            name = $2; }] }
   | formal_params_list COMMA vtype ID { {  typ = $3;
                                            name = $4; } :: $1 }
-
 actual_params:
   /* nothing */        { [] }
   | actual_params_list { List.rev $1 }
@@ -87,7 +86,7 @@ mat_row:
   | mat_row COMMA expr { $3 :: $1 }
 
 mat_row_list:
-  LPAREN mat_row RPAREN { [List.rev $2] }
+  LPAREN mat_row RPAREN { [List.rev($2)] }
   | mat_row_list LPAREN mat_row RPAREN { List.rev($3) :: $1 }
 
 inner_comp:
