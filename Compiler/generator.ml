@@ -151,7 +151,7 @@ and writeBinop expr1 op expr2 =
 and writeMatrix expr_wrap = 
     let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
     let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-2) in
-    sprintf "%s\n;" submatrix 
+    sprintf "%s" submatrix 
 
 and writeRow row_expr =
     let rowStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ "," ) "" row_expr in
