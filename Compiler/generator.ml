@@ -18,12 +18,12 @@ let cpp_from_type (ty: Sast.sdata_type) : string =
     | Int -> "int"
     | Float -> "float"
     | Comp -> "complex"
-    | Mat -> "Matrix"
-    | Mati -> "Matrix"
-    | Matf -> "Matrix"
-    | Matc -> "Matrix"
-    | Qubb -> "Matrix"
-    | Qubk -> "Matrix"
+    | Mat -> "MatrixXcf"
+    | Mati -> "MatrixXci"
+    | Matf -> "MatrixXcf"
+    | Matc -> "MatrixXcf"
+    | Qubb -> "MatrixXcf"
+    | Qubk -> "MatrixXcf"
     | Void -> " "
 
 (* write program in .cpp outfile*)
