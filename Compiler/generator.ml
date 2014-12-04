@@ -89,7 +89,7 @@ and cppExpr expr = match expr with
   | Lit_comp(re,im) -> " (" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
-  | Lit_qub(expr) -> writeQubit expr
+  | Lit_qub(vec) -> sprintf "genQubit(%s)" vec
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
@@ -160,7 +160,7 @@ and writeRow row_expr =
 and writeUnop op expr = 
     let exp = cppExpr (expr_of expr) in 
         let unopFunc op exp = match op with
-          Ast.Neg     -> sprintf "  -%s" exp
+          Ast.Neg   -> sprintf "  -%s" exp
         | Ast.Not   -> sprintf "  !(%s)" exp
         | Ast.Re    -> sprintf "  real(%s)" exp 	(* assumes exp is matrix*)
         | Ast.Im    -> sprintf "  imag(%s)" exp
@@ -177,6 +177,4 @@ and writeUnop op expr =
 
 (*probably doesn't work yet due to string format of expr*)
 and writeQubit expr =
-    let exp = string_of_int expr in
-	sprintf "genQubit(%s)" exp
-     
+	sprintf "genQubit(%s)" expr

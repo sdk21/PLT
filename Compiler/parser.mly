@@ -20,7 +20,7 @@
 %token EOF
 
 %token <string> ID
-%token <int> INT_LIT
+%token <string> INT_LIT
 %token <float> FLOAT_LIT
 %token <string> COMP_LIT
 
@@ -96,7 +96,7 @@ inner_comp:
 
 expr:
   ID                               { Id($1) }
-  | INT_LIT                        { Lit_int($1) }
+  | INT_LIT                        { Lit_int(int_of_string $1) }
   | FLOAT_LIT                      { Lit_float($1) }
   | C LPAREN inner_comp RPAREN     { Lit_comp(List.hd $3, List.hd (List.rev $3)) } 
   | LCAR INT_LIT BAR               { Lit_qub($2, 0) }

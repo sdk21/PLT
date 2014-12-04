@@ -24,7 +24,7 @@ and  sexpr =
     Lit_int of int
   | Lit_float of float
   | Lit_comp of float * float
-  | Lit_qub of int
+  | Lit_qub of string
   | Mat of expr_wrapper list list
   | Id of string
   | Unop of Ast.un_op * expr_wrapper
@@ -44,6 +44,7 @@ and svar_decl =
   { 
     styp : sdata_type;
     sname : string;
+    builtin : bool;
   }
 
 and sfunc_decl = 
@@ -101,7 +102,7 @@ and string_of_sexpr = function
     Lit_int(i) -> string_of_int i
     | Lit_float(f) -> string_of_float f
     | Lit_comp(f1, f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
-    | Lit_qub(i) -> string_of_int i
+    | Lit_qub(i) -> i
     | Mat(l) ->  string_of_mat l
     | Id(s) -> s
     | Unop(op, e) -> string_of_unop op e
