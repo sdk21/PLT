@@ -73,6 +73,41 @@ MatrixXcf genQubit(string s, int bra) {
 
 	return qub;
 }
+MatrixXcf genQubits(string s) {
+	
+	int slen = s.length();
+	int qstrlen = slen-2; //length of the qubit string removing end chars
+
+	string qstr = s.substr(1, qstrlen); //binary substring from qubit rep
+	int qlen = pow(2, qstrlen); //length of the vector
+	//int qlen = pow(2,slen); //length of vector
+
+	int base10num = 0;
+
+	//iterates through qstr. Whenever digit is a 1, it adds the associated 
+	//power of 2 for that position to base10num
+	const char * cq = qstr.c_str();
+	char * c = new char();
+	for(int i = 0; i < qstrlen; i++) {
+		strncpy(c,cq+i,1);
+		base10num += strtol(c,NULL,10) * pow(2,(qstrlen-1-i));  
+	}
+	delete c;
+
+	//creates the vector and sets correct bit to 1
+	MatrixXcf qub;
+	if(!s.compare(0, 1, "<")) {
+	//if(bra)
+		qub = MatrixXcf(1,qlen);
+		qub(0,qlen-1-base10num) = 1;
+//	} else if(!bra){
+	} else {
+		qub = MatrixXcf(qlen,1);
+		qub(base10num,0) = 1;
+	}
+
+	return qub;
+}
 
 /*
 int main() {

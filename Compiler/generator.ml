@@ -60,12 +60,11 @@ and cpp_funcList func =
     and cppLocals = cppVarDecl func.slocals ";\n\t" in
     sprintf "
     %s %s (%s){
-	%s %s;
 	%s 
         %s
         return %s;
     }
-    " cppRtnType cppFName cppFParam cppRtnType cppRtnValue cppLocals cppFBody cppRtnValue
+    " cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
 
 (* variable declarations *)
 and cppVarDecl vardeclist delim =
@@ -101,9 +100,7 @@ and cppExpr expr = match expr with
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
   | Lit_qubb(vec) -> writeQubit vec 1
   | Lit_qubk(vec) -> writeQubit vec 0
-  (*
-  | Lit_qub(vec) -> sprintf "genQubit(%s)" vec
-  *)
+  | Lit_qub(vec) -> sprintf "genQubits(%s)" vec
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)

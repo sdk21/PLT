@@ -17,7 +17,8 @@ static const Matrix2cf Y = (Matrix2cf() << 0, -std::complex<float>(0,1),
 //METHODS
 MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2);
 Matrix4cf control(Matrix2cf mat);
-MatrixXcf genQubit(string s);
+MatrixXcf genQubit(string s, int bra);
+MatrixXcf genQubits(string s);
 
 #endif
 
