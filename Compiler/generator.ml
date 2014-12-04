@@ -91,6 +91,8 @@ and cppExpr expr = match expr with
   | Unop(op, expr) ->  writeUnop op expr
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
   | Lit_qub(expr) -> writeQubit expr
+  | Lit_qubb(expr) -> writeQubit expr 1
+  | Lit_qubk(expr) -> writeQubit expr 0
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
@@ -170,14 +172,14 @@ and writeUnop op expr =
         | Ast.Det   -> sprintf "  %s.determinant()" exp
         | Ast.Adj   -> sprintf "  %s.adjoint()" exp
         | Ast.Conj  -> sprintf "  %s.conjugate()" exp
-        | Ast.Unit  -> sprintf "  %s" exp  		(* till here *)
+        | Ast.Unit  -> sprintf "  (%s.conjugate()*%s).isIdentity()" exp  		(* till here *)
         | Ast.Sin   -> sprintf "  sin((double)%s)" exp
         | Ast.Cos   -> sprintf "  cos((double)%s)" exp
         | Ast.Tan   -> sprintf "  tan((double)%s)" exp
     in unopFunc op exp
 
 (*probably doesn't work yet due to string format of expr*)
-and writeQubit expr =
+and writeQubit expr bra=
     let exp = string_of_int expr in
-	sprintf "genQubit(%s)" exp
+	sprintf "genQubit(%s,%s)" exp bra
      
