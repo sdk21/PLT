@@ -5,8 +5,8 @@
 
 { open Parser }
 
-let name = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 let whitespace = [' ' '\t' '\r' '\n'] 
+let name = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
 let integers = ['0'-'9']+
 let floats = ['0'-'9']+ '.' ['0'-'9']*
 
@@ -85,8 +85,8 @@ rule token = parse
 | "break"    { BREAK }  (* Break For or While loop *)
 | "continue" { CONT }   (* Continue to For or While loop *)
 
-| name     as id   { ID(id) } 
-| integers as lxm  { INT_LIT(int_of_string lxm) }
+| name     as lxm  { ID(lxm) } 
+| integers as lxm  { INT_LIT(lxm) }
 | floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
 
 | eof              { EOF }

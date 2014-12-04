@@ -11,24 +11,33 @@ open Sast
 ***************)
 
 type symbol_table =
-  { parent : symbol_table option;
-    ret_typ : Sast.sdata_type;
+  { ret_typ : Sast.sdata_type;
     ret_nam : string;
     func_nam : string;
     mutable formal_param : svar_decl list;
-    mutable local : svar_decl list; }
+    mutable local : svar_decl list; 
+    builtin : svar_decl list; }
 
 type environment =
   { scope : symbol_table;
     mutable functions : Sast.sfunc_decl list; }
 
+let builtins =
+  [
+    { styp = Sast.Float; sname = "e"; builtin = true; };
+    { styp = Sast.Float; sname = "pi"; builtin = true; };
+    { styp = Sast.Mati; sname = "H"; builtin = true; };
+    { styp = Sast.Mati; sname = "X"; builtin = true; };
+    { styp = Sast.Mati; sname = "Y"; builtin = true; };
+  ]
+
 let root_symbol_table =
-  { parent = None;
-    ret_typ = Sast.Void;
+  { ret_typ = Sast.Void;
     ret_nam = "";
     func_nam = "";
     formal_param = [];
-    local = []; }
+    local = []; 
+    builtin = builtins; }
 
 let root_environment = 
   { scope = root_symbol_table;
@@ -112,20 +121,18 @@ let while_error t = match t with
 *********************)
 
 let var_exists name scope =
-  let formal =
-    List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param
-  in match formal with
-  true -> true
-  | false ->
-      let local =
-        List.exists (fun vdecl -> name = vdecl.sname) scope.local
-      in
-        local
+  if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then
+    true
+  else
+    if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then
+      true
+    else
+     List.exists (fun vdecl -> name = vdecl.sname) scope.builtin
 
 let func_exists name env =
   List.exists (fun fdecl -> name = fdecl.sfunc_name) env.functions
 
-let rec lookup_var name scope =
+let lookup_var name scope =
   let vdecl_found = 
     try
       List.find (fun vdecl -> name = vdecl.sname) scope.formal_param
@@ -133,9 +140,9 @@ let rec lookup_var name scope =
       try
         List.find (fun vdecl -> name = vdecl.sname) scope.local
       with Not_found ->
-        match scope.parent with
-          Some(parent) -> lookup_var name parent
-          | _ -> raise Not_found
+        try
+          List.find (fun vdecl -> name = vdecl.sname) scope.builtin
+        with Not_found -> var_decl_error name
     in
       vdecl_found
 
@@ -163,14 +170,17 @@ let rec check_qub_expr i =
     else 0
 
 and check_qub i t =
-  if (check_qub_expr i = 1)
-    then
-      (match t with
-          0 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubb)
-        | 1 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubk)
-        | _ -> qub_error 2)
-  else
-    qub_error t
+  let int_expr =
+    int_of_string i
+  in
+    if (check_qub_expr int_expr = 1)
+      then
+        (match t with
+            0 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubb)
+          | 1 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubk)
+          | _ -> qub_error 2)
+    else
+      qub_error t
 
 and check_mat l env =
   let e =
@@ -516,12 +526,12 @@ and check_stmt env = function
 
 and vdecl_to_sdecl vdecl =
     match vdecl.typ with
-      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; }
-      | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; }
-      | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; }
-      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; }
-      | Ast.Qubb -> { styp = Sast.Qubb; sname = vdecl.name; }
-      | Ast.Qubk -> { styp = Sast.Qubk; sname = vdecl.name; }
+      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtin = false; }
+      | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtin = false; }
+      | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtin = false; }
+      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtin = false; }
+      | Ast.Qubb -> { styp = Sast.Qubb; sname = vdecl.name; builtin = false; }
+      | Ast.Qubk -> { styp = Sast.Qubk; sname = vdecl.name; builtin = false; }
 
 and formal_to_sformal scope formal_param  =
   let found =
@@ -537,12 +547,12 @@ and formal_to_sformal scope formal_param  =
               sdecl :: scope.formal_param
             in
               let new_scope =
-                { parent = scope.parent;
-                  ret_typ = scope.ret_typ;
+                { ret_typ = scope.ret_typ;
                   ret_nam = scope.ret_nam;
                   func_nam = scope.func_nam;
                   formal_param = new_formals;
-                  local = scope.local; }
+                  local = scope.local; 
+                  builtin = scope.builtin; }
               in
                 new_scope
 
@@ -566,12 +576,12 @@ and local_to_slocal scope local =
               sdecl :: scope.local
             in
               let new_scope =
-                { parent = scope.parent;
-                  ret_typ = scope.ret_typ;
+                { ret_typ = scope.ret_typ;
                   ret_nam = scope.ret_nam;
                   func_nam = scope.func_nam;
                   formal_param = scope.formal_param;
-                  local = new_locals; }
+                  local = new_locals; 
+                  builtin = scope.builtin; }
               in
                 new_scope
 
@@ -592,65 +602,89 @@ and ret_to_sret scope ret_typ =
       | Ast.Qubk -> Sast.Qubk
   in
     let new_scope =
-      { parent = scope.parent;
-        ret_typ = sret_typ;
+      { ret_typ = sret_typ;
         ret_nam = scope.ret_nam;
         func_nam = scope.func_nam;
         formal_param = scope.formal_param;
-        local = scope.local; }
+        local = scope.local;
+        builtin = scope.builtin; }
     in
       new_scope
 
 and rname_to_srname scope ret_name =
     let new_scope =
-      { parent = scope.parent;
+      { 
         ret_typ = scope.ret_typ;
         ret_nam = ret_name;
         func_nam = scope.func_nam;
         formal_param = scope.formal_param;
-        local = scope.local; }
+        local = scope.local;
+        builtin = scope.builtin; }
     in
       new_scope
 
 and fname_to_sfname scope func_name =
     let new_scope =
-      { parent = scope.parent;
-        ret_typ = scope.ret_typ;
+      { ret_typ = scope.ret_typ;
         ret_nam = scope.ret_nam;
         func_nam = func_name;
         formal_param = scope.formal_param;
-        local = scope.local; }
+        local = scope.local; 
+        builtin = scope.builtin; }
     in
       new_scope
 
-and fdecl_to_sdecl fdecl env = 
-  let new_scope = 
-    formals_to_sformals env.scope fdecl.formal_params
+and ret_to_slocal scope name typ =
+  let vdecl =
+    { typ = typ; name = name; }
   in
-    let new_scope =
-      locals_to_slocals new_scope fdecl.locals
+    let sdecl = 
+      vdecl_to_sdecl vdecl
     in
-      let new_scope =
-        ret_to_sret new_scope fdecl.ret_typ
+      let new_locals = 
+        sdecl :: scope.local
       in
         let new_scope =
-          rname_to_srname new_scope fdecl.ret_name
+          { ret_typ = scope.ret_typ;
+            ret_nam = scope.ret_nam;
+            func_nam = scope.func_nam;
+            formal_param = scope.formal_param;
+            local = new_locals; 
+            builtin = scope.builtin; }
+        in
+          new_scope
+
+and fdecl_to_sdecl fdecl env = 
+  let new_scope =
+    ret_to_slocal env.scope fdecl.ret_name fdecl.ret_typ
+  in
+    let new_scope = 
+      formals_to_sformals new_scope fdecl.formal_params
+    in
+      let new_scope =
+        locals_to_slocals new_scope fdecl.locals
+      in
+        let new_scope =
+          ret_to_sret new_scope fdecl.ret_typ
         in
           let new_scope =
-            fname_to_sfname new_scope fdecl.func_name
+            rname_to_srname new_scope fdecl.ret_name
           in
-            let new_env =
-              { scope = new_scope; functions = env.functions; }
+            let new_scope =
+              fname_to_sfname new_scope fdecl.func_name
             in
-              let stmts =
-                List.map (fun stmt -> check_stmt new_env stmt) fdecl.body
+              let new_env =
+                { scope = new_scope; functions = env.functions; }
               in
-                { sret_typ = new_scope.ret_typ;
-                  sret_name = new_scope.ret_nam;
-                  sfunc_name = new_scope.func_nam;
-                  sformal_params = new_scope.formal_param;
-                  slocals = new_scope.local;
-                  sbody = stmts; }
+                let stmts =
+                  List.map (fun stmt -> check_stmt new_env stmt) fdecl.body
+                in
+                  { sret_typ = new_scope.ret_typ;
+                    sret_name = new_scope.ret_nam;
+                    sfunc_name = new_scope.func_nam;
+                    sformal_params = new_scope.formal_param;
+                    slocals = new_scope.local;
+                    sbody = stmts; }
 
 and check_function env fdecl =
   let found =
