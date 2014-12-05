@@ -14,6 +14,8 @@ rule token = parse
   whitespace { token lexbuf }
 | '#'        { comment lexbuf }
 
+| "print"    { PRINT }    (* Print statements *)
+
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
 | "comp"     { COMP }   (* Complex type *)

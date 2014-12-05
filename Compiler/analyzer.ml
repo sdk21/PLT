@@ -59,6 +59,9 @@ let qub_error t = match t with
   | 1 -> raise (Except("Invalid use of <expr|"))
   | _ -> raise (Except("Invalid use qubits"))
 
+let assignment_error =
+  raise (Except("Invalid assignment"))
+
 let var_error s =
   raise (Except("Invalid use of a variable: " ^ s ^ " was not declared" ))
 
@@ -234,7 +237,7 @@ and check_id name env =
     try
       lookup_var name env.scope
      with Not_found ->
-       raise (Except("Undeclared identifier: " ^ name))
+       var_error name
   in
     let typ = vdecl.styp in
       Sast.Expr(Sast.Id(name), typ)
@@ -407,16 +410,22 @@ and check_assign name e env =
     try
       lookup_var name env.scope
      with Not_found ->
-       raise (Except("Undeclared identifier: " ^ name))
+       var_error name
     in
       let e = check_expr env e in
         match e with
           Sast.Expr(_, t1) -> 
             let t2 = vdecl.styp in
-              if (t1 = t2)
-                then Sast.Expr(Sast.Assign(name, e), t1)
+              if (t2 = Sast.Mat) then
+                if (t1 = Sast.Mati || t1 = Sast.Matf || t1 = Sast.Matc) then
+                  Sast.Expr(Sast.Assign(name, e), t1)
+                else
+                  if (t1 = t2)
+                    then Sast.Expr(Sast.Assign(name, e), t1)
+                  else
+                    assignment_error 
               else
-                raise (Except("Invalid assignment"))
+                  assignment_error 
 
 and check_call_params formal_params params =
   if ((List.length formal_params) = 0)
