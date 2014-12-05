@@ -176,8 +176,8 @@ and check_qub i t =
     if (check_qub_expr int_expr = 1)
       then
         (match t with
-            0 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubb)
-          | 1 -> Sast.Expr(Sast.Lit_qub(i), Sast.Qubk)
+            0 -> Sast.Expr(Sast.Lit_qub(i, 1), Sast.Qubb)
+          | 1 -> Sast.Expr(Sast.Lit_qub(i, 0), Sast.Qubk)
           | _ -> qub_error 2)
     else
       qub_error t

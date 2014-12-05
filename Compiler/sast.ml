@@ -24,7 +24,7 @@ and  sexpr =
     Lit_int of int
   | Lit_float of float
   | Lit_comp of float * float
-  | Lit_qub of string
+  | Lit_qub of string * int
   | Mat of expr_wrapper list list
   | Id of string
   | Unop of Ast.un_op * expr_wrapper
@@ -102,9 +102,7 @@ and string_of_sexpr = function
     Lit_int(i) -> string_of_int i
     | Lit_float(f) -> string_of_float f
     | Lit_comp(f1, f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
-    | Lit_qubb(i) -> i
-    | Lit_qubk(i) -> i
-    | Lit_qub(i) -> i
+    | Lit_qub(i, t) -> i
     | Mat(l) ->  string_of_mat l
     | Id(s) -> s
     | Unop(op, e) -> string_of_unop op e
@@ -127,9 +125,7 @@ and string_of_expr_wrapper w =
       | Expr(Binop(e1, op, e2), _) -> Binop(e1, op, e2)
       | Expr(Assign(name, e), t1) -> Assign(name, e)
       | Expr(Call(name, params), _) -> Call(name, params)
-      | Expr(Lit_qub(i), _) -> Lit_qub(i)
-      | Expr(Lit_qubk(i), _) -> Lit_qubk(i)
-      | Expr(Lit_qubb(i), _) -> Lit_qubb(i)
+      | Expr(Lit_qub(i, t), _) -> Lit_qub(i, t)
       | _ -> Noexpr
     in
       string_of_sexpr sexpr

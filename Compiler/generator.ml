@@ -98,9 +98,7 @@ and cppExpr expr = match expr with
   | Lit_comp(re,im) -> " (" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
-  | Lit_qubb(vec) -> writeQubit vec 1
-  | Lit_qubk(vec) -> writeQubit vec 0
-  | Lit_qub(vec) -> sprintf "genQubits(%s)" vec
+  | Lit_qub(vec, t) -> writeQubit vec t
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
