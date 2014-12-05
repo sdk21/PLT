@@ -59,8 +59,8 @@ let qub_error t = match t with
   | 1 -> raise (Except("Invalid use of <expr|"))
   | _ -> raise (Except("Invalid use qubits"))
 
-let assignment_error =
-  raise (Except("Invalid assignment"))
+let assignment_error s =
+  raise (Except("Invalid assignment to variable" ^ s))
 
 let var_error s =
   raise (Except("Invalid use of a variable: " ^ s ^ " was not declared" ))
@@ -420,12 +420,12 @@ and check_assign name e env =
                 if (t1 = Sast.Mati || t1 = Sast.Matf || t1 = Sast.Matc) then
                   Sast.Expr(Sast.Assign(name, e), t1)
                 else
-                  if (t1 = t2)
-                    then Sast.Expr(Sast.Assign(name, e), t1)
-                  else
-                    assignment_error 
+                  assignment_error name
               else
-                  assignment_error 
+                if (t1 = t2) then
+                  Sast.Expr(Sast.Assign(name, e), t1)
+                else
+                  assignment_error name
 
 and check_call_params formal_params params =
   if ((List.length formal_params) = 0)
