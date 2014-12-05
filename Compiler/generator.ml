@@ -17,7 +17,7 @@ let cpp_from_type (ty: Sast.sdata_type) : string =
     match ty with
     | Int -> "int"
     | Float -> "float"
-    | Comp -> "complex"
+    | Comp -> "complex<float>"
     | Mat -> "MatrixXcf"
     | Mati -> "MatrixXci"
     | Matf -> "MatrixXcf"
@@ -58,6 +58,15 @@ and cpp_funcList func =
     and cppFParam = cppVarDecl func.sformal_params ","
     and cppFBody = cppStmtList func.sbody 
     and cppLocals = cppVarDecl func.slocals ";\n\t" in
+    if cppFName = "execute" then
+    sprintf "
+    %s main (){
+	%s 
+        %s
+        return 0;
+    }
+    " cppRtnType cppLocals cppFBody 
+    else
     sprintf "
     %s %s (%s){
 	%s 
@@ -74,8 +83,10 @@ and cppVarDecl vardeclist delim =
 
 (* each varibale *)   
 and cppVar var delim =
-    let vartype = cpp_from_type var.styp in 
-    sprintf " %s %s%s" vartype var.sname delim
+    if not var.builtin then
+        let vartype = cpp_from_type var.styp in 
+        sprintf " %s %s%s" vartype var.sname delim
+    else ""
 
 (* list of statements *)
 and cppStmtList astmtlist =    
@@ -95,10 +106,10 @@ and cppStmt stmts = match stmts with
 and cppExpr expr = match expr with
    Lit_int(lit) -> string_of_int lit ^ " "
   | Lit_float(flit) -> string_of_float flit ^ " "
-  | Lit_comp(re,im) -> " (" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
+  | Lit_comp(re,im) -> " complex<float>(" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
-  | Lit_qub(vec,i) -> writeQubit vec i
+  | Lit_qub(vec, t) -> writeQubit vec t
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
@@ -166,11 +177,15 @@ and writeBinop expr1 op expr2 =
 and writeMatrix expr_wrap = 
     let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
     let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-2) in
-    sprintf "%s" submatrix 
+    sprintf "(Matrix<complex<float>>,Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
 
 and writeRow row_expr =
     let rowStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ "," ) "" row_expr in
     sprintf "%s" rowStr
+
+and colMatrix expr_wrap = List.length (List.hd expr_wrap)
+
+and rowMatrix expr_wrap = List.length expr_wrap
 
 (* uniary operators *)
 and writeUnop op expr = 
