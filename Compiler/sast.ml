@@ -24,7 +24,7 @@ and  sexpr =
     Lit_int of int
   | Lit_float of float
   | Lit_comp of float * float
-  | Lit_qub of string
+  | Lit_qub of string * int
   | Mat of expr_wrapper list list
   | Id of string
   | Unop of Ast.un_op * expr_wrapper
