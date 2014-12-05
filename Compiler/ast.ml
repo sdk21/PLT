@@ -68,6 +68,7 @@ type stmt =
   | If of expr * stmt
   | For of expr * expr * expr * expr * stmt
   | While of expr * stmt
+  | Print of expr
 
 (* Statement Lists *)
 type stmt_list =
@@ -154,6 +155,7 @@ and string_of_stmt = function
   | For(ex1,ex2,ex3,ex4,stmt) -> "For args : " ^ string_of_expr ex1 ^ " " ^ string_of_expr ex2 ^ " "^ string_of_expr ex3 ^ 
                                  " "^ string_of_expr ex4 ^ "\nstatement :\n" ^ string_of_stmt stmt 
   | While(expr,stmt) -> "While condition : " ^ string_of_expr expr ^ "\nstatement : " ^ string_of_stmt stmt
+  | Print(expr) -> "Print(" ^ string_of_expr expr ^")"
 
 and string_of_stmts stmts = 
   String.concat "\n" (List.map string_of_stmt stmts) 

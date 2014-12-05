@@ -55,9 +55,12 @@ let matrix_error t = match t with
   | _ -> raise (Except("Invalid matrix"))
 
 let qub_error t = match t with
-  1 -> raise (Except("Invalid use of <expr|"))
-  | 0 -> raise (Except("Invalid use of |expr>"))
+    0 -> raise (Except("Invalid use of |expr>"))
+  | 1 -> raise (Except("Invalid use of <expr|"))
   | _ -> raise (Except("Invalid use qubits"))
+
+let assignment_error =
+  raise (Except("Invalid assignment"))
 
 let var_error s =
   raise (Except("Invalid use of a variable: " ^ s ^ " was not declared" ))
@@ -115,6 +118,11 @@ let for_error t = match t with
 
 let while_error t = match t with
   _ -> raise (Except("Invalid use of 'while'"))
+
+let program_error t = match t with
+  0 -> raise (Except("Missing 'execute' function"))
+  | 1 -> raise (Except("'execute' function must be of type int"))
+  | _ -> raise (Except("Invalid program"))
 
 (*********************
  * Utility Functions *
@@ -229,7 +237,7 @@ and check_id name env =
     try
       lookup_var name env.scope
      with Not_found ->
-       raise (Except("Undeclared identifier: " ^ name))
+       var_error name
   in
     let typ = vdecl.styp in
       Sast.Expr(Sast.Id(name), typ)
@@ -402,16 +410,22 @@ and check_assign name e env =
     try
       lookup_var name env.scope
      with Not_found ->
-       raise (Except("Undeclared identifier: " ^ name))
+       var_error name
     in
       let e = check_expr env e in
         match e with
           Sast.Expr(_, t1) -> 
             let t2 = vdecl.styp in
-              if (t1 = t2)
-                then Sast.Expr(Sast.Assign(name, e), t1)
+              if (t2 = Sast.Mat) then
+                if (t1 = Sast.Mati || t1 = Sast.Matf || t1 = Sast.Matc) then
+                  Sast.Expr(Sast.Assign(name, e), t1)
+                else
+                  if (t1 = t2)
+                    then Sast.Expr(Sast.Assign(name, e), t1)
+                  else
+                    assignment_error 
               else
-                raise (Except("Invalid assignment"))
+                  assignment_error 
 
 and check_call_params formal_params params =
   if ((List.length formal_params) = 0)
@@ -517,12 +531,19 @@ and check_while e s env =
           | _ -> while_error 1)
     | _ -> while_error 1
 
+and check_print e env =
+  let se =
+    check_expr env e
+  in
+    Sast.Print(se)
+
 and check_stmt env = function
   Ast.Expr(e) -> Sast.Sexpr(check_expr env e)
   | Ast.Block(l) -> check_block l env
   | Ast.If(e, s) -> check_if e s env
   | Ast.For(e1, e2, e3, e4, s) -> check_for e1 e2 e3 e4 s env
   | Ast.While(e, s) -> check_while e s env
+  | Ast.Print(e) -> check_print e env
 
 and vdecl_to_sdecl vdecl =
     match vdecl.typ with
@@ -558,7 +579,10 @@ and formal_to_sformal scope formal_param  =
 
 and formals_to_sformals scope formal_params =
   let new_scope = 
-    List.fold_left formal_to_sformal scope (List.rev formal_params)
+    if ((List.length formal_params) = 0) then
+      scope
+    else
+      List.fold_left formal_to_sformal scope (List.rev formal_params)
   in
     new_scope
 
@@ -702,8 +726,29 @@ and check_function env fdecl =
             in
               new_env
 
+and check_exec_fdecl fdecls =
+  let fdecl =
+    List.hd (List.rev fdecls)
+  in 
+    let name =
+      fdecl.func_name
+    in
+      if (name = "execute") then
+        let typ =
+          fdecl.ret_typ
+        in
+          if (typ = Ast.Int) then
+            fdecls
+          else
+            program_error 1
+      else
+        program_error 0
+
 and check_program fdecls =
-  let env =
-    List.fold_left check_function root_environment (List.rev fdecls)
+  let fdecls =
+    check_exec_fdecl fdecls
   in
-    env.functions
+    let env =
+      List.fold_left check_function root_environment (List.rev fdecls)
+    in
+      env.functions

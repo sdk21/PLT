@@ -39,6 +39,7 @@ and sstmt =
   | If of expr_wrapper * sstmt
   | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
   | While of expr_wrapper * sstmt
+  | Print of expr_wrapper
  
 and svar_decl = 
   { 
@@ -151,6 +152,7 @@ and string_of_sstmt = function
   | For(e1, e2, e3, e4, s) -> "For args : " ^ string_of_expr_wrapper e1 ^ " " ^ string_of_expr_wrapper e2 ^ " "^ string_of_expr_wrapper e3 ^ 
                                  " "^ string_of_expr_wrapper e4 ^ "\nstatement :\n" ^ string_of_sstmt s 
   | While(e,s) -> "While condition : " ^ string_of_expr_wrapper e ^ "\nstatement : " ^ string_of_sstmt s
+  | Print(e) -> "Print(" ^ string_of_expr_wrapper e ^")"
 
 and string_of_sstmts sstmts = 
   String.concat "\n" (List.map string_of_sstmt sstmts) 
