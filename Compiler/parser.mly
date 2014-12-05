@@ -9,6 +9,7 @@
 %token INT FLOAT COMP QUBB QUBK MAT
 %token DEF
 %token RETURN
+%token PRINT
 %token ASSIGN
 %token COMMA COLON SEMI LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE LCAR RCAR BAR
 %token PLUS MINUS TIMES DIV MOD EXPN
@@ -145,6 +146,7 @@ stmt:
   | FOR LPAREN expr FROM expr TO expr by RPAREN stmt { For($3, $5, $7, $8, $10) }
   | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
   | IF LPAREN expr RPAREN stmt                       { If($3, $5) }
+  | PRINT expr                                       { Print($2) }
 
 stmt_list:
   /* nothing  */ { [] }
