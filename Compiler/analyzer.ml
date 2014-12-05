@@ -420,11 +420,11 @@ and check_assign name e env =
                 if (t1 = Sast.Mati || t1 = Sast.Matf || t1 = Sast.Matc) then
                   Sast.Expr(Sast.Assign(name, e), t1)
                 else
-                  if (t1 = t2)
-                    then Sast.Expr(Sast.Assign(name, e), t1)
-                  else
-                    assignment_error 
+                  assignment_error 
               else
+                if (t1 = t2)
+                  then Sast.Expr(Sast.Assign(name, e), t1)
+                else
                   assignment_error 
 
 and check_call_params formal_params params =
