@@ -496,16 +496,19 @@ and check_block stmts env =
     in
       Sast.Block(sstmts)
 
-and check_if e s env =
+and check_if e s1 s2 env =
     let se =
       check_expr env e
     in
       match se with
         Sast.Expr(_, Sast.Int) ->
-          let ss =
-            check_stmt env s
+          let ss1 =
+            check_stmt env s1
           in
-            Sast.If(se, ss)
+            let ss2 =
+              check_stmt env s2
+            in
+              Sast.If(se, ss1, ss2)
         | _ -> stmt_error 0
 
 and check_for e1 e2 e3 e4 s env =
@@ -553,7 +556,7 @@ and check_while e s env =
 and check_stmt env = function
   Ast.Expr(e) -> Sast.Sexpr(check_expr env e)
   | Ast.Block(l) -> check_block l env
-  | Ast.If(e, s) -> check_if e s env
+  | Ast.If(e, s1, s2) -> check_if e s1 s2 env
   | Ast.For(e1, e2, e3, e4, s) -> check_for e1 e2 e3 e4 s env
   | Ast.While(e, s) -> check_while e s env
 

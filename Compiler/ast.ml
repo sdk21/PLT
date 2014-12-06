@@ -67,7 +67,7 @@ type expr =
 type stmt =
     Expr of expr
   | Block of stmt list
-  | If of expr * stmt
+  | If of expr * stmt * stmt
   | For of expr * expr * expr * expr * stmt
   | While of expr * stmt
 
@@ -152,7 +152,8 @@ and string_of_exprs exprs =
 and string_of_stmt = function
     Expr(exp) -> string_of_expr exp ^ "\n"
   | Block(stmt_list) -> "{\n" ^ string_of_stmts stmt_list ^ "\n}"
-  | If(expr,stmt) -> "If condition : " ^ string_of_expr expr ^ "\nstatement :\n" ^ string_of_stmt stmt
+  | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
+  | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
   | For(ex1,ex2,ex3,ex4,stmt) -> "For args : " ^ string_of_expr ex1 ^ " " ^ string_of_expr ex2 ^ " "^ string_of_expr ex3 ^ 
                                  " "^ string_of_expr ex4 ^ "\nstatement :\n" ^ string_of_stmt stmt 
   | While(expr,stmt) -> "While condition : " ^ string_of_expr expr ^ "\nstatement : " ^ string_of_stmt stmt

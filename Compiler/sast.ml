@@ -35,7 +35,7 @@ and  sexpr =
 and sstmt =
     Sexpr of expr_wrapper
   | Block of sstmt list
-  | If of expr_wrapper * sstmt
+  | If of expr_wrapper * sstmt * sstmt
   | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
   | While of expr_wrapper * sstmt
  
@@ -148,7 +148,8 @@ and string_of_sexprs e =
 and string_of_sstmt = function
     Sexpr(e) -> string_of_expr_wrapper e ^ "\n"
   | Block(l) -> "{\n" ^ string_of_sstmts l ^ "\n}"
-  | If(e,s) -> "If condition : " ^ string_of_expr_wrapper e ^ "\nstatement :\n" ^ string_of_sstmt s
+  | If(e, s, Block([])) -> "if (" ^ string_of_expr_wrapper e ^ ")\n" ^ string_of_sstmt s
+  | If(e, s1, s2) ->  "if (" ^ string_of_expr_wrapper e ^ ")\n" ^string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
   | For(e1, e2, e3, e4, s) -> "For args : " ^ string_of_expr_wrapper e1 ^ " " ^ string_of_expr_wrapper e2 ^ " "^ string_of_expr_wrapper e3 ^ 
                                  " "^ string_of_expr_wrapper e4 ^ "\nstatement :\n" ^ string_of_sstmt s 
   | While(e,s) -> "While condition : " ^ string_of_expr_wrapper e ^ "\nstatement : " ^ string_of_sstmt s

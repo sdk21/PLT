@@ -79,6 +79,7 @@ rule token = parse
 | "tan"      { TAN }    (* Tangent *)
 
 | "if"       { IF }     (* If statement *)
+| "else"	 { ELSE }	(* Else statement *)
 | "for"      { FOR }    (* For loop - for(i from x to y by z) *)
 | "from"     { FROM }
 | "to"       { TO }
@@ -95,5 +96,5 @@ rule token = parse
 | _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
 
 and comment = parse
-  ['r' '\n']  { token lexbuf }
-| _           { comment lexbuf } 
+  ['r' '\n']       { token lexbuf }
+| _                { comment lexbuf } 

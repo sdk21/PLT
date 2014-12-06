@@ -24,6 +24,8 @@
 %token <float> FLOAT_LIT
 %token <string> COMP_LIT
 
+%nonassoc NOELSE
+%nonassoc ELSE
 %right ASSIGN
 %left OR XOR
 %left AND
@@ -54,11 +56,11 @@ vdecl:
   vtype ID SEMI { { typ = $1;
                     name = $2 } } 
 vdecl_list:
-  /* nothing */      { [] }
+    /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
 formal_params:
-  /* nothing */        { [] }
+    /* nothing */      { [] }
   | formal_params_list { List.rev $1 }
 
 formal_params_list:
@@ -67,7 +69,7 @@ formal_params_list:
   | formal_params_list COMMA vtype ID { {  typ = $3;
                                            name = $4; } :: $1 }
 actual_params:
-  /* nothing */        { [] }
+    /* nothing */      { [] }
   | actual_params_list { List.rev $1 }
 
 actual_params_list:
@@ -84,7 +86,7 @@ fdecl:
 	       body = List.rev $11; } }
 
 mat_row:
-   expr                { [$1] }
+    expr               { [$1] }
   | mat_row COMMA expr { $3 :: $1 }
 
 mat_row_list:
@@ -97,7 +99,7 @@ inner_comp:
   | FLOAT_LIT PLUS FLOAT_LIT I { [$1; $3] }
 
 expr:
-  ID                               { Id($1) }
+    ID                             { Id($1) }
   | INT_LIT                        { Lit_int(int_of_string $1) }
   | FLOAT_LIT                      { Lit_float($1) }
   | C LPAREN inner_comp RPAREN     { Lit_comp(List.hd $3, List.hd (List.rev $3)) } 
@@ -138,22 +140,23 @@ expr:
   | expr XOR    expr               { Binop($1, Xor,  $3) }
 
  by:
-  /* nothing */ { Noexpr }
- | BY expr      { $2 }
+   /* nothing */ { Noexpr }
+ | BY expr       { $2 }
 
 stmt:  
     expr SEMI                                        { Expr($1) }
   | LBRACE stmt_list RBRACE                          { Block(List.rev $2) }
   | FOR LPAREN expr FROM expr TO expr by RPAREN stmt { For($3, $5, $7, $8, $10) }
   | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
-  | IF LPAREN expr RPAREN stmt                       { If($3, $5) }
+  | IF LPAREN expr RPAREN stmt %prec NOELSE          { If($3, $5, Block([])) }
+  | IF LPAREN expr RPAREN stmt ELSE stmt             { If($3, $5, $7) }
 
 stmt_list:
-  /* nothing  */ { [] }
+    /* nothing  */ { [] }
   | stmt_list stmt { $2 :: $1 }
 
  rev_program:
-  /* nothing */ { [] }
+   /* nothing */     { [] }
  | rev_program fdecl { $2 :: $1 }
 
 program:
