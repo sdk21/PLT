@@ -113,7 +113,7 @@ and cppExpr expr = match expr with
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
-  | Call(str,expr_wrap) -> str ^  ""  
+  | Call(str,expr_wrap) -> str ^ "(" ^ writeFunCall expr_wrap ^ ")"    
   | Noexpr -> ""
 
 (* block of statement lists*)  
@@ -192,6 +192,12 @@ and writeRow row_expr =
 and colMatrix expr_wrap = List.length (List.hd expr_wrap)
 
 and rowMatrix expr_wrap = List.length expr_wrap
+
+(*function calls variable names *)
+and writeFunCall expr_wrap =
+    let argvStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ ",") "" expr_wrap in
+    let argvStrCom = String.sub argvStr 0 ((String.length argvStr)-2) in
+    sprintf "%s" argvStrCom
 
 (* uniary operators *)
 and writeUnop op expr = 
