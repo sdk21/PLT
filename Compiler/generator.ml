@@ -54,25 +54,13 @@ and cpp_funcList func =
     let cppRtnType = cpp_from_type func.sret_typ
     and cppRtnValue = func.sret_name
     and cppFName = func.sfunc_name
-    and cppFParam = cppVarDecl func.sformal_params ","
+    and cppFParam = if (func.sformal_params = []) then "" else cppVarDecl func.sformal_params ","
     and cppFBody = cppStmtList func.sbody 
     and cppLocals = cppVarDecl func.slocals ";\n\t" in
     if cppFName = "execute" then
-    sprintf "
-    %s main (){
-	%s 
-        %s
-        return 0;
-    }
-    " cppRtnType cppLocals cppFBody 
+    sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
     else
-    sprintf "
-    %s %s (%s){
-	%s 
-        %s
-        return %s;
-    }
-    " cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
+    sprintf "\n%s %s (%s)\n{\n\t%s\n\t%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
 
 (* variable declarations *)
 and cppVarDecl vardeclist delim =
@@ -84,7 +72,7 @@ and cppVarDecl vardeclist delim =
 and cppVar var delim =
     if not var.builtin then
         let vartype = cpp_from_type var.styp in 
-        sprintf " %s %s%s" vartype var.sname delim
+        sprintf "%s %s%s" vartype var.sname delim
     else ""
 
 (* list of statements *)
@@ -94,18 +82,17 @@ and cppStmtList astmtlist =
 
 (* For generating statements *)
 and cppStmt stmts = match stmts with
-    Sast.Sexpr(expr_wrap) -> cppExpr (expr_of expr_wrap) ^ ";\n"  
+    Sast.Sexpr(expr_wrap) -> cppExpr (expr_of expr_wrap) ^ ";\n\t"  
   | Sast.Block(sstmt) -> cppStmtBlock sstmt
   | Sast.If(expr_wrap , sstmt) -> writeIfStmt (expr_of expr_wrap) sstmt
   | Sast.For(var,init, final, increment, stmt) -> 
             writeForStmt var init final increment stmt
   | Sast.While(expr_wrap , sstmt) -> writeWhileStmt (expr_of expr_wrap) sstmt
-  | Sast.Print(expr_wrap) -> writePrintStmt (expr_of expr_wrap)
 
 (* For generating expressions*)
 and cppExpr expr = match expr with
-   Lit_int(lit) -> string_of_int lit ^ " "
-  | Lit_float(flit) -> string_of_float flit ^ " "
+    Lit_int(lit) -> string_of_int lit
+  | Lit_float(flit) -> string_of_float flit
   | Lit_comp(re,im) -> " complex<float>(" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
@@ -147,7 +134,7 @@ and writeForStmt var init final increment stmt =
     and stmtbody = cppStmt stmt
     in
     sprintf "
-    for (int %s = %s; %s < %s ; %s = %s + %s){
+    for (int %s = %s; %s < %s; %s = %s + %s){
         %s
         }" varname initvalue varname finalvalue varname varname incrementval stmtbody
 
@@ -181,9 +168,9 @@ and writeBinop expr1 op expr2 =
 
 (*matrices which is list of list of expression wrapper*)
 and writeMatrix expr_wrap = 
-    let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
-    let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-2) in
-    sprintf "(Matrix<complex<float> Dynamic, Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
+    let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b)) "" expr_wrap in
+    let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-1) in
+    sprintf "(Matrix<complex<float>, Dynamic, Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
 
 and writeRow row_expr =
     let rowStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ "," ) "" row_expr in
@@ -196,7 +183,7 @@ and rowMatrix expr_wrap = List.length expr_wrap
 (*function calls variable names *)
 and writeFunCall expr_wrap =
     let argvStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ ",") "" expr_wrap in
-    let argvStrCom = String.sub argvStr 0 ((String.length argvStr)-2) in
+    let argvStrCom = String.sub argvStr 0 ((String.length argvStr)-1) in
     sprintf "%s" argvStrCom
 
 (* uniary operators *)

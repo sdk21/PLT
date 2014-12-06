@@ -22,7 +22,7 @@ type environment =
   { scope : symbol_table;
     mutable functions : Sast.sfunc_decl list; }
 
-let builtins =
+let builtin_vars =
   [
     { styp = Sast.Float; sname = "e"; builtin = true; };
     { styp = Sast.Float; sname = "pi"; builtin = true; };
@@ -37,7 +37,7 @@ let root_symbol_table =
     func_nam = "";
     formal_param = [];
     local = []; 
-    builtin = builtins; }
+    builtin = builtin_vars; }
 
 let root_environment = 
   { scope = root_symbol_table;
@@ -50,17 +50,17 @@ let root_environment =
 exception Except of string
 
 let matrix_error t = match t with
-  0 -> raise (Except("Invalid type in matrix"))
-  | 1 -> raise (Except("Type mismatch in matrix"))
+    0 -> raise (Except("Invalid matrix: incorrect type"))
+  | 1 -> raise (Except("Invalid matrix: type mismatch"))
   | _ -> raise (Except("Invalid matrix"))
 
 let qub_error t = match t with
-    0 -> raise (Except("Invalid use of |expr>"))
-  | 1 -> raise (Except("Invalid use of <expr|"))
-  | _ -> raise (Except("Invalid use qubits"))
+    0 -> raise (Except("Invalid qubit: incorrect use of |expr>"))
+  | 1 -> raise (Except("Invalid qubit: incorrect use of <expr|"))
+  | _ -> raise (Except("Invalid qubit"))
 
 let assignment_error s =
-  raise (Except("Invalid assignment to variable " ^ s))
+  raise (Except("Invalid assignment to variable: " ^ s))
 
 let var_error s =
   raise (Except("Invalid use of a variable: " ^ s ^ " was not declared" ))
@@ -75,57 +75,55 @@ let func_decl_error s =
   raise (Except("Invalid function declaration: " ^ s ^ " was already declared" ))
 
 let unop_error t = match t with
-  Ast.Neg -> raise (Except("Invalid use of '-expr'"))
-  | Ast.Not -> raise (Except("Invalid use of 'Not(expr)'"))
-  | Ast.Re -> raise (Except("Invalid use of 'Re(expr)'"))
-  | Ast.Im -> raise (Except("Invalid use of 'Im(expr)'"))
-  | Ast.Norm -> raise (Except("Invalid use of 'Norm(expr)'"))
-  | Ast.Trans -> raise (Except("Invalid use of 'Trans(expr)'"))
-  | Ast.Det -> raise (Except("Invalid use of 'Det(expr)'"))
-  | Ast.Adj -> raise (Except("Invalid use of 'Adj(expr)'"))
-  | Ast.Conj -> raise (Except("Invalid use of 'Conjexpr)'"))
-  | Ast.Unit -> raise (Except("Invalid use of 'Unit(expr)'"))
-  | Ast.Sin -> raise (Except("Invalid use of 'Sin(expr)'"))
-  | Ast.Cos -> raise (Except("Invalid use of 'Cos(expr)'"))
-  | Ast.Tan -> raise (Except("Invalid use of 'Tan(expr)'"))
+    Ast.Neg -> raise (Except("Invalid use of unop: '-expr'"))
+  | Ast.Not -> raise (Except("Invalid use of unop: 'Not(expr)'"))
+  | Ast.Re -> raise (Except("Invalid use of unop: 'Re(expr)'"))
+  | Ast.Im -> raise (Except("Invalid use of unop: 'Im(expr)'"))
+  | Ast.Norm -> raise (Except("Invalid use of unop: 'Norm(expr)'"))
+  | Ast.Trans -> raise (Except("Invalid use of unop: 'Trans(expr)'"))
+  | Ast.Det -> raise (Except("Invalid use of unop: 'Det(expr)'"))
+  | Ast.Adj -> raise (Except("Invalid use of unop: 'Adj(expr)'"))
+  | Ast.Conj -> raise (Except("Invalid use of unop: 'Conjexpr)'"))
+  | Ast.Unit -> raise (Except("Invalid use of unop: 'Unit(expr)'"))
+  | Ast.Sin -> raise (Except("Invalid use of unop: 'Sin(expr)'"))
+  | Ast.Cos -> raise (Except("Invalid use of unop: 'Cos(expr)'"))
+  | Ast.Tan -> raise (Except("Invalid use of unop: 'Tan(expr)'"))
 
 let binop_error t = match t with
-  Ast.Add -> raise (Except("Invalid use of 'expr + expr'"))
-  | Ast.Sub -> raise (Except("Invalid use of 'expr - expr'"))
-  | Ast.Mult -> raise (Except("Invalid use of 'expr * expr'"))
-  | Ast.Div -> raise (Except("Invalid use of 'expr / expr'"))
-  | Ast.Mod -> raise (Except("Invalid use of 'expr % expr'"))
-  | Ast.Expn -> raise (Except("Invalid use of 'expr ^ expr'"))
-  | Ast.Or -> raise (Except("Invalid use of 'expr or expr'"))
-  | Ast.And -> raise (Except("Invalid use of 'expr and expr'"))
-  | Ast.Xor -> raise (Except("Invalid use of 'expr xor expr'"))
-  | Ast.Tens -> raise (Except("Invalid use of 'expr @ expr'"))
-  | Ast.Eq -> raise (Except("Invalid use of 'expr eq expr'"))
-  | Ast.Neq -> raise (Except("Invalid use of 'expr neq expr'"))
-  | Ast.Lt -> raise (Except("Invalid use of 'expr lt expr'"))
-  | Ast.Gt -> raise (Except("Invalid use of 'expr gt expr'"))
-  | Ast.Leq -> raise (Except("Invalid use of 'expr leq expr'"))
-  | Ast.Geq -> raise (Except("Invalid use of 'expr geq expr'"))
+    Ast.Add -> raise (Except("Invalid use of binop: 'expr + expr'"))
+  | Ast.Sub -> raise (Except("Invalid use of binop: 'expr - expr'"))
+  | Ast.Mult -> raise (Except("Invalid use of binop: expr * expr'"))
+  | Ast.Div -> raise (Except("Invalid use of binop: 'expr / expr'"))
+  | Ast.Mod -> raise (Except("Invalid use of binop: 'expr % expr'"))
+  | Ast.Expn -> raise (Except("Invalid use of binop: 'expr ^ expr'"))
+  | Ast.Or -> raise (Except("Invalid use of binop: 'expr or expr'"))
+  | Ast.And -> raise (Except("Invalid use of binop: 'expr and expr'"))
+  | Ast.Xor -> raise (Except("Invalid use of binop: 'expr xor expr'"))
+  | Ast.Tens -> raise (Except("Invalid use of binop: 'expr @ expr'"))
+  | Ast.Eq -> raise (Except("Invalid use of binop: 'expr eq expr'"))
+  | Ast.Neq -> raise (Except("Invalid use of binop: 'expr neq expr'"))
+  | Ast.Lt -> raise (Except("Invalid use of binop: 'expr lt expr'"))
+  | Ast.Gt -> raise (Except("Invalid use of binop: 'expr gt expr'"))
+  | Ast.Leq -> raise (Except("Invalid use of binop: 'expr leq expr'"))
+  | Ast.Geq -> raise (Except("Invalid use of binop: 'expr geq expr'"))
 
 let expr_error t = match t with
   _ -> raise (Except("Invalid expression"))
 
 let call_error t = match t with
-  0 -> raise (Except("Invalid function call: function undeclared"))
+    0 -> raise (Except("Invalid function call: function undeclared"))
   | 1 -> raise (Except("Invalid function call: incorrect number of parameters"))
-  | _ -> raise (Except("Invalid function call: incorrect type for parameter"))
+  | 2 -> raise (Except("Invalid function call: incorrect type for parameter"))
+  | _ -> raise (Except("Invalid function call"))
 
-let if_error t = match t with
-  _ -> raise (Except("Invalid use of 'if'"))
-
-let for_error t = match t with
-  _ -> raise (Except("Invalid use of 'for'"))
-
-let while_error t = match t with
-  _ -> raise (Except("Invalid use of 'while'"))
+let stmt_error t = match t with
+    0 -> raise (Except("Invalid use of statment: 'if'"))
+  | 1 -> raise (Except("Invalid use of statment: 'for'"))
+  | 2 -> raise (Except("Invalid use of statment: 'while'"))
+  | _ -> raise (Except("Invalid statement"))
 
 let program_error t = match t with
-  0 -> raise (Except("Missing 'execute' function"))
+    0 -> raise (Except("Missing 'execute' function"))
   | 1 -> raise (Except("'execute' function must be of type int"))
   | _ -> raise (Except("Invalid program"))
 
@@ -508,7 +506,7 @@ and check_if e s env =
             check_stmt env s
           in
             Sast.If(se, ss)
-        | _ -> if_error 1
+        | _ -> stmt_error 0
 
 and check_for e1 e2 e3 e4 s env =
   let se1 =
@@ -534,10 +532,10 @@ and check_for e1 e2 e3 e4 s env =
                         let ss =
                           check_stmt env s in
                             Sast.For(se1, se2, se3, se4, ss)
-                      | _ -> for_error 1)
-                | _ -> for_error 1)
-          | _ -> for_error 1)
-    | _ -> for_error 1
+                      | _ -> stmt_error 1)
+                | _ -> stmt_error 1)
+          | _ -> stmt_error 1)
+    | _ -> stmt_error 1
 
 and check_while e s env =
   let se =
@@ -549,14 +547,8 @@ and check_while e s env =
           Ast.Eq | Ast.Neq | Ast.Lt | Ast.Gt | Ast.Leq | Ast.Geq ->
             let ss = check_stmt env s in
               Sast.While(se, ss)
-          | _ -> while_error 1)
-    | _ -> while_error 1
-
-and check_print e env =
-  let se =
-    check_expr env e
-  in
-    Sast.Print(se)
+          | _ -> stmt_error 2)
+    | _ -> stmt_error 2
 
 and check_stmt env = function
   Ast.Expr(e) -> Sast.Sexpr(check_expr env e)
@@ -564,7 +556,6 @@ and check_stmt env = function
   | Ast.If(e, s) -> check_if e s env
   | Ast.For(e1, e2, e3, e4, s) -> check_for e1 e2 e3 e4 s env
   | Ast.While(e, s) -> check_while e s env
-  | Ast.Print(e) -> check_print e env
 
 and vdecl_to_sdecl vdecl =
     match vdecl.typ with
@@ -602,7 +593,7 @@ and formal_to_sformal scope formal_param  =
 
 and formals_to_sformals scope formal_params =
   let new_scope = 
-    if ((List.length formal_params) = 0) then
+    if (formal_params = []) then
       scope
     else
       List.fold_left formal_to_sformal scope (List.rev formal_params)
@@ -759,13 +750,7 @@ and check_exec_fdecl fdecls =
       fdecl.func_name
     in
       if (name = "execute") then
-        let typ =
-          fdecl.ret_typ
-        in
-          if (typ = Ast.Int) then
-            fdecls
-          else
-            program_error 1
+        fdecls
       else
         program_error 0
 

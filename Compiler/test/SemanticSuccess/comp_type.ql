@@ -1,21 +1,18 @@
-def func_test(comp z) : comp ret_name { 
-	comp a;
-	comp b;
-	comp c;
-	comp d;
+def func_test(comp val1, comp val2) : comp ret_name { 
 
-	a = C(1.1);
-	b = C(1.2I);
-	c = C(1.1 + 1.2I);
+	comp val3;
 
-	d = z;
+	val3 = C(1.1);
 	
-	ret_name = c * d;
+	ret_name = val1 + val2 * val3;
 }
-def execute(int a):int try {
-	comp b;
+def execute() : comp  ret_name {
 
-	b = C(3.2 + 1.I);
+	comp comp1;
+	comp comp2;
 
-	func_test(b);
+	comp1 = C(7.5I);
+	comp2 = C(3.2 + 1.I);
+
+	ret_name = func_test(comp1, comp2);
 }

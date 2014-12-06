@@ -9,7 +9,6 @@
 %token INT FLOAT COMP MATI MATF MATC QUBB QUBK
 %token DEF
 %token RETURN
-%token PRINT
 %token ASSIGN
 %token COMMA COLON SEMI LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE LCAR RCAR BAR
 %token PLUS MINUS TIMES DIV MOD EXPN
@@ -143,12 +142,11 @@ expr:
  | BY expr      { $2 }
 
 stmt:  
-  expr SEMI                                          { Expr($1) }
+    expr SEMI                                        { Expr($1) }
   | LBRACE stmt_list RBRACE                          { Block(List.rev $2) }
   | FOR LPAREN expr FROM expr TO expr by RPAREN stmt { For($3, $5, $7, $8, $10) }
   | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
   | IF LPAREN expr RPAREN stmt                       { If($3, $5) }
-  | PRINT LPAREN expr RPAREN                         { Print($3) }
 
 stmt_list:
   /* nothing  */ { [] }
