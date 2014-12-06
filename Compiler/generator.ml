@@ -18,7 +18,6 @@ let cpp_from_type (ty: Sast.sdata_type) : string =
     | Int -> "int"
     | Float -> "float"
     | Comp -> "complex<float>"
-    | Mat -> "MatrixXcf"
     | Mati -> "MatrixXci"
     | Matf -> "MatrixXcf"
     | Matc -> "MatrixXcf"
