@@ -11,6 +11,8 @@ def execute() : comp  ret_name {
 	comp comp1;
 	comp comp2;
 
+	if (1) {1; 2+3;} else {3+6;}
+
 	comp1 = C(7.5I);
 	comp2 = C(3.2 + 1.I);
 

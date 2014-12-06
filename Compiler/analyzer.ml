@@ -478,7 +478,7 @@ and check_call name params env =
           call_error 2
 
 and check_expr env = function
-  Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
+    Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
   | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
   | Ast.Lit_comp(f1, f2) -> Sast.Expr(Sast.Lit_comp(f1, f2), Sast.Comp)
   | Ast.Lit_qub(i, t) -> check_qub i t
@@ -488,6 +488,7 @@ and check_expr env = function
   | Ast.Binop(e1, op, e2) -> check_binop e1 op e2 env
   | Ast.Assign(s, e) -> check_assign s e env
   | Ast.Call(s, l) -> check_call s l env
+  | Ast.Noexpr -> Sast.Expr(Sast.Noexpr, Sast.Void)
   | _ -> expr_error 1
 
 and check_block stmts env =

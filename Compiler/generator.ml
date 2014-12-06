@@ -82,7 +82,7 @@ and cppStmtList astmtlist =
 
 (* For generating statements *)
 and cppStmt stmts = match stmts with
-    Sast.Sexpr(expr_wrap) -> cppExpr (expr_of expr_wrap) ^ ";\n\t"  
+    Sast.Sexpr(expr_wrap) -> "\t" ^ cppExpr (expr_of expr_wrap) ^ ";\n"  
   | Sast.Block(sstmt) -> cppStmtBlock sstmt
   | Sast.If(expr_wrap , sstmt1, sstmt2) -> writeIfStmt (expr_of expr_wrap) sstmt1 sstmt2
   | Sast.For(var,init, final, increment, stmt) -> writeForStmt var init final increment stmt
@@ -107,26 +107,24 @@ and cppStmtBlock sstmtl =
 let slist = List.fold_left (fun output element ->
     let stmt = cppStmt  element in
     output ^ stmt ^ "\n") "" sstmtl in
-    "\n{\n" ^ slist ^ "}\n"
+    "\n\t{\n" ^ slist ^ "\t}\n"
 
 (* if statement*)
 and writeIfStmt expr stmt1 stmt2 = 
-	let cond = cppExpr expr
-    and body = cppStmt stmt1
-    and ebody = writeElseStmt stmt2 in
-    sprintf "
-        if(%s) {%s\n\t}
-        %s" cond body ebody  
+	let cond = cppExpr expr in
+    let body = cppStmt stmt1 in
+    let ebody = writeElseStmt stmt2 in
+    sprintf "if(%s)%s%s" cond body ebody  
 
 (* else statements *)
 and writeElseStmt stmt =
     let body =
         cppStmt stmt
     in
-        if ((String.compare (body) "\n{\n}\n") = 0) then
+        if ((String.compare body ";\n\t") = 0) then
             sprintf "\n"
         else
-            sprintf "else {%s\n\t}\n" body
+            sprintf "\telse%s" body
 
 
 (* while statement*)
