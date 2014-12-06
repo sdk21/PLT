@@ -6,7 +6,7 @@
 %{ open Ast %}
 
 %token C I
-%token INT FLOAT COMP QUBB QUBK MAT
+%token INT FLOAT COMP MATI MATF MATC QUBB QUBK
 %token DEF
 %token RETURN
 %token PRINT
@@ -45,9 +45,11 @@ vtype:
   INT     { Int }
   | FLOAT { Float }
   | COMP  { Comp }
+  | MATI  { Mati }
+  | MATF  { Mati }
+  | MATC  { Matc }
   | QUBB  { Qubb }
   | QUBK  { Qubk }
-  | MAT   { Mat }
 
 vdecl:
   vtype ID SEMI { { typ = $1;
@@ -146,7 +148,8 @@ stmt:
   | FOR LPAREN expr FROM expr TO expr by RPAREN stmt { For($3, $5, $7, $8, $10) }
   | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
   | IF LPAREN expr RPAREN stmt                       { If($3, $5) }
-  | PRINT expr                                       { Print($2) }
+  | PRINT LPAREN expr RPAREN                         { Print($3) }
+
 
 stmt_list:
   /* nothing  */ { [] }
