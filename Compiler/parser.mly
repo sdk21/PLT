@@ -85,15 +85,15 @@ fdecl:
 	       body = List.rev $11; } }
 
 mat_row:
-   expr { [$1] }
+   expr                { [$1] }
   | mat_row COMMA expr { $3 :: $1 }
 
 mat_row_list:
-  LPAREN mat_row RPAREN { [List.rev($2)] }
+    LPAREN mat_row RPAREN              { [List.rev($2)] }
   | mat_row_list LPAREN mat_row RPAREN { List.rev($3) :: $1 }
 
 inner_comp:
-  FLOAT_LIT                    { [$1; 0.] }
+    FLOAT_LIT                  { [$1; 0.] }
   | FLOAT_LIT I                { [0.; $1] }
   | FLOAT_LIT PLUS FLOAT_LIT I { [$1; $3] }
 
@@ -149,7 +149,6 @@ stmt:
   | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
   | IF LPAREN expr RPAREN stmt                       { If($3, $5) }
   | PRINT LPAREN expr RPAREN                         { Print($3) }
-
 
 stmt_list:
   /* nothing  */ { [] }

@@ -18,7 +18,7 @@ let cpp_from_type (ty: Sast.sdata_type) : string =
     | Int -> "int"
     | Float -> "float"
     | Comp -> "complex<float>"
-    | Mati -> "MatrixXci"
+    | Mati -> "MatrixXcf"
     | Matf -> "MatrixXcf"
     | Matc -> "MatrixXcf"
     | Qubb -> "MatrixXcf"
@@ -113,7 +113,7 @@ and cppExpr expr = match expr with
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
-  | Call(str,expr_wrap) -> str ^  ""  
+  | Call(str,expr) -> str ^  ""
   | Noexpr -> ""
 
 (* block of statement lists*)  
@@ -183,7 +183,7 @@ and writeBinop expr1 op expr2 =
 and writeMatrix expr_wrap = 
     let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
     let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-2) in
-    sprintf "(Matrix<complex<float>>,Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
+    sprintf "(Matrix<complex<float> >,Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
 
 and writeRow row_expr =
     let rowStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ "," ) "" row_expr in

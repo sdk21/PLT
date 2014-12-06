@@ -60,10 +60,13 @@ let qub_error t = match t with
   | _ -> raise (Except("Invalid use qubits"))
 
 let assignment_error s =
-  raise (Except("Invalid assignment to variable" ^ s))
+  raise (Except("Invalid assignment to variable " ^ s))
 
 let var_error s =
   raise (Except("Invalid use of a variable: " ^ s ^ " was not declared" ))
+
+let func_error s =
+  raise (Except("Invalid function call: " ^ s ^ " was not declared" ))
 
 let var_decl_error s =
   raise (Except("Invalid variable declaration: " ^ s ^ " was already declared" ))
@@ -152,7 +155,7 @@ let lookup_var name scope =
       with Not_found ->
         try
           List.find (fun vdecl -> name = vdecl.sname) scope.builtin
-        with Not_found -> var_decl_error name
+        with Not_found -> var_error name
     in
       vdecl_found
 
@@ -160,7 +163,7 @@ let lookup_func name env =
   let fdecl_found = 
     try
       List.find (fun fdecl -> name = fdecl.sfunc_name) env.functions
-    with Not_found -> raise Not_found
+    with Not_found -> func_error name
   in
     fdecl_found
 
@@ -236,10 +239,7 @@ and check_row l1 l2 t env =
 
 and check_id name env =
   let vdecl =
-    try
-      lookup_var name env.scope
-     with Not_found ->
-       var_error name
+    lookup_var name env.scope
   in
     let typ = vdecl.styp in
       Sast.Expr(Sast.Id(name), typ)
@@ -437,10 +437,7 @@ and check_binop e1 op e2 env =
 
 and check_assign name e env =
   let vdecl =
-    try
-      lookup_var name env.scope
-     with Not_found ->
-       var_error name
+    lookup_var name env.scope
     in
       let e = check_expr env e in
         match e with

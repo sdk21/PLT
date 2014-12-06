@@ -25,8 +25,8 @@ rule token = parse
 | "qubb"     { QUBB }   (* Qubit type (bra) *)
 | "qubk"     { QUBK }   (* Qubit type (ket) *)
 
-| "c"        { C }      (* Start of complex number *)
-| "i"        { I }      (*  Imaginary component *)
+| "C"        { C }      (* Start of complex number *)
+| "I"        { I }      (*  Imaginary component *)
 
 | "def"      { DEF }    (* Define function *)
 | "return"   { RETURN }
