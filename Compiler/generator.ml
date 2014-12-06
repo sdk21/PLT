@@ -101,6 +101,7 @@ and cppStmt stmts = match stmts with
   | Sast.For(var,init, final, increment, stmt) -> 
             writeForStmt var init final increment stmt
   | Sast.While(expr_wrap , sstmt) -> writeWhileStmt (expr_of expr_wrap) sstmt
+  | Sast.Print(expr_wrap) -> writePrintStmt (expr_of expr_wrap)
 
 (* For generating expressions*)
 and cppExpr expr = match expr with
@@ -150,6 +151,12 @@ and writeForStmt var init final increment stmt =
     for (int %s = %s; %s < %s ; %s = %s + %s){
         %s
         }" varname initvalue varname finalvalue varname varname incrementval stmtbody
+
+(* print statement *)
+and writePrintStmt expr =
+    let stmtPrint = cppExpr expr in
+    sprintf "
+    cout << %s << endl" stmtPrint
 
 (* binary operations *)
 and writeBinop expr1 op expr2 = 
