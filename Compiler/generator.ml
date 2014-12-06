@@ -38,7 +38,7 @@ and gen_program fileName prog =
         #include <cmath>
         #include <complex>
         #include <iostream>
-        #include \"../cpp/qlang.h\"
+        #include \"../../cpp/qlang.h\"
         using namespace Eigen;
         using namespace std;
         %s" cppString in 
@@ -113,7 +113,7 @@ and cppExpr expr = match expr with
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
-  | Call(str,expr) -> str ^  ""
+  | Call(str,expr_wrap) -> str ^ "(" ^ writeFunCall expr_wrap ^ ")"    
   | Noexpr -> ""
 
 (* block of statement lists*)  
@@ -183,7 +183,7 @@ and writeBinop expr1 op expr2 =
 and writeMatrix expr_wrap = 
     let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b) ^ "\n") "" expr_wrap in
     let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-2) in
-    sprintf "(Matrix<complex<float> >,Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
+    sprintf "(Matrix<complex<float> Dynamic, Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
 
 and writeRow row_expr =
     let rowStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ "," ) "" row_expr in
@@ -192,6 +192,12 @@ and writeRow row_expr =
 and colMatrix expr_wrap = List.length (List.hd expr_wrap)
 
 and rowMatrix expr_wrap = List.length expr_wrap
+
+(*function calls variable names *)
+and writeFunCall expr_wrap =
+    let argvStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ ",") "" expr_wrap in
+    let argvStrCom = String.sub argvStr 0 ((String.length argvStr)-2) in
+    sprintf "%s" argvStrCom
 
 (* uniary operators *)
 and writeUnop op expr = 
