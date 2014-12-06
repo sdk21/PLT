@@ -9,7 +9,6 @@ type sdata_type =
     Int
   | Float
   | Comp
-  | Mat
   | Mati
   | Matf
   | Matc
@@ -137,7 +136,9 @@ and string_of_svar_decl svar_decl =
       Int -> "int," ^ " name: " ^ svar_decl.sname ^ "  "
     | Float -> "float," ^ " name: " ^ svar_decl.sname ^ "  "
     | Comp -> "comp," ^ " name: " ^ svar_decl.sname ^ "  "
-    | Mat -> "mat," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Mati -> "mati," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Matf -> "matf," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Matc -> "matc," ^ " name: " ^ svar_decl.sname ^ "  "
     | Qubb -> "qubb," ^ " name: " ^ svar_decl.sname ^ "  "
     | Qubk -> "qubk," ^ " name: " ^ svar_decl.sname ^ "  "
     | _ -> "")
@@ -163,7 +164,9 @@ and string_of_sfdecl sfdecl =
       Int -> " int "
     | Float -> " float "
     | Comp -> " comp "
-    | Mat -> " mat "
+    | Mati -> " mati "
+    | Matf -> " matf "
+    | Matc -> " matc "
     | Qubb -> " qubb "
     | Qubk -> " qubk "
     | _ -> "") ^

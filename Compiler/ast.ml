@@ -8,7 +8,9 @@ type data_type =
     Int
   | Float
   | Comp
-  | Mat
+  | Mati
+  | Matf
+  | Matc
   | Qubb
   | Qubk
 
@@ -166,7 +168,9 @@ and string_of_var_decl var_decl =
       Int -> "int," ^ " name: " ^ var_decl.name^ "  "
     | Float -> "float," ^ " name: " ^ var_decl.name^ "  "
     | Comp -> "comp," ^ " name: " ^ var_decl.name^ "  "
-    | Mat -> "mat," ^ " name: " ^ var_decl.name^ "  "
+    | Mati -> "mati," ^ " name: " ^ var_decl.name^ "  "
+    | Matf -> "matf," ^ " name: " ^ var_decl.name^ "  "
+    | Matc -> "matc," ^ " name: " ^ var_decl.name^ "  "
     | Qubb -> "qubb," ^ " name: " ^ var_decl.name^ "  "
     | Qubk -> "qubk," ^ " name: " ^ var_decl.name^ "  ")
   
@@ -176,7 +180,9 @@ and string_of_fdecl fdecl =
       Int -> " int "
     | Float -> " float "
     | Comp -> " comp "
-    | Mat -> " mat "
+    | Mati -> " mati "
+    | Matf -> " matf "
+    | Matc -> " matc "
     | Qubb -> " qubb "
     | Qubk -> " qubk ") ^
       "\nret_name: " ^ fdecl.ret_name ^ "\nfunc_name: "  ^ fdecl.func_name ^  "\n(" ^

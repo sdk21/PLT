@@ -108,7 +108,9 @@ let expr_error t = match t with
   _ -> raise (Except("Invalid expression"))
 
 let call_error t = match t with
-  _ -> raise (Except("Undeclared function or function signature mismatch"))
+  0 -> raise (Except("Invalid function call: function undeclared"))
+  | 1 -> raise (Except("Invalid function call: incorrect number of parameters"))
+  | _ -> raise (Except("Invalid function call: incorrect type for parameter"))
 
 let if_error t = match t with
   _ -> raise (Except("Invalid use of 'if'"))
@@ -268,29 +270,41 @@ and check_unop op e env =
           | Ast.Norm ->
             (match t with
               Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
-              | Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              | Sast.Mati -> Sast.Expr(Sast.Unop(op, e), Sast.Mati)
+              | Sast.Matf -> Sast.Expr(Sast.Unop(op, e), Sast.Matf)
+              | Sast.Matc -> Sast.Expr(Sast.Unop(op, e), Sast.Matc)
               | Sast.Qubb -> Sast.Expr(Sast.Unop(op, e), Sast.Qubb)
               | Sast.Qubk -> Sast.Expr(Sast.Unop(op, e), Sast.Qubk)
               | _ ->  unop_error op)
           | Ast.Trans ->
             (match t with
-              Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              Sast.Mati -> Sast.Expr(Sast.Unop(op, e), Sast.Mati)
+              | Sast.Matf -> Sast.Expr(Sast.Unop(op, e), Sast.Matf)
+              | Sast.Matc -> Sast.Expr(Sast.Unop(op, e), Sast.Matc)
               | _ ->  unop_error op)
           | Ast.Det ->
             (match t with
-              Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              Sast.Mati -> Sast.Expr(Sast.Unop(op, e), Sast.Mati)
+              | Sast.Matf -> Sast.Expr(Sast.Unop(op, e), Sast.Matf)
+              | Sast.Matc -> Sast.Expr(Sast.Unop(op, e), Sast.Matc)
               | _ ->  unop_error op)
           | Ast.Adj ->
             (match t with
-              Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              Sast.Mati -> Sast.Expr(Sast.Unop(op, e), Sast.Mati)
+              | Sast.Matf -> Sast.Expr(Sast.Unop(op, e), Sast.Matf)
+              | Sast.Matc -> Sast.Expr(Sast.Unop(op, e), Sast.Matc)
               | _ ->  unop_error op)
           | Ast.Conj ->
             (match t with
-              Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              Sast.Mati -> Sast.Expr(Sast.Unop(op, e), Sast.Mati)
+              | Sast.Matf -> Sast.Expr(Sast.Unop(op, e), Sast.Matf)
+              | Sast.Matc -> Sast.Expr(Sast.Unop(op, e), Sast.Matc)
               | _ ->  unop_error op)
           | Ast.Unit -> 
             (match t with
-              Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              Sast.Mati -> Sast.Expr(Sast.Unop(op, e), Sast.Mati)
+              | Sast.Matf -> Sast.Expr(Sast.Unop(op, e), Sast.Matf)
+              | Sast.Matc -> Sast.Expr(Sast.Unop(op, e), Sast.Matc)
               | _ ->  unop_error op)
           | Ast.Sin -> 
             (match t with
@@ -335,9 +349,17 @@ and check_binop e1 op e2 env =
                       (match t2 with
                         Sast.Int | Sast.Float | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
                         | _ -> binop_error op)
-                    | Sast.Mat ->
+                    | Sast.Mati ->
                       (match t2 with
-                        Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        Sast.Mati -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mati)
+                        | _ -> binop_error op)
+                    | Sast.Matf ->
+                      (match t2 with
+                        Sast.Matf -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Matf)
+                        | _ -> binop_error op)
+                    | Sast.Matc ->
+                      (match t2 with
+                        Sast.Matc -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Matc)
                         | _ -> binop_error op)
                     | Sast.Qubb ->
                       (match t2 with 
@@ -350,9 +372,17 @@ and check_binop e1 op e2 env =
                     | _ -> binop_error op)
                 | Ast.Tens ->
                   (match t1 with
-                    Sast.Mat ->
+                    Sast.Mati ->
                       (match t2 with
-                        Sast.Mat->Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        Sast.Mati -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mati)
+                        | _ -> binop_error op)
+                    | Sast.Matf ->
+                      (match t2 with
+                        Sast.Matf -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Matf)
+                        | _ -> binop_error op)
+                    | Sast.Matc ->
+                      (match t2 with
+                        Sast.Matc -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Matc)
                         | _ -> binop_error op)
                     | Sast.Qubb -> 
                       (match t2 with
@@ -416,16 +446,10 @@ and check_assign name e env =
         match e with
           Sast.Expr(_, t1) -> 
             let t2 = vdecl.styp in
-              if (t2 = Sast.Mat) then
-                if (t1 = Sast.Mati || t1 = Sast.Matf || t1 = Sast.Matc) then
-                  Sast.Expr(Sast.Assign(name, e), t1)
-                else
-                  assignment_error name
+              if (t1 = t2) then
+                Sast.Expr(Sast.Assign(name, e), t1)
               else
-                if (t1 = t2) then
-                  Sast.Expr(Sast.Assign(name, e), t1)
-                else
-                  assignment_error name
+                assignment_error name
 
 and check_call_params formal_params params =
   if ((List.length formal_params) = 0)
@@ -445,7 +469,7 @@ and check_call name params env =
   let fdecl =
     try
       lookup_func name env
-    with Not_found -> call_error 1
+    with Not_found -> call_error 0
   in
     let params =
       List.map (check_expr env) params
@@ -456,7 +480,7 @@ and check_call name params env =
         if ((check_call_params fdecl.sformal_params params) = true)
           then Sast.Expr(Sast.Call(name, params), fdecl.sret_typ)
         else
-          call_error 1
+          call_error 2
 
 and check_expr env = function
   Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
@@ -550,7 +574,9 @@ and vdecl_to_sdecl vdecl =
       Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtin = false; }
       | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtin = false; }
       | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtin = false; }
-      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtin = false; }
+      | Ast.Mati -> { styp = Sast.Mati; sname = vdecl.name; builtin = false; }
+      | Ast.Matf -> { styp = Sast.Matf; sname = vdecl.name; builtin = false; }
+      | Ast.Matc -> { styp = Sast.Matc; sname = vdecl.name; builtin = false; }
       | Ast.Qubb -> { styp = Sast.Qubb; sname = vdecl.name; builtin = false; }
       | Ast.Qubk -> { styp = Sast.Qubk; sname = vdecl.name; builtin = false; }
 
@@ -621,7 +647,9 @@ and ret_to_sret scope ret_typ =
       Ast.Int -> Sast.Int
       | Ast.Float -> Sast.Float
       | Ast.Comp -> Sast.Comp
-      | Ast.Mat -> Sast.Mat
+      | Ast.Mati -> Sast.Mati
+      | Ast.Matf -> Sast.Matf
+      | Ast.Matc -> Sast.Matc
       | Ast.Qubb -> Sast.Qubb
       | Ast.Qubk -> Sast.Qubk
   in
@@ -749,6 +777,10 @@ and check_program fdecls =
     check_exec_fdecl fdecls
   in
     let env =
-      List.fold_left check_function root_environment (List.rev fdecls)
+      List.fold_left check_function root_environment fdecls
     in
-      env.functions
+      let sfdecls =
+        List.rev env.functions
+      in
+        sfdecls
+

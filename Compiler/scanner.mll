@@ -19,9 +19,11 @@ rule token = parse
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
 | "comp"     { COMP }   (* Complex type *)
+| "mati"     { MATI }   (* Matrix type (int) *)
+| "matf"     { MATF }   (* Matrix type (float) *)
+| "matc"     { MATC }   (* Matrix type (comp) *)
 | "qubb"     { QUBB }   (* Qubit type (bra) *)
 | "qubk"     { QUBK }   (* Qubit type (ket) *)
-| "mat"      { MAT }    (* Matrix type *)
 
 | "c"        { C }      (* Start of complex number *)
 | "i"        { I }      (*  Imaginary component *)
