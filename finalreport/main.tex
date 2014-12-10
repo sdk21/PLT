@@ -1,0 +1,39 @@
+\documentclass[11pt]{report}
+
+\def\withcolors{1}
+\def\withnotes{1}
+\def\withindex{1}
+\def\withbiblioconversion{1} % long names for the journals
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{packages}
+\input{preamble}
+
+\newcommand{\QL}{\textsf{QLang}\xspace}
+\title{\QL: Qubit Language\\ \Large(Final Report)}
+\author{
+  Christopher Campbell
+  \and Cl\'ement Canonne
+  \and Sankalpa Khadka
+  \and Winnie Narang
+  \and Jonathan Wong
+}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{An Introduction to the Language}
+  \input{sec-introduction}
+\chapter{\QL in practice: a Tutorial}
+  \input{sec-tutorial}
+\chapter{Reference Manual}
+\chapter{Project Plan and Organization}
+\chapter{Architectural Design}
+\chapter{Test Plan}
+\appendix
+\chapter{More on Quantum Computing}\label{app:quantum:more}
+  \input{app-moreqc}
+\chapter{Source Code}
+
+\end{document}

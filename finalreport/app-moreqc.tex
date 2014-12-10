@@ -1,0 +1,117 @@
+\section {Common quantum gates}
+
+\subsubsection*{Pauli Operators}
+	The \emph{Pauli operators} are the special single qubit gates which are represented by the Pauli matrices $\{I, X, Y, Z\}$ as follows
+	\[
+I =
+\begin{bmatrix}
+ 1 & 0  \\
+ 0 & 1  
+\end{bmatrix}
+\qquad
+X =
+\begin{bmatrix}
+ 0 & 1  \\
+ 1 & 0  
+\end{bmatrix}
+\qquad
+Z =
+\begin{bmatrix}
+ 1 & 0  \\
+ 0 & -1  
+\end{bmatrix}
+\qquad
+Y =
+\begin{bmatrix}
+ 0 & -i  \\
+ i & 0  
+\end{bmatrix}.
+\]
+For example, the application of $X$ causes bit-flip in following ways:
+\[
+X\ket{0}=\begin{bmatrix}
+ 0 & 1  \\
+ 1 & 0  
+\end{bmatrix}
+\begin{bmatrix}
+ 1   \\
+ 0   
+\end{bmatrix}=\begin{bmatrix}
+ 0   \\
+ 1   
+\end{bmatrix}= \ket{1}
+\]
+\[
+X\ket{1}=\begin{bmatrix}
+ 0 & 1  \\
+ 1 & 0  
+\end{bmatrix}
+\begin{bmatrix}
+ 0   \\
+ 1   
+\end{bmatrix}=\begin{bmatrix}
+ 1   \\
+ 0   
+\end{bmatrix}= \ket{0}.
+\]
+\subsubsection*{Hadamard Gate}
+The \emph{Hadamard gate} is defined by the matrix:
+\[
+H= \frac{1}{\sqrt{2}}\begin{bmatrix}
+ 1 & 1  \\
+ 1 & -1
+\end{bmatrix}.
+\]
+The Hadamard gate maps the computational basis states into superposition of states. The Hadamard gate is significant since it produces maximally entangled states from basis states in the following ways:
+\[
+H\ket{0}=\frac{1}{\sqrt{2}}(\ket{0}+\ket{1})
+\qquad
+H\ket{1}=\frac{1}{\sqrt{2}}(\ket{0}-\ket{1}).
+\]
+
+\subsubsection*{Controlled-U Gates}
+	A \emph{controlled-U gate} is the quantum gate in which the $U$ operator acts on the \new{$n$\textsuperscript{th} $n$-qubit} only if the value of the preceeding qubit is $1$.\\ For example: In a Controlled-\textsf{NOT} gate, the \textsf{NOT} operator flips the second qubit if the first qubit is $1$.
+	\[
+	\textsf{CNOT} = \begin{bmatrix}
+ 1&0&0&0\\
+0&1&0&0\\
+0&0&0&1 \\
+0&0&1&0\end{bmatrix}
+	\]
+	
+	\[
+	\textsf{CNOT}\ket{00}=\ket{00}
+	\]
+	\[
+	\textsf{CNOT}\ket{01}=\ket{01}
+	\]
+	\[
+	\textsf{CNOT}\ket{10}=\ket{11}
+	\]
+	\[
+	\textsf{CNOT}\ket{11}=\ket{10}.
+	\]
+	
+	
+\section {Tensor product and its properties}
+
+Let $A=(a_{i,j})$ be a matrix with respect to the ordered basis $\mathcal{A}=(u_1,\dots,u_n)$ and $B=(b_{i,j})$ be a matrix with respect to the ordered basis $\mathcal{B}=(v_1,\dots,v_m)$. Consider the ordered basis $\mathcal{C}=(u_i \otimes v_j)$ ordered by lexicographic order, that is $u_i \otimes v_j \leq u_l \otimes v_k$ if if $i<l$ or $i=l$ and $j<k$. The matrix of $A \otimes B$ with respect to $\mathcal{C}$ is : 
+\[
+	A \otimes B= 
+	\begin{bmatrix}
+ 	a_{1,1}B & a_{1,2}B & \dots & a_{1,n}B\\
+	a_{2,1}B & a_{2,2}B & \dots & a_{2,n}B\\
+	\vdots & \vdots & \ddots & \vdots \\
+	a_{n,1}B & a_{n,2}B & \dots & a_{n,n}B
+	\end{bmatrix} 
+\]
+		This matrix is called the tensor product of the matrix $A$ with the matrix $B$.
+\begin{itemize}
+\item $A \otimes B \otimes C =  (A \otimes B ) \otimes C = A \otimes (B \otimes C)$
+\item $ a ( \ket{x} \otimes \ket{y}) = a \ket{x} \otimes \ket{y} = \ket{x} \otimes a\ket{y}$
+\item $ ( A \otimes B) \cdot (\ket{y}\ket{z}) = A\ket{y} \otimes B\ket{z}$
+\item $ ( A \otimes B) \cdot ( C \otimes D) = AC \otimes BD$
+\item $ (A \otimes B) ^{H} = A^{H} \otimes B^{H}$
+\item If $ A$ and $B$ unitary, $A \otimes B$ is unitary.
+\item If $\ket{x}=\ket{x_1} \ket{x_2}$ and $\ket{y}=\ket{y_1}\ket{y_2}$ then $\dotproduct[x,y]=\dotproduct[x_1,y_1] \dotproduct[x_2, y_2]$ 
+\end{itemize}

@@ -1,0 +1,82 @@
+The \QL language is a scientific tool that enables easy and simple simulation of quantum computing on classical computers. 
+Featuring a clear and intuitive syntax, \QL makes it possible to take any quantum algorithm and implement it seamlessly, while 
+conserving both the overall structure and syntactical features of the original pseudocode. The \QL code is then compiled to 
+C++, allowing for an eventual high-performance execution -- a process made simple and transparent to the user, who can focus on
+the algorithmic aspects of the quantum simulation.
+\section{Background: Quantum Computing}
+
+In classical computing, data are stored in the form of binary digits or bits. A \emph{bit} is the basic unit of information stored and manipulated in a computer, which in one of two possible distinct states (for instance: two distinct voltages, on and off state of electric switch, two directions of magnetization, etc.). 
+The two possible values/states of a system are represented as binary digits, $0$ and $1$. In a quantum computer, however, data are stored in the form of \emph{qubits}, or quantum bits. A quantum system of $n$ qubits is a Hilbert space of dimension $2^n$; fixing any orthonormal basis, any \emph{quantum state} can thus be uniquely written as a linear combination of $2^n$ orthogonal vectors $\{\ket{i}\}_i$ where $i$ is an $n$-bit binary number.
+
+\begin{example}A $3$ qubit system has a canonical basis of 8 orthonormal states denoted 
+$\ket{000}$, $\ket{001}$, $\ket{010}$, $\ket{011}$, $\ket{100}$, $\ket{101}$, $\ket{110}$, $\ket{111}$.
+\end{example}
+To put it briefly, while a classical bit has only two states (either $0$ or $1$), a qubit can have  states $\ket{0}$ and $\ket{1}$, or any linear combination of states also known as a \emph{superposition}: %. Hence, a qubit can have an infinitely many states,
+\[
+	\ket{\phi}=\alpha\ket{0}+\beta\ket{1}
+\]
+where $\alpha,\beta\in\C$ are any complex numbers such that $\abs{\alpha}^2+\abs{\beta}^2=1$.\medskip
+
+Similarly, one may recall that logical operations, also known as \emph{logical gates}, are the basis of computation in classical computers. Computers are built with circuit that is made up of logical gates. The examples of logical gates are \textsf{AND}, \textsf{OR}, \textsf{NOT}, \textsf{NOR}, \textsf{XOR}, etc. The analogue for quantum computers, \emph{quantum gates}, are operations which are a \emph{unitary transformation} on qubits. The quantum gates are represented by matrices, and a gate acts on $n$ qubits is represented by $2^n \times 2^n$ unitary matrix\footnote{That is, a matrix $U\in\C^{2^n\times 2^n}$ such that $\adjoint{U}U=I_{2^n}$, where $\adjoint{\cdot}$ denotes the Hermitian conjugate.}. Analogous to the classical computer which is built from an electrical circuit containing wires and logic gates, quantum computers are built from  quantum circuits containing ``wires'' and quantum gates to carry out the computation.\medskip
+
+\noindent More on this, as well as the definition of the usual quantum gates, can be found in \autoref{app:quantum:more}.
+
+\subsection {Dirac notation for quantum computation}
+In quantum computing, \emph{Dirac notation} is generally used to represent qubits. This notation provides concise and intuitive representation of complex matrix operations.
+
+More precisely, a column vector $\left[ \begin {array} {c} c_1\\ c_2\\ \vdots\\ c_n \end{array} \right]$ is represented as $\ket{\psi}$, also read as ``ket psi''.  In particular, the computational basis states, also know as \emph{pure states} are represented as $\ket{i}$  where  $i$ is a $n$-bit binary number. For example,
+\[
+\ket{000}=\begin{bmatrix} 1\\ 0\\ 0\\ 0\\ 0\\ 0\\ 0\\ 0 \end{bmatrix},
+\ket{001}=\begin{bmatrix} 0\\ 1\\ 0\\ 0\\ 0\\ 0\\ 0\\ 0 \end{bmatrix},
+\ket{010}=\begin{bmatrix} 0\\ 0\\ 1\\ 0\\ 0\\ 0\\ 0\\ 0 \end{bmatrix},
+\dots,
+\ket{101}=\begin{bmatrix} 0\\ 0\\ 0\\ 0\\ 0\\ 1\\ 0\\ 0 \end{bmatrix},
+\ket{110}=\begin{bmatrix} 0\\ 0\\ 0\\ 0\\ 0\\ 0\\ 1\\ 0 \end{bmatrix},
+\ket{111}=\begin{bmatrix} 0\\ 0\\ 0\\ 0\\ 0\\ 0\\ 0\\ 1 \end{bmatrix}
+\]
+Similarly, the row vector $\begin{bmatrix} c^\ast_1 & c^\ast_2  & \dots & c^\ast_n & \end{bmatrix}$, which is also complex conjugate transpose of $\ket{\psi}$, is represented as $\bra{\psi}$, also read as ``bra psi''.\medskip
+
+The inner product of vectors $\ket{\varphi}$ and $\ket{\psi}$ is written $\dotprod{ \varphi }{ \psi }$.
+The tensor product of vectors $\ket{\varphi}$ and $\ket{\psi}$ is written $\ket{\varphi} \otimes \ket{\psi}$  and more commonly $\ket{\varphi}\ket{\psi}$.
+We list below a few other mathematical notions that are relevant in quantum computing:
+
+\begin{itemize}[-]
+\item $z^\ast$ (complex conjugate of elements)\\  if $z=a+ib$, then $z^\ast = a - ib$.
+\item $A^\ast$ (complex conjugate of matrices)\\ if $A = \twobytwomatrix[1,6i,3i,2+4i]$ then $A^\ast = \twobytwomatrix[1,-6i,-3i,2-4i]$.
+%%%%%%%%%%%%%%%%%%%%%% Transpose of A
+\item $\transpose{A}$  (transpose of matrix $A$)\\ if $A = \twobytwomatrix[1,6i,3i,2+4i]$ then $\transpose{A} = \twobytwomatrix[1,3i,6i,2+4i]$.
+%%%%%%%%%%%%%%%%%%%%%% Adjoint of A
+\item $\adjoint{A}$  (Hermitian conjugate (adjoint) of matrix $A$)\\
+Defined as $\adjoint{A} = \left(\transpose{A}\right)^\ast$; if $A = \twobytwomatrix[1,6i,3i,2+4i]$ then $A^{\dag} = \twobytwomatrix[1,-3i,-6i,2-4i]$
+%%%%%%%%%%%%%%%%%%%%%% Norm
+\item $\norm{\ket{\psi}}$ ($\lp[2]$ norm of vector $\ket{\psi}$)\\
+$\norm{\ket{\psi}} = \sqrt{\dotproduct[{\psi}, {\psi}]}$. 
+ (This is often used to normalize $\ket{\psi}$ into a unit vector $\frac{\ket{\psi}}{\norm{\ket{\psi}}}$.)
+%%%%%%%%%%%%%%%%%%%%%% Other
+
+\item $\bra{\varphi}A\ket{\psi}$ (inner product of $\ket{\varphi}$ and $A\ket{\psi}$). \\
+Equivalently\footnote{Recall that we work in a complex Hilbert space: the inner product is a sesquilinear form.}, inner product of $A^{\dag}\ket{\varphi}$ and $\ket{\psi}$
+
+\end{itemize}
+
+\subsection{Quantum Algorithms}
+A quantum algorithm is an algorithm that, in addition to operations on bits, can apply quantum gates to qubits and measure the outcome, in order to perform a computation or solve a search problem. Inherently, the outcome of such algorithms will be probabilistic: for instance, a quantum algorithm is said to \emph{compute a function $f$ on input $x$} if, for all $x$, the value $f(x)$ it outputs is correct with high probability.
+  The representation of a quantum computation process requires an input register, output register and unitary transformation that takes a computational basis states into linear combination of computational basis states. If $x$ represents an $n$ qubit input register and $y$ represents an $m$ qubit output register, then the effect of a unitary transformation $U_f$ on the computational basis $\ket{x}_n\ket{y}_m$ is represented as follows:
+	\begin{equation}
+	U_f(\ket{x}_n\ket{y}_m)=\ket{x}_n\ket{y\oplus f(x)}_m,
+	\end{equation}
+	where $f$ is a function that takes an $n$ qubit input register and returns an $m$ qubit output and $\oplus$ represents mod-$2$ bitwise addition.
+
+
+\section{Related Work}
+
+\todo{Fill the related work here. Other languages, etc.}
+\section{Goal and objectives}
+
+\QL has been designed with a handful of key characteristics in mind:
+\begin{description}
+  \item[Intuitive.] Any student or researcher familiar with quantum computing should be able to transpose and implement their algorithms easily and quickly, without wasting time struggling to udnerstand idiosyncrasies of the language. 
+  \item[Specific.] The language has one purpose -- implementing quantum algorithms. Anything that is not related to nor useful for this purpose should not be -- and is not -- part of \QL (e.g., the language does not support strings).
+  \item[Simple.] Matrices, vector operations are pervasive in quantum computing -- thus, they must be easy to use and understand. All predefined structures and functions are straightforward to use, and have no puzzling nor counter-intuitive behavior.
+\end{description}
+In a nutshell, \QL is simple, includes everything it should -- and nothing it should not.
