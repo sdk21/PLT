@@ -81,9 +81,15 @@ MatrixXcf genQubit(string s, int bra) {
 }
 
 string qubitToString(MatrixXcf qub) {
-	int bra = 1;
-	int qlen = qub.cols();
-	if(qub.rows() > qlen) { qlen = qub.rows(); bra = 0;}
+	int bra;
+	int qlen;
+	if(qub.rows() == 1) { qlen = qub.cols(); bra = 1; }
+	//int qlen = qub.cols();
+	else if(qub.cols() == 1) { qlen = qub.rows(); bra = 0;}
+	else { 
+		cerr << "Incorrect matrix size for qubitToString" << endl;
+		exit(1);
+	}
 	//cout << "bra " << bra << endl;
 
 	//gets position of 1 in the qubit
@@ -173,11 +179,16 @@ int main() {
 	   cout << genQubit("01",1) << endl;
 	   cout << genQubit("10",1) << endl;
 	   cout << genQubit("11",1) << endl;
-	 //cout << memcpy(genQubit("01",1), genQubit("01",1), 4*sizeof(complex<float>)) << endl;
+	 cout << genQubit("11",1).isApprox(genQubit("11",1))<< endl;
 	 //cout << genQubit("01",1).isApprox( genQubit("10",1)) << endl;
 	//cout << genQubit("1101",0) << endl;
-	cout << qubitToString(genQubit("1100",1)) << endl;
-	cout << genQubit("10",1) * genQubit("01",1)<< endl;
+	cout << qubitToString(genQubit("01100",0)) << endl;
+	complex<float> com(2,1);
+	//cout << (Matrix2i()<<1,0,0,1).finished()*(Matrix2cf()<<com,com,com,com).finished()<< endl;
+
+	Matrix<int, 2,2> in; in << 1,0,0,1;
+	Matrix<complex<float>,2,2> cM; cM << 2,1.01,com,2;
+	cout << cM << endl;
 
 
 	return 0;
