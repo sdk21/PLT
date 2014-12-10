@@ -123,8 +123,8 @@ let stmt_error t = match t with
   | _ -> raise (Except("Invalid statement"))
 
 let program_error t = match t with
-    0 -> raise (Except("Missing 'execute' function"))
-  | 1 -> raise (Except("'execute' function must be of type int"))
+    0 -> raise (Except("Missing 'compute' function"))
+  | 1 -> raise (Except("'compute' function must be of type int"))
   | _ -> raise (Except("Invalid program"))
 
 (*********************
@@ -489,7 +489,6 @@ and check_expr env = function
   | Ast.Assign(s, e) -> check_assign s e env
   | Ast.Call(s, l) -> check_call s l env
   | Ast.Noexpr -> Sast.Expr(Sast.Noexpr, Sast.Void)
-  | _ -> expr_error 1
 
 and check_block stmts env =
     let sstmts =
@@ -746,21 +745,21 @@ and check_function env fdecl =
             in
               new_env
 
-and check_exec_fdecl fdecls =
+and check_compute_fdecl fdecls =
   let fdecl =
     List.hd (List.rev fdecls)
   in 
     let name =
       fdecl.func_name
     in
-      if (name = "execute") then
+      if (name = "compute") then
         fdecls
       else
         program_error 0
 
 and check_program fdecls =
   let fdecls =
-    check_exec_fdecl fdecls
+    check_compute_fdecl fdecls
   in
     let env =
       List.fold_left check_function root_environment fdecls

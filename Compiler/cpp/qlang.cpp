@@ -1,8 +1,9 @@
-#include <complex>
 #include <Eigen/Dense>
-#include <cmath>
 #include <iostream>
-#include "qlang.h"
+#include <complex>
+#include <string>
+#include <cmath>
+#include "qlang.hpp"
 
 using namespace Eigen;
 using namespace std;
@@ -42,10 +43,10 @@ Matrix4cf control(Matrix2cf mat) {
 MatrixXcf genQubit(string s, int bra) {
 	
 	int slen = s.length();
-//	int qstrlen = slen-2; //length of the qubit string removing end chars
+	int qstrlen = slen-2; //length of the qubit string removing end chars
 
-//	string qstr = s.substr(1, qstrlen); //binary substring from qubit rep
-//	int qlen = pow(2, qstrlen); //length of the vector
+	string qstr = s.substr(1, qstrlen); //binary substring from qubit rep
+	int qlen = pow(2, qstrlen); //length of the vector
 	int qlen = pow(2,slen); //length of vector
 
 	int base10num = 0;
