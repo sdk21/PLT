@@ -1,5 +1,5 @@
-#ifndef QLANG_H_ 
-#define QLANG_H_
+#ifndef QLANG_HPP_ 
+#define QLANG_HPP_
 
 using namespace Eigen;
 using namespace std;
