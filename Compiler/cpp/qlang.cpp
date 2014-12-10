@@ -86,6 +86,7 @@ string qubitToString(MatrixXcf qub) {
 	if(qub.rows() > qlen) { qlen = qub.rows(); bra = 0;}
 	//cout << "bra " << bra << endl;
 
+	//gets position of 1 in the qubit
 	complex<float> one(1,0);
 	int xi = 0;
 	int yi = 0;
@@ -101,8 +102,8 @@ string qubitToString(MatrixXcf qub) {
 		}
 	}
 
+	//converts position to binary number reversed
 	string bin = "";
-
 	do {
 		if ( (number & 1) == 0 )
 			bin += "0";
@@ -115,11 +116,14 @@ string qubitToString(MatrixXcf qub) {
 	int outQubLen = sqrt(qlen);
 	//if(qlen%2) { outQubLen++; }
 
+	//adds necessary 0s
 	for(int i = bin.length(); i < outQubLen; i++) {
 		bin += "0";
 	}
 
-	reverse(bin.begin(), bin.end());
+	reverse(bin.begin(), bin.end()); //reverses
+
+	//generates appropriate bra or ket representation
 	string result;
 	if(bra) { result = "<" + bin + "|"; }
 	else { result = "|" + bin + ">"; }
@@ -163,7 +167,6 @@ MatrixXcf genQubits(string s) {
 	return qub;
 }
 
-/*
 int main() {
 	   cout << genQubit("00",1) << endl;
 	   cout << genQubit("01",1) << endl;
@@ -172,11 +175,12 @@ int main() {
 	 //cout << memcpy(genQubit("01",1), genQubit("01",1), 4*sizeof(complex<float>)) << endl;
 	 //cout << genQubit("01",1).isApprox( genQubit("10",1)) << endl;
 	//cout << genQubit("1101",0) << endl;
-	cout << printQubit(genQubit("1101",1)) << endl;
+	cout << qubitToString(genQubit("1100",1)) << endl;
+	cout << genQubit("10",1) * genQubit("01",1)<< endl;
+
 
 	return 0;
 }
-*/
 /*
    int main() {
 
