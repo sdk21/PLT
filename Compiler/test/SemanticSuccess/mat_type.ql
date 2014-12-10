@@ -1,23 +1,24 @@
-def test_func(int a, int b, int c, int d) : mati ret_val { 
+def test_func(comp a, comp b, comp c, comp d) : matc ret_val { 
 
-	mati mat1;
+	matc x;
 
-	mat1 = [(a,b)(c,d)];
+	x = [(a,b)(c,d)];
 
-	ret_val = mat1;
+	ret_val = x;
 }
 
-def execute() : mati ret_val {
+def compute() : matc ret_val {
 
-	int a;
-	int b;
-	int c;
-	int d;
+	comp a;
+	comp b;
+	comp c;
+	comp d;
+        matc k;
 
-	a = 4;
-	b = 7;
-	c = 2;
-	d = 9;
+	a = C(4.+5.I);
+	b = C(6.+6.I);
+	c = C(7.+8.I);
+	d = C(9.+10.I);
 
 	ret_val = test_func(a, b, c, d);
 }
