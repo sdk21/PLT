@@ -167,6 +167,7 @@ MatrixXcf genQubits(string s) {
 	return qub;
 }
 
+/*
 int main() {
 	   cout << genQubit("00",1) << endl;
 	   cout << genQubit("01",1) << endl;
@@ -181,6 +182,7 @@ int main() {
 
 	return 0;
 }
+*/
 /*
    int main() {
 
