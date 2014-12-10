@@ -1,0 +1,8 @@
+To illustrate and describe the process of writing in \QL, this section will walk the reader through the implementation of one of the most emblematic quantum examples, namely \emph{Deutsch-Jozsa Algorithm}. The goal of this algorithm is to answer the following question: given query access to an unknown fucntion $f\colon\{0,1\}^n \to \{0,1\}$, promised to be either constant or balanced\footnote{$f$ is said to be balanced if $f(x)=0$ for exactly half of the inputs $x\in\{0,1\}^n$; or, equivalently, if $\shortexpect_{x}[f(x)] = \frac{1}{2}$.}, which of the two holds?  Classically, it is easy to see that this requires (in the worst case) querying just over half the solution space, that is $2^{n-1} + 1$ queries.  Quantumly, the Deutsch-Jozsa algorithm enables us to answer this question with just \emph{one} query!
+
+\begin{align*}
+ \Qcircuit @C=1em @R=.7em {
+  \lstick{\ket{0}} & /^n \qw & \gate{H^{\otimes n}} & \multigate{1}{U_f} & \gate{H^{\otimes n}}	& \meter & \cw \\
+  \lstick{\ket{1}} & \qw     & \gate{H}             & \ghost{U_f}        & \qw
+ }
+\end{align*}
