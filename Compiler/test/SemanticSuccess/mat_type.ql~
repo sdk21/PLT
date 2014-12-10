@@ -15,10 +15,10 @@ def compute() : matc ret_val {
 	comp d;
         matc k;
 
-	a = C(4.+5.I);
-	b = C(6.+6.I);
-	c = C(7.+8.I);
-	d = C(9.+10.I);
+	a = C(4+5I);
+	b = C(6+6I);
+	c = C(7+8I);
+	d = C(9+10I);
 
 	ret_val = test_func(a, b, c, d);
 }
