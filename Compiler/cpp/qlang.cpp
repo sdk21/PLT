@@ -56,29 +56,83 @@ MatrixXcf genQubit(string s, int bra) {
 	const char * cq = s.c_str();
 	//const char * cq = qstr.c_str();
 	char * c = new char();
-	for(int i = 0; i < qlen; i++) {
+	for(int i = 0; i < slen; i++) {
 	//for(int i = 0; i < qstrlen; i++) {
 		strncpy(c,cq+i,1);
 		//base10num += strtol(c,NULL,10) * pow(2,(qstrlen-1-i));  
-		base10num += strtol(c,NULL,10) * pow(2,(qlen-1-i));  
+		base10num += strtol(c,NULL,10) * pow(2,(slen-1-i));  
 	}
 	delete c;
+
+	//cout << base10num << endl;
 
 	//creates the vector and sets correct bit to 1
 	MatrixXcf qub;
 	//if(!s.compare(0, 1, "<")) {
 	if(bra) {
-		qub = MatrixXcf(1,qlen);
+		qub = MatrixXcf::Zero(1,qlen);
 		qub(0,qlen-1-base10num) = 1;
 	} else if(!bra){
-		qub = MatrixXcf(qlen,1);
+		qub = MatrixXcf::Zero(qlen,1);
 		qub(base10num,0) = 1;
 	}
 
 	return qub;
 }
+
+string qubitToString(MatrixXcf qub) {
+	int bra = 1;
+	int qlen = qub.cols();
+	if(qub.rows() > qlen) { qlen = qub.rows(); bra = 0;}
+	//cout << "bra " << bra << endl;
+
+	//gets position of 1 in the qubit
+	complex<float> one(1,0);
+	int xi = 0;
+	int yi = 0;
+	int number;
+	for(number = 0; number < qlen; number++) {
+		if(bra) { xi = number; }
+		else { yi = number; }
+
+		if(qub(yi,xi) == one) {
+			if(bra) { number = qlen-1-number; }
+			//cout << i << endl;
+			break;
+		}
+	}
+
+	//converts position to binary number reversed
+	string bin = "";
+	do {
+		if ( (number & 1) == 0 )
+			bin += "0";
+		else
+			bin += "1";
+
+		number >>= 1;
+	} while ( number );
+
+	int outQubLen = sqrt(qlen);
+	//if(qlen%2) { outQubLen++; }
+
+	//adds necessary 0s
+	for(int i = bin.length(); i < outQubLen; i++) {
+		bin += "0";
+	}
+
+	reverse(bin.begin(), bin.end()); //reverses
+
+	//generates appropriate bra or ket representation
+	string result;
+	if(bra) { result = "<" + bin + "|"; }
+	else { result = "|" + bin + ">"; }
+
+	return result;
+}
+
 MatrixXcf genQubits(string s) {
-	
+
 	int slen = s.length();
 	int qstrlen = slen-2; //length of the qubit string removing end chars
 
@@ -101,12 +155,12 @@ MatrixXcf genQubits(string s) {
 	//creates the vector and sets correct bit to 1
 	MatrixXcf qub;
 	if(!s.compare(0, 1, "<")) {
-	//if(bra)
-		qub = MatrixXcf(1,qlen);
+		//if(bra)
+		qub = MatrixXcf::Zero(1,qlen);
 		qub(0,qlen-1-base10num) = 1;
-//	} else if(!bra){
+		//	} else if(!bra){
 	} else {
-		qub = MatrixXcf(qlen,1);
+		qub = MatrixXcf::Zero(qlen,1);
 		qub(base10num,0) = 1;
 	}
 
@@ -115,17 +169,33 @@ MatrixXcf genQubits(string s) {
 
 /*
 int main() {
-
-	complex<float> c1 = 2;
-	complex<float> c2 = 3;
-	Matrix2cf mat1, mat2;
-	mat1 << c1,c1,c1,c1;
-	mat2 << c2,c2,c2,0;
-
-	cout << tensor(mat1,mat2) << endl;
+	   cout << genQubit("00",1) << endl;
+	   cout << genQubit("01",1) << endl;
+	   cout << genQubit("10",1) << endl;
+	   cout << genQubit("11",1) << endl;
+	 //cout << memcpy(genQubit("01",1), genQubit("01",1), 4*sizeof(complex<float>)) << endl;
+	 //cout << genQubit("01",1).isApprox( genQubit("10",1)) << endl;
+	//cout << genQubit("1101",0) << endl;
+	cout << qubitToString(genQubit("1100",1)) << endl;
+	cout << genQubit("10",1) * genQubit("01",1)<< endl;
 
 
 	return 0;
 }
 */
+/*
+   int main() {
+
+   complex<float> c1 = 2;
+   complex<float> c2 = 3;
+   Matrix2cf mat1, mat2;
+   mat1 << c1,c1,c1,c1;
+   mat2 << c2,c2,c2,0;
+
+   cout << tensor(mat1,mat2) << endl;
+
+
+   return 0;
+   }
+ */
 
