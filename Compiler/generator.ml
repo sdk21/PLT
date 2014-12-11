@@ -54,7 +54,7 @@ and cpp_funcList func =
     and cppFBody = cppStmtList func.sbody 
     and cppLocals = cppVarDecl func.slocals ";\n\t" in
     if cppFName = "compute" then
-        sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
+                sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
     else 
     sprintf "\n%s %s (%s)\n{\n\t%s\n\t%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
 
@@ -97,7 +97,7 @@ and cppExpr expr = match expr with
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
   | Call(str,expr_wrap) ->
           if str = "print" then
-                sprintf "cout << %s <<endl" (writeFunCall expr_wrap)
+               writePrintStmt expr_wrap 
           else
                 str ^ "(" ^ writeFunCall expr_wrap ^ ")"    
   | Noexpr -> ""
@@ -147,10 +147,14 @@ and writeForStmt var init final increment stmt =
         }" varname initvalue varname finalvalue varname varname incrementval stmtbody
 
 (* print statement *)
-and writePrintStmt expr =
-    let stmtPrint = cppExpr expr in
-    sprintf "
-    cout << %s << endl" stmtPrint
+and writePrintStmt expr_wrap =
+    let expr = cppExpr (expr_of (List.hd expr_wrap)) 
+    and t = type_of (List.hd expr_wrap) in
+        let printIt expr t = match t with
+                Sast.Qubk ->  sprintf "cout << qubitToString(%s) << endl" expr
+               | Sast.Qubb -> sprintf "cout << qubitToString(%s) << endl" expr
+               | _ -> sprintf "cout << %s << endl" expr 
+        in printIt expr t
 
 (* binary operations *)
 and writeBinop expr1 op expr2 = 
