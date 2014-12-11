@@ -39,7 +39,7 @@ and gen_program fileName prog =
         #include <complex>
         #include <cmath>
         #include <Eigen/Dense>
-        #include \"../../cpp/qlang.hpp\"
+        #include \"../include/qlang/qlang.hpp\"
         using namespace Eigen;
         using namespace std;
         %s" cppString in 
@@ -225,7 +225,7 @@ and writeBinop expr1 op expr2 =
 		| Ast.Sub 	-> sprintf "%s - %s" e1 e2
 		| Ast.Mult 	-> sprintf "%s * %s" e1 e2
 		| Ast.Div 	-> sprintf "%s / %s" e1 e2
-		| Ast.Mod 	-> sprintf "%s ! %s" e1 e2
+		| Ast.Mod 	-> sprintf "%s %% %s" e1 e2
 		| Ast.Expn 	-> sprintf "pow(%s,%s)" e1 e2
 		| Ast.Tens 	-> sprintf "tensor(%s, %s)" e1 e2
 		| Ast.Eq 	-> equalCaseWise e1 t1 e2
