@@ -10,6 +10,7 @@ type sdata_type =
   | Float
   | Comp
   | Mat
+  | Poly
   | Void
 
 type expr_wrapper = 
@@ -50,6 +51,7 @@ and sfunc_decl =
     sformal_params : svar_decl list;
     slocals : svar_decl list;
     sbody : sstmt list;
+    builtin : bool;
   }
 
 type sprogram =

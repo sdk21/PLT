@@ -32,6 +32,18 @@ let builtin_vars =
     { styp = Sast.Mat; sname = "IDT"; builtin = true; };
   ]
 
+let builtin_funcs = 
+  [
+    { sret_typ = Sast.Poly;
+      sret_name = "null";
+      sfunc_name = "print";
+      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtin = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtin = true;
+    }
+  ]
+
 let root_symbol_table =
   { ret_typ = Sast.Void;
     ret_nam = "";
@@ -42,7 +54,7 @@ let root_symbol_table =
 
 let root_environment = 
   { scope = root_symbol_table;
-    functions = []; }
+    functions = builtin_funcs; }
 
 (**************
  * Exceptions *
@@ -407,7 +419,7 @@ and check_call_params formal_params params =
       let param = match (List.hd params) with
         Sast.Expr(_, t) -> t
       in
-        if (fdecl_arg.styp = param)
+        if (fdecl_arg.styp = Sast.Poly || (fdecl_arg.styp = param))
           then check_call_params (List.tl formal_params) (List.tl params)
         else false
 
@@ -670,7 +682,9 @@ and fdecl_to_sdecl fdecl env =
                     sfunc_name = new_scope.func_nam;
                     sformal_params = new_scope.formal_param;
                     slocals = new_scope.local;
-                    sbody = stmts; }
+                    sbody = stmts;
+                    builtin = false;
+                  }
 
 and check_function env fdecl =
   let found =

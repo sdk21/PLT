@@ -18,12 +18,8 @@ let cpp_from_type (ty: Sast.sdata_type) : string =
     | Int -> "int"
     | Float -> "float"
     | Comp -> "complex<float>"
-    | Mati -> "MatrixXcf"
-    | Matf -> "MatrixXcf"
-    | Matc -> "MatrixXcf"
-    | Qubb -> "MatrixXcf"
-    | Qubk -> "MatrixXcf"
-    | Void -> " "
+    | Mat -> "MatrixXcf"
+    | Poly | Void -> " "
 
 (* write program in .cpp outfile*)
 let rec writeToFile fileName progString =
@@ -183,11 +179,7 @@ and writeBinop expr1 op expr2 =
 (*equality is structure hence different for different datatypes*)
 
 and equalCaseWise e1 t1 e2 = match t1 with
-       Sast.Mati -> sprintf "%s.isApprox(%s)" e1 e2
-      |Sast.Matf -> sprintf "%s.isApprox(%s)" e1 e2
-      |Sast.Matc -> sprintf "%s.isApprox(%s)" e1 e2
-      |Sast.Qubb -> sprintf "%s.isApprox(%s)" e1 e2
-      |Sast.Qubk -> sprintf "%s.isApprox(%s)" e1 e2
+       Sast.Mat -> sprintf "%s.isApprox(%s)" e1 e2
       | _ -> sprintf "%s == %s" e1 e2        
 
 (*matrices which is list of list of expression wrapper*)
