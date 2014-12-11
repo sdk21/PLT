@@ -9,6 +9,6 @@ def func_test(int z) : int ret_name {
 
 }
 
-def compute(int a):int try {
+def compute(int a):int trial {
 
 }

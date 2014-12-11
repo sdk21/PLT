@@ -117,7 +117,8 @@ and cppExpr expr = match expr with
       if is_builtin_func name then
         writeBuiltinFuncCall name l
       else
-        "(" ^ writeFunCall l ^ ")"    
+
+        name ^ "(" ^ writeFunCall l ^ ")"    
   | Noexpr -> ""
 
 (* generate built-in function call *)
@@ -225,7 +226,7 @@ and writeBinop expr1 op expr2 =
 		| Ast.Sub 	-> sprintf "%s - %s" e1 e2
 		| Ast.Mult 	-> sprintf "%s * %s" e1 e2
 		| Ast.Div 	-> sprintf "%s / %s" e1 e2
-		| Ast.Mod 	-> sprintf "%s ! %s" e1 e2
+		| Ast.Mod 	-> sprintf "%s %% %s" e1 e2
 		| Ast.Expn 	-> sprintf "pow(%s,%s)" e1 e2
 		| Ast.Tens 	-> sprintf "tensor(%s, %s)" e1 e2
 		| Ast.Eq 	-> equalCaseWise e1 t1 e2

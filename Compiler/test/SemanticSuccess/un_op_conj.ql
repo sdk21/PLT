@@ -4,6 +4,6 @@ def func_test(mat z) : mat ret_name {
         a=[(1,9,9)(4,5,5)];
         b = conj(a);
 }
-def compute(int a):int try {
+def compute(int a):int trial {
 
 }

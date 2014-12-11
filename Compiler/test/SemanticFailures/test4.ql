@@ -1,0 +1,1 @@
+def func_test(int a) : int ret_name { 1+a; 1 + ret_name;  3*4; }

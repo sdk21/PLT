@@ -7,6 +7,6 @@ def func_test(mat z) : mat ret_name {
 }
 
 
-def compute(int a):int try {
+def compute(int a):int trial {
 
 }

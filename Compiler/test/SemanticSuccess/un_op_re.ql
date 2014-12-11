@@ -5,6 +5,6 @@ def func_test(comp z) : comp ret_name {
         b = re(a);
  
 }
-def compute(int a):int try {
+def compute(int a):int trial {
 
 }
