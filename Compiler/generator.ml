@@ -117,7 +117,8 @@ and cppExpr expr = match expr with
       if is_builtin_func name then
         writeBuiltinFuncCall name l
       else
-        "(" ^ writeFunCall l ^ ")"    
+
+        name ^ "(" ^ writeFunCall l ^ ")"    
   | Noexpr -> ""
 
 (* generate built-in function call *)
@@ -150,7 +151,7 @@ and writePrintqStmt l =
     match expr_wrap with
         Sast.Expr(_,t) -> 
           (match t with 
-            Sast.Mat -> sprintf "cout << qubitToString(%s) << endl" expr
+            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl" expr
           | _ -> sprintf "cout << %s << endl" expr)
 
 (* generate block *)  
@@ -204,7 +205,7 @@ and writeUnop op expr =
         | Ast.Not   -> sprintf "  !(%s)" exp
         | Ast.Re    -> sprintf "  real(%s)" exp   (* assumes exp is matrix*)
         | Ast.Im    -> sprintf "  imag(%s)" exp
-        | Ast.Norm  -> sprintf "  norm(%s)" exp
+        | Ast.Norm  -> sprintf "  %s.norm()" exp
         | Ast.Trans -> sprintf "  %s.transpose()" exp
         | Ast.Det   -> sprintf "  %s.determinant()" exp
         | Ast.Adj   -> sprintf "  %s.adjoint()" exp

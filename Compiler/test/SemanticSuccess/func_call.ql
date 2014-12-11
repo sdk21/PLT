@@ -6,6 +6,6 @@ def func_test(int z) : int ret_name {
         ret_name = z;
 
 }
-def compute( int a):int try {
-      try = func_test(4);
+def compute( int a):int trial {
+      trial = func_test(4);
 }
