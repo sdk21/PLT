@@ -1,8 +1,3 @@
-(* Semantic Analyzer 
-	- Consumes abstract syntax tree from parser
-	- Produces semantically Analyzed Syntax Tree for compiler
-*)
-
 open Ast
 open Sast
 
@@ -16,20 +11,22 @@ type symbol_table =
     func_nam : string;
     mutable formal_param : svar_decl list;
     mutable local : svar_decl list; 
-    builtin : svar_decl list; }
+    builtin : svar_decl list;
+  }
 
 type environment =
   { scope : symbol_table;
-    mutable functions : Sast.sfunc_decl list; }
+    mutable functions : Sast.sfunc_decl list;
+  }
 
 let builtin_vars =
   [
-    { styp = Sast.Float; sname = "e"; builtin = true; };
-    { styp = Sast.Float; sname = "pi"; builtin = true; };
-    { styp = Sast.Mat; sname = "H"; builtin = true; };
-    { styp = Sast.Mat; sname = "X"; builtin = true; };
-    { styp = Sast.Mat; sname = "Y"; builtin = true; };
-    { styp = Sast.Mat; sname = "IDT"; builtin = true; };
+    { styp = Sast.Float; sname = "e"; builtinv = true; };
+    { styp = Sast.Float; sname = "pi"; builtinv = true; };
+    { styp = Sast.Mat; sname = "H"; builtinv = true; };
+    { styp = Sast.Mat; sname = "X"; builtinv = true; };
+    { styp = Sast.Mat; sname = "Y"; builtinv = true; };
+    { styp = Sast.Mat; sname = "IDT"; builtinv = true; };
   ]
 
 let builtin_funcs = 
@@ -37,19 +34,19 @@ let builtin_funcs =
     { sret_typ = Sast.Poly;
       sret_name = "null";
       sfunc_name = "print";
-      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtin = true; };];
+      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtin = true;
+      builtinf = true;
     };
 
     { sret_typ = Sast.Poly;
       sret_name = "null";
-      sfunc_name = "print";
-      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtin = true; };];
+      sfunc_name = "printq";
+      sformal_params = [{ styp = Sast.Mat; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtin = true;
+      builtinf = true;
     };
   ]
 
@@ -59,11 +56,13 @@ let root_symbol_table =
     func_nam = "";
     formal_param = [];
     local = []; 
-    builtin = builtin_vars; }
+    builtin = builtin_vars;
+  }
 
 let root_environment = 
   { scope = root_symbol_table;
-    functions = builtin_funcs; }
+    functions = builtin_funcs;
+  }
 
 (**************
  * Exceptions *
@@ -192,8 +191,7 @@ let lookup_func name env =
 
 let rec check_qub_expr i =
   let r = i mod 10 in
-   if (r = 0 || r = 1)
-    then
+   if (r = 0 || r = 1) then
      let i = i / 10 in
        if (i != 0)
         then
@@ -205,8 +203,7 @@ and check_qub i t =
   let int_expr =
     int_of_string i
   in
-    if (check_qub_expr int_expr = 1)
-      then
+    if (check_qub_expr int_expr = 1) then
         (match t with
             0 -> Sast.Expr(Sast.Lit_qub(i, 1), Sast.Mat)
           | 1 -> Sast.Expr(Sast.Lit_qub(i, 0), Sast.Mat)
@@ -533,11 +530,11 @@ and check_stmt env = function
   | Ast.While(e, s) -> check_while e s env
 
 and vdecl_to_sdecl vdecl =
-    match vdecl.typ with
-      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtin = false; }
-      | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtin = false; }
-      | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtin = false; }
-      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtin = false; }
+  match vdecl.typ with
+      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtinv = false; }
+    | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtinv = false; }
+    | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtinv = false; }
+    | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtinv = false; }
 
 and formal_to_sformal scope formal_param  =
   let found =
@@ -692,7 +689,7 @@ and fdecl_to_sdecl fdecl env =
                     sformal_params = new_scope.formal_param;
                     slocals = new_scope.local;
                     sbody = stmts;
-                    builtin = false;
+                    builtinf = false;
                   }
 
 and check_function env fdecl =
@@ -700,7 +697,7 @@ and check_function env fdecl =
     func_exists fdecl.func_name env
   in
     match found with
-      true -> func_decl_error fdecl.func_name
+        true -> func_decl_error fdecl.func_name
       | false ->
           let sfdecl =
             fdecl_to_sdecl fdecl env
@@ -734,4 +731,3 @@ and check_program fdecls =
         List.rev env.functions
       in
         sfdecls
-

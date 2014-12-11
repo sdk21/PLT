@@ -1,8 +1,3 @@
-(* Abstract Syntax Tree (AST)
-    - Produced by parser
-    - Consumed by semantic analyzer
-*)
-
 (* Elementary Data Types *)
 type data_type =
     Int

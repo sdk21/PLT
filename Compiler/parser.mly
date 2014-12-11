@@ -1,8 +1,3 @@
-/* Parser
- *  - Consumes token stream from scanner
- *  - Produces abstract syntax tree for semantic analyzer
- */
-
 %{ open Ast %}
 
 %token C I

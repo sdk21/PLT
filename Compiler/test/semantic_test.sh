@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 SCAN="../qlc -s" 
 
 #files="SemanticFailures/*.ql"
@@ -9,9 +8,11 @@ files="SemanticSuccess/*.ql"
 count=1
 
 
-SemanticCheck() {
-eval "$SCAN $1" 1>> test.null 2>> test.out 
-wc test.out | awk '{print $1}'
+
+SemanticCheck()
+{
+    eval "$SCAN $1" 1>> test.null 2>> test.out 
+    wc test.out | awk '{print $1}' 
 }
 
 
