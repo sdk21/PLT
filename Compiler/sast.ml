@@ -40,7 +40,7 @@ and svar_decl =
   { 
     styp : sdata_type;
     sname : string;
-    builtin : bool;
+    builtinv : bool;
   }
 
 and sfunc_decl = 
@@ -51,7 +51,7 @@ and sfunc_decl =
     sformal_params : svar_decl list;
     slocals : svar_decl list;
     sbody : sstmt list;
-    builtin : bool;
+    builtinf : bool;
   }
 
 type sprogram =

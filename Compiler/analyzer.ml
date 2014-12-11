@@ -24,12 +24,12 @@ type environment =
 
 let builtin_vars =
   [
-    { styp = Sast.Float; sname = "e"; builtin = true; };
-    { styp = Sast.Float; sname = "pi"; builtin = true; };
-    { styp = Sast.Mat; sname = "H"; builtin = true; };
-    { styp = Sast.Mat; sname = "X"; builtin = true; };
-    { styp = Sast.Mat; sname = "Y"; builtin = true; };
-    { styp = Sast.Mat; sname = "IDT"; builtin = true; };
+    { styp = Sast.Float; sname = "e"; builtinv = true; };
+    { styp = Sast.Float; sname = "pi"; builtinv = true; };
+    { styp = Sast.Mat; sname = "H"; builtinv = true; };
+    { styp = Sast.Mat; sname = "X"; builtinv = true; };
+    { styp = Sast.Mat; sname = "Y"; builtinv = true; };
+    { styp = Sast.Mat; sname = "IDT"; builtinv = true; };
   ]
 
 let builtin_funcs = 
@@ -37,19 +37,19 @@ let builtin_funcs =
     { sret_typ = Sast.Poly;
       sret_name = "null";
       sfunc_name = "print";
-      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtin = true; };];
+      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtin = true;
+      builtinf = true;
     };
 
     { sret_typ = Sast.Poly;
       sret_name = "null";
       sfunc_name = "printq";
-      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtin = true; };];
+      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtin = true;
+      builtinf = true;
     };
   ]
 
@@ -534,10 +534,10 @@ and check_stmt env = function
 
 and vdecl_to_sdecl vdecl =
     match vdecl.typ with
-      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtin = false; }
-      | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtin = false; }
-      | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtin = false; }
-      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtin = false; }
+        Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtinv = false; }
+      | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtinv = false; }
+      | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtinv = false; }
+      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtinv = false; }
 
 and formal_to_sformal scope formal_param  =
   let found =
@@ -692,7 +692,7 @@ and fdecl_to_sdecl fdecl env =
                     sformal_params = new_scope.formal_param;
                     slocals = new_scope.local;
                     sbody = stmts;
-                    builtin = false;
+                    builtinf = false;
                   }
 
 and check_function env fdecl =

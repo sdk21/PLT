@@ -47,16 +47,19 @@ and writeCpp funcList =
 
 (* for each function in the list *)    
 and cpp_funcList func =
-    let cppRtnType = cpp_from_type func.sret_typ
-    and cppRtnValue = func.sret_name
-    and cppFName = func.sfunc_name
-    and cppFParam = if (func.sformal_params = []) then "" else cppVarDecl func.sformal_params ","
-    and cppFBody = cppStmtList func.sbody 
-    and cppLocals = cppVarDecl func.slocals ";\n\t" in
-    if cppFName = "compute" then
-                sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
-    else 
-    sprintf "\n%s %s (%s)\n{\n\t%s\n\t%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
+    if func.builtinf then
+      ""
+    else
+      let cppFName = func.sfunc_name
+      and cppRtnType = cpp_from_type func.sret_typ
+      and cppRtnValue = func.sret_name
+      and cppFParam = if (func.sformal_params = []) then "" else cppVarDecl func.sformal_params ","
+      and cppFBody = cppStmtList func.sbody 
+      and cppLocals = cppVarDecl func.slocals ";\n\t" in
+      if cppFName = "compute" then
+                  sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
+      else 
+      sprintf "\n%s %s (%s)\n{\n\t%s\n%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
 
 (* variable declarations *)
 and cppVarDecl vardeclist delim =
@@ -66,7 +69,7 @@ and cppVarDecl vardeclist delim =
 
 (* each varibale *)   
 and cppVar var delim =
-    if not var.builtin then
+    if not var.builtinv then
         let vartype = cpp_from_type var.styp in 
         sprintf "%s %s%s" vartype var.sname delim
     else ""
