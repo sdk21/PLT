@@ -11,11 +11,13 @@ type symbol_table =
     func_nam : string;
     mutable formal_param : svar_decl list;
     mutable local : svar_decl list; 
-    builtin : svar_decl list; }
+    builtin : svar_decl list;
+  }
 
 type environment =
   { scope : symbol_table;
-    mutable functions : Sast.sfunc_decl list; }
+    mutable functions : Sast.sfunc_decl list;
+  }
 
 let builtin_vars =
   [
@@ -54,11 +56,13 @@ let root_symbol_table =
     func_nam = "";
     formal_param = [];
     local = []; 
-    builtin = builtin_vars; }
+    builtin = builtin_vars;
+  }
 
 let root_environment = 
   { scope = root_symbol_table;
-    functions = builtin_funcs; }
+    functions = builtin_funcs;
+  }
 
 (**************
  * Exceptions *
@@ -526,11 +530,11 @@ and check_stmt env = function
   | Ast.While(e, s) -> check_while e s env
 
 and vdecl_to_sdecl vdecl =
-    match vdecl.typ with
-        Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtinv = false; }
-      | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtinv = false; }
-      | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtinv = false; }
-      | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtinv = false; }
+  match vdecl.typ with
+      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtinv = false; }
+    | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtinv = false; }
+    | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtinv = false; }
+    | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtinv = false; }
 
 and formal_to_sformal scope formal_param  =
   let found =
@@ -693,7 +697,7 @@ and check_function env fdecl =
     func_exists fdecl.func_name env
   in
     match found with
-      true -> func_decl_error fdecl.func_name
+        true -> func_decl_error fdecl.func_name
       | false ->
           let sfdecl =
             fdecl_to_sdecl fdecl env

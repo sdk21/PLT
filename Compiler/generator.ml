@@ -35,10 +35,10 @@ and writeToFile fileName progString =
 and gen_program fileName prog =
     let cppString = writeCpp prog in
     let out = sprintf "
-        #include <Eigen/Dense>
-        #include <cmath>
-        #include <complex>
         #include <iostream>
+        #include <complex>
+        #include <cmath>
+        #include <Eigen/Dense>
         #include \"../../cpp/qlang.hpp\"
         using namespace Eigen;
         using namespace std;
