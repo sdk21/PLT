@@ -4,6 +4,12 @@ def func_test(qubk z) : qubk ret_name {
         a = z;
         ret_name = a; 
 }
-def compute(int a): int try {
+
+def compute():qubk tr {
+        
+        qubk a;
+        
+        a= |001>;
+        tr=func_test(a);
 
 }

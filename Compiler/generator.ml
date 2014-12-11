@@ -18,12 +18,8 @@ let cpp_from_type (ty: Sast.sdata_type) : string =
     | Int -> "int"
     | Float -> "float"
     | Comp -> "complex<float>"
-    | Mati -> "MatrixXcf"
-    | Matf -> "MatrixXcf"
-    | Matc -> "MatrixXcf"
-    | Qubb -> "MatrixXcf"
-    | Qubk -> "MatrixXcf"
-    | Void -> " "
+    | Mat -> "MatrixXcf"
+    | Poly | Void -> " "
 
 (* write program in .cpp outfile*)
 let rec writeToFile fileName progString =
@@ -58,8 +54,8 @@ and cpp_funcList func =
     and cppFBody = cppStmtList func.sbody 
     and cppLocals = cppVarDecl func.slocals ";\n\t" in
     if cppFName = "compute" then
-    sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
-    else
+                sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
+    else 
     sprintf "\n%s %s (%s)\n{\n\t%s\n\t%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
 
 (* variable declarations *)
@@ -99,7 +95,11 @@ and cppExpr expr = match expr with
   | Mat (expr_wrap) -> writeMatrix expr_wrap
   | Id(str) -> str 
   | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
-  | Call(str,expr_wrap) -> str ^ "(" ^ writeFunCall expr_wrap ^ ")"    
+  | Call(str,expr_wrap) ->
+          if str = "print" then
+               writePrintStmt expr_wrap 
+          else
+                str ^ "(" ^ writeFunCall expr_wrap ^ ")"    
   | Noexpr -> ""
 
 (* block of statement lists*)  
@@ -147,23 +147,29 @@ and writeForStmt var init final increment stmt =
         }" varname initvalue varname finalvalue varname varname incrementval stmtbody
 
 (* print statement *)
-and writePrintStmt expr =
-    let stmtPrint = cppExpr expr in
-    sprintf "
-    cout << %s << endl" stmtPrint
+and writePrintStmt expr_wrap =
+    let expr = cppExpr (expr_of (List.hd expr_wrap)) 
+    and t = type_of (List.hd expr_wrap) in
+        let printIt expr t = match t with
+                Sast.Qubk ->  sprintf "cout << qubitToString(%s) << endl" expr
+               | Sast.Qubb -> sprintf "cout << qubitToString(%s) << endl" expr
+               | _ -> sprintf "cout << %s << endl" expr 
+        in printIt expr t
 
 (* binary operations *)
 and writeBinop expr1 op expr2 = 
-    let e1 = cppExpr (expr_of expr1) and e2 = cppExpr (expr_of expr2) in 
-    	let binopFunc e1 op e2 = match op with 
+    let e1 = cppExpr (expr_of expr1) 
+    and t1 = type_of expr1  
+    and e2 = cppExpr (expr_of expr2) in 
+    	let binopFunc e1 t1 op e2 = match op with 
 		 Ast.Add 	-> sprintf "%s + %s" e1 e2
 		| Ast.Sub 	-> sprintf "%s - %s" e1 e2
 		| Ast.Mult 	-> sprintf "%s * %s" e1 e2
 		| Ast.Div 	-> sprintf "%s / %s" e1 e2
-		| Ast.Mod 	-> sprintf "%s ~ %s" e1 e2
+		| Ast.Mod 	-> sprintf "%s ! %s" e1 e2
 		| Ast.Expn 	-> sprintf "pow(%s,%s)" e1 e2
 		| Ast.Tens 	-> sprintf "tensor(%s, %s)" e1 e2
-		| Ast.Eq 	-> sprintf "%s == %s" e1 e2
+		| Ast.Eq 	-> equalCaseWise e1 t1 e2
 		| Ast.Neq 	-> sprintf "%s != %s" e1 e2
 		| Ast.Lt 	-> sprintf "%s < %s" e1 e2
 		| Ast.Gt 	-> sprintf "%s > %s" e1 e2
@@ -172,7 +178,13 @@ and writeBinop expr1 op expr2 =
 		| Ast.Or 	-> sprintf "%s || %s" e1 e2
 		| Ast.And 	-> sprintf "%s && %s" e1 e2
 		| Ast.Xor 	-> sprintf "%s ^ %s" e1 e2
-	in binopFunc e1 op e2
+	in binopFunc e1 t1 op e2 
+
+(*equality is structure hence different for different datatypes*)
+
+and equalCaseWise e1 t1 e2 = match t1 with
+       Sast.Mat -> sprintf "%s.isApprox(%s)" e1 e2
+      | _ -> sprintf "%s == %s" e1 e2        
 
 (*matrices which is list of list of expression wrapper*)
 and writeMatrix expr_wrap = 
