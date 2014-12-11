@@ -5,6 +5,6 @@ def func_test(int z) : int ret_name {
         b = cos(a);
         ret_name=b;
 }
-def execute(int a):int try {
+def compute(int a):int try {
 
 }

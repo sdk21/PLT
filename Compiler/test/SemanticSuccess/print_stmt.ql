@@ -3,7 +3,10 @@ def func_test(int z) : int ret_name {
         a = 5; 
         a = z;
         ret_name = a; 
+        
 }
-def execute(int a):int try {
+def compute(int a):int try {
+   
+}
 
-}
+

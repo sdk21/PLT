@@ -6,7 +6,7 @@ def func_test(comp val1, comp val2) : comp ret_name {
 	
 	ret_name = val1 + val2 * val3;
 }
-def execute() : comp  ret_name {
+def compute() : comp  ret_name {
 
 	comp comp1;
 	comp comp2;

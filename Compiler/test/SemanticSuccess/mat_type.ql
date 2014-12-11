@@ -7,7 +7,7 @@ def test_func(int a, int b, int c, int d) : mati ret_val {
 	ret_val = mat1;
 }
 
-def execute() : mati ret_val {
+def compute() : mati ret_val {
 
 	int a;
 	int b;
