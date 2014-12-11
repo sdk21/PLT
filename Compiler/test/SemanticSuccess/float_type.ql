@@ -4,6 +4,7 @@ def func_test(float z) : float ret_name {
         a = 5.0;
         ret_name = z;  
 }
-def execute(int a):int try {
+
+def compute(int a):int try {
 
 }

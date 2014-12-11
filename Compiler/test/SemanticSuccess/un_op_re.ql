@@ -1,10 +1,10 @@
 def func_test(comp z) : comp ret_name { 
         comp a;
-        int b;
-        a= c(4+5i);
+        comp b;
+        a = C(4.0 + 5.0I);
         b = re(a);
-        ret_name = a;  
+ 
 }
-def execute(int a):int try {
+def compute(int a):int try {
 
 }

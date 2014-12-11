@@ -9,6 +9,7 @@ def test_func(comp a, comp b, comp c, comp d) : mat ret_val {
 
 def compute() : mat ret_val {
 
+
 	comp a;
 	comp b;
 	comp c;

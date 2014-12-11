@@ -1,9 +1,14 @@
 def func_test(int z) : int ret_name { 
-        int a; 
-        a = 5; 
-        a = z;
-        ret_name = a; 
+        
+        int i;
+        int a;
+
+        for(i from 0 to 2 by 1)
+        a=a+5;
+
+
 }
-def execute(int a):int try {
+
+def compute(int a):int try {
 
 }

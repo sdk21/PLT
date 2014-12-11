@@ -2,8 +2,11 @@
 
 SCAN="../qlc -s" 
 
-files="SemanticFailures/*.ql"
-#files="SemanticSuccess/*.ql"
+#files="SemanticFailures/*.ql"
+files="SemanticSuccess/*.ql"
+#files="SemanticSuccess/un_op_trans.ql"
+count=1
+
 
 
 SemanticCheck()
@@ -17,12 +20,16 @@ rm -f test.out test.null
 
 for file in $files
 do
+errors=0
 errors=$(SemanticCheck $file)
 if [ $errors == 0 ]
 then
-echo "Test: " $file " passed."
+echo "Test " $count ": " $file " passed."
 else
-echo $file " failed to pass."
+echo "Test " $count ": " $file " failed to pass."
 fi
+count=$((count+1))
 done
+
+rm -f *.cpp
 
