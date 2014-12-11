@@ -45,7 +45,7 @@ let builtin_funcs =
 
     { sret_typ = Sast.Poly;
       sret_name = "null";
-      sfunc_name = "print";
+      sfunc_name = "printq";
       sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtin = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
