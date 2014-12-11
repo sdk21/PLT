@@ -1,6 +1,6 @@
-def func_test(mati z) : mati ret_name { 
-        mati a;
-        mati b;
+def func_test(mat z) : mat ret_name { 
+        mat a;
+        mat b;
         a = [(1,9,9)(4,5,5)];
         b = norm(a);
 }

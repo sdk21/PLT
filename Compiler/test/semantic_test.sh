@@ -4,7 +4,7 @@ SCAN="../qlc -s"
 
 #files="SemanticFailures/*.ql"
 files="SemanticSuccess/*.ql"
-#files="SemanticSuccess/un_op_trans.ql"
+#files="SemanticSuccess/binop_int_arith.ql"
 count=1
 
 
