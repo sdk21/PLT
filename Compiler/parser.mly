@@ -6,7 +6,7 @@
 %{ open Ast %}
 
 %token C I
-%token INT FLOAT COMP MATI MATF MATC QUBB QUBK
+%token INT FLOAT COMP MAT
 %token DEF
 %token RETURN
 %token ASSIGN
@@ -46,11 +46,7 @@ vtype:
   INT     { Int }
   | FLOAT { Float }
   | COMP  { Comp }
-  | MATI  { Mati }
-  | MATF  { Mati }
-  | MATC  { Matc }
-  | QUBB  { Qubb }
-  | QUBK  { Qubk }
+  | MAT   { Mat }
 
 vdecl:
   vtype ID SEMI { { typ = $1;
@@ -127,7 +123,7 @@ expr:
   | expr TIMES  expr               { Binop($1, Mult, $3) }
   | expr DIV    expr               { Binop($1, Div,  $3) }
   | expr MOD    expr               { Binop($1, Mod,  $3) }
-  | expr EXPN expr                 { Binop($1, Expn, $3) }
+  | expr EXPN   expr               { Binop($1, Expn, $3) }
   | expr TENS   expr               { Binop($1, Tens, $3) }
   | expr EQ     expr               { Binop($1, Eq,   $3) }
   | expr NEQ    expr               { Binop($1, Neq,  $3) }

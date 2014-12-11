@@ -17,11 +17,7 @@ rule token = parse
 | "int"      { INT }    (* Integer type *)
 | "float"    { FLOAT }  (* Float type *)
 | "comp"     { COMP }   (* Complex type *)
-| "mati"     { MATI }   (* Matrix type (int) *)
-| "matf"     { MATF }   (* Matrix type (float) *)
-| "matc"     { MATC }   (* Matrix type (comp) *)
-| "qubb"     { QUBB }   (* Qubit type (bra) *)
-| "qubk"     { QUBK }   (* Qubit type (ket) *)
+| "mat"      { MAT }    (* Matrix *)
 
 | "C"        { C }      (* Start of complex number *)
 | "I"        { I }      (*  Imaginary component *)
@@ -96,5 +92,5 @@ rule token = parse
 | _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
 
 and comment = parse
-  ['r' '\n']       { token lexbuf }
+  ['\r' '\n']       { token lexbuf }
 | _                { comment lexbuf } 
