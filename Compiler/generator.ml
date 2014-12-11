@@ -205,7 +205,7 @@ and writeUnop op expr =
         | Ast.Not   -> sprintf "  !(%s)" exp
         | Ast.Re    -> sprintf "  real(%s)" exp   (* assumes exp is matrix*)
         | Ast.Im    -> sprintf "  imag(%s)" exp
-        | Ast.Norm  -> sprintf "  norm(%s)" exp
+        | Ast.Norm  -> sprintf "  %s.norm()" exp
         | Ast.Trans -> sprintf "  %s.transpose()" exp
         | Ast.Det   -> sprintf "  %s.determinant()" exp
         | Ast.Adj   -> sprintf "  %s.adjoint()" exp

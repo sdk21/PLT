@@ -16,8 +16,13 @@ CompilationCheck() {
 	wc test.out | awk '{print $1}'
 }
 
+ExecutionCheck() {
+	eval "./out" >> test.outputs 
+	# wc test.outputs | awk '{print $1}'
+}
 
-rm -f test.out test.null
+
+rm -f test.out test.null test.outputs
 
 #Step 1
 for file in $files
@@ -33,6 +38,7 @@ done
 
 echo "Generating executables now"
 
+
 #Step 2
 files="SemanticSuccess/*.cpp"
 for file in $files
@@ -41,6 +47,8 @@ errors=$(CompilationCheck $file)
 if [ $errors -eq 0 ]
 then
 echo $file "executable generated."
+#Step 3
+ExecutionCheck 
 else
 echo $file "could not generate executable."
 errors=0
@@ -48,3 +56,6 @@ fi
 done
 
 rm -f SemanticSuccess/*.cpp
+
+
+
