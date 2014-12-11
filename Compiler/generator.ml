@@ -58,7 +58,7 @@ and cpp_funcList func =
     and cppFBody = cppStmtList func.sbody 
     and cppLocals = cppVarDecl func.slocals ";\n\t" in
     if cppFName = "compute" then
-        sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
+                sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
     else 
     sprintf "\n%s %s (%s)\n{\n\t%s\n\t%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
 
