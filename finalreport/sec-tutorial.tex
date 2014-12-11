@@ -10,19 +10,19 @@ To illustrate and describe the process of writing in \QL, this section will walk
 
 To implement it in \QL, we first have to implement the $n$-fold Hadamard gate $H^{\otimes n}$; recalling that the Hadamard gate $H$ is a built-in operator of the language, this can be done as follows:\todonote{Check the QL code for Deutsch-Jozsa -- there were typos and mistakes in the .ql file.}
 \begin{lstlisting}
-  def hadamard(int n) = mati gate{
+  def hadamard(int n): mat gate{
         #returns Hadamard gate of 2^n dimensions
         gate = H; 
-        for i from 1 to n by 1{
+        for(i from 1 to n by 1){
                 gate = gate @ H;                 
         }       
 }
 \end{lstlisting}
 Now, to implement the measurement gate (or, more precisely, to return the measurement matrix), we write the following code that takes a ket $\ket{x}$ and returns the matrix $\ket{x}\bra{x}$:
 \begin{lstlisting}
-def measure(qubk top) = mati result{
+def measure(qubk top): mat result{
         # returns the measurement matrix  
-        mati adjoint = Adj(top);
+        mat adjoint = Adj(top);
         result = top * adjoint;
 }
 \end{lstlisting}
@@ -30,11 +30,11 @@ def measure(qubk top) = mati result{
 
 Once all the ``building blocks'' (gates) of the algorithm have been implemented, we can write down the algorithm \emph{as it appears from the circuit above}: the function takes as argument a qubit \textsf{top} (in the diagram, $\ket{0}$), the parameter size $n$, as well as the unitary matrix implementing the quantum  gate $U_f$ (the access to the unknown function $f$), and returnings either 0 or 1, dependeing one wether the function is constant or balanced.
 \begin{lstlisting}
-def deutsch(int n, qubk top, mati U) = int outcomeZero{       
+def deutsch(int n, qubk top, mat U): int outcomeZero{       
         qubk bottom;  # originally, the |1> qubit    
-        mati input; # input will be the tensor product of top and bottom register  
-        mati had;   # n-fold Hadamard gate  
-        mati meas;
+        mat input; # input will be the tensor product of top and bottom register  
+        mat had;   # n-fold Hadamard gate  
+        mat meas;
 
         bottom = |1>;
         input = top @ bottom;
@@ -58,12 +58,12 @@ def deutsch(int n, qubk top, mati U) = int outcomeZero{
 }
 \end{lstlisting}
 
-Finally, we can call (and test) our algorithm by defining two unitary transformations (here $U_b$ and $U_c$) and testing our function on them -- and print the output:
+Finally, we can call (and test) our algorithm by defining two unitary transformations (here $U_b$ and $U_c$) and testing our function on them -- and print the output. This is done by definiting the entry point function, \textsf{compute}:
 \begin{lstlisting}
-def execute () = int outcome{
+def compute (): int outcome{
         qubk top;
-        mati Ub;
-        mati Uc;
+        mat Ub;
+        mat Uc;
         int n;
         
         n = 1;

@@ -77,3 +77,39 @@
 
 % Resizable parentheses that work (without the space between \left(#1\right)
 \usepackage{mleftright} % \mleft( #1 \mright)
+
+% Listings package, tailored for QLang
+\usepackage{listings}
+\lstdefinelanguage{qlang}{ %
+  deletekeywords={...},            % if you want to delete keywords from the base language
+  escapeinside={\%*}{*)},
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  keywords={def,if,else,elif,for, from, to, by,while, true, false,mat, int, qubk, qubb},
+  otherkeywords={@},
+  morecomment=[l]{\#},
+  classoffset=1,morekeywords={print,norm,Adj,eq},keywordstyle=\bf\color{purple},classoffset=0,
+}
+\lstset{%
+  language=qlang,
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\scriptsize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{OliveGreen},    % comment style
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+%  identifierstyle=\bf,
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{Gray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{RedViolet},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
