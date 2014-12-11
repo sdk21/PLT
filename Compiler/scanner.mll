@@ -1,8 +1,3 @@
-(* Scanner
-    - Consumes program as symbol stream
-    - Produces token stream for parser
-*)
-
 { open Parser }
 
 let whitespace = [' ' '\t' '\r' '\n'] 

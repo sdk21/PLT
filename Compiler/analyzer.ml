@@ -1,8 +1,3 @@
-(* Semantic Analyzer 
-	- Consumes abstract syntax tree from parser
-	- Produces semantically Analyzed Syntax Tree for compiler
-*)
-
 open Ast
 open Sast
 
@@ -46,7 +41,7 @@ let builtin_funcs =
     { sret_typ = Sast.Poly;
       sret_name = "null";
       sfunc_name = "printq";
-      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtinv = true; };];
+      sformal_params = [{ styp = Sast.Mat; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
       builtinf = true;
@@ -192,8 +187,7 @@ let lookup_func name env =
 
 let rec check_qub_expr i =
   let r = i mod 10 in
-   if (r = 0 || r = 1)
-    then
+   if (r = 0 || r = 1) then
      let i = i / 10 in
        if (i != 0)
         then
@@ -205,8 +199,7 @@ and check_qub i t =
   let int_expr =
     int_of_string i
   in
-    if (check_qub_expr int_expr = 1)
-      then
+    if (check_qub_expr int_expr = 1) then
         (match t with
             0 -> Sast.Expr(Sast.Lit_qub(i, 1), Sast.Mat)
           | 1 -> Sast.Expr(Sast.Lit_qub(i, 0), Sast.Mat)
@@ -734,4 +727,3 @@ and check_program fdecls =
         List.rev env.functions
       in
         sfdecls
-

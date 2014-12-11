@@ -1,8 +1,3 @@
-(* Compiler
-    - Consumes semantically analyzed syntax tree from semantic analyzer
-    - Produces compiled program
- *)
-
 type action = Ast | Sast | Gen | Debug
 
 let _ =
