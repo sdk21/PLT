@@ -1,20 +1,20 @@
-def test_func(comp a, comp b, comp c, comp d) : matc ret_val { 
+def test_func(comp a, comp b, comp c, comp d) : mat ret_val { 
 
-	matc x;
+	mat x;
 
 	x = [(a,b)(c,d)];
 
 	ret_val = x;
 }
 
-def compute() : matc ret_val {
+def compute() : mat ret_val {
 
 
 	comp a;
 	comp b;
 	comp c;
 	comp d;
-        matc k;
+        mat k;
 
 	a = C(4.+5.I);
 	b = C(6.+6.I);
