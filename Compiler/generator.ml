@@ -117,7 +117,7 @@ and cppExpr expr = match expr with
       if is_builtin_func name then
         writeBuiltinFuncCall name l
       else
-        "(" ^ writeFunCall l ^ ")"    
+        name ^ "(" ^ writeFunCall l ^ ")"    
   | Noexpr -> ""
 
 (* generate built-in function call *)
