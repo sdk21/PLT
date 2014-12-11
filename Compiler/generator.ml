@@ -149,12 +149,13 @@ and writeForStmt var init final increment stmt =
 (* print statement *)
 and writePrintStmt expr_wrap =
     let expr = cppExpr (expr_of (List.hd expr_wrap)) 
-    and t = type_of (List.hd expr_wrap) in
-        let printIt expr t = match t with
-                Sast.Qubk ->  sprintf "cout << qubitToString(%s) << endl" expr
-               | Sast.Qubb -> sprintf "cout << qubitToString(%s) << endl" expr
-               | _ -> sprintf "cout << %s << endl" expr 
-        in printIt expr t
+      in 
+    match (List.hd expr_wrap) with
+        Sast.Expr(Sast.Lit_qub(_, qt),_) -> 
+          (match qt with 
+            0 -> sprintf "cout << qubitToString(%s) << endl" expr
+          | _ -> sprintf "cout << qubitToString(%s) << endl" expr)
+      | _ -> sprintf "cout << %s << endl" expr 
 
 (* binary operations *)
 and writeBinop expr1 op expr2 = 
