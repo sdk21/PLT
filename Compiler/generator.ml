@@ -150,7 +150,7 @@ and writePrintqStmt l =
     match expr_wrap with
         Sast.Expr(_,t) -> 
           (match t with 
-            Sast.Mat -> sprintf "cout << qubitToString(%s) << endl" expr
+            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl" expr
           | _ -> sprintf "cout << %s << endl" expr)
 
 (* generate block *)  

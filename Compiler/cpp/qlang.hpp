@@ -17,7 +17,7 @@ MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2);
 Matrix4cf control(Matrix2cf mat);
 MatrixXcf genQubit(string s, int bra);
 MatrixXcf genQubits(string s);
-string qubitToString(MatrixXcf qub);
+string vectorToBraket(MatrixXcf qub);
 
 
 #endif
