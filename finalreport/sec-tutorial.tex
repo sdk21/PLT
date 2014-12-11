@@ -1,5 +1,6 @@
-To illustrate and describe the process of writing in \QL, this section will walk the reader through the implementation of one of the most emblematic quantum examples, namely \emph{Deutsch-Jozsa Algorithm}. The goal of this algorithm is to answer the following question: given query access to an unknown fucntion $f\colon\{0,1\}^n \to \{0,1\}$, promised to be either constant or balanced\footnote{$f$ is said to be balanced if $f(x)=0$ for exactly half of the inputs $x\in\{0,1\}^n$; or, equivalently, if $\shortexpect_{x}[f(x)] = \frac{1}{2}$.}, which of the two holds?  Classically, it is easy to see that this requires (in the worst case) querying just over half the solution space, that is $2^{n-1} + 1$ queries.  Quantumly, the Deutsch-Jozsa algorithm enables us to answer this question with just \emph{one} query!
+To illustrate and describe the process of writing in \QL, this section will walk the reader through the implementation of one of the most emblematic quantum examples, namely \emph{Deutsch-Jozsa Algorithm}. The goal of this algorithm is to answer the following question: given query access to an unknown fucntion $f\colon\{0,1\}^n \to \{0,1\}$, promised to be either constant or balanced\footnote{$f$ is said to be balanced if $f(x)=0$ for exactly half of the inputs $x\in\{0,1\}^n$; or, equivalently, if $\shortexpect_{x}[f(x)] = \frac{1}{2}$.}, which of the two holds?  Classically, it is easy to see that this requires (in the worst case) querying just over half the solution space, that is $2^{n-1} + 1$ queries.  Quantumly, the Deutsch-Jozsa algorithm enables us to answer this question with just \emph{one} query!\medskip
 
+\noindent The circuit performing the algorithm is given below:
 \begin{align*}
  \Qcircuit @C=1em @R=.7em {
   \lstick{\ket{0}} & /^n \qw & \gate{H^{\otimes n}} & \multigate{1}{U_f} & \gate{H^{\otimes n}}	& \meter & \cw \\
@@ -7,4 +8,73 @@ To illustrate and describe the process of writing in \QL, this section will walk
  }
 \end{align*}
 
-\lstinputlisting{alg-deutsch.ql}
+To implement it in \QL, we first have to implement the $n$-fold Hadamard gate $H^{\otimes n}$; recalling that the Hadamard gate $H$ is a built-in operator of the language, this can be done as follows:\todonote{Check the QL code for Deutsch-Jozsa -- there were typos and mistakes in the .ql file.}
+\begin{lstlisting}
+  def hadamard(int n) = mati gate{
+        #returns Hadamard gate of 2^n dimensions
+        gate = H; 
+        for i from 1 to n by 1{
+                gate = gate @ H;                 
+        }       
+}
+\end{lstlisting}
+Now, to implement the measurement gate (or, more precisely, to return the measurement matrix), we write the following code that takes a ket $\ket{x}$ and returns the matrix $\ket{x}\bra{x}$:
+\begin{lstlisting}
+def measure(qubk top) = mati result{
+        # returns the measurement matrix  
+        mati adjoint = Adj(top);
+        result = top * adjoint;
+}
+\end{lstlisting}
+(Note that $\ket{x}\bra{x}$ was written as $\ket{x}\operatorname{adjoint}(\ket{x})$, which is performed above using the transparent conversion between vectors and matrices provided by the language.)\medskip
+
+Once all the ``building blocks'' (gates) of the algorithm have been implemented, we can write down the algorithm \emph{as it appears from the circuit above}: the function takes as argument a qubit \textsf{top} (in the diagram, $\ket{0}$), the parameter size $n$, as well as the unitary matrix implementing the quantum  gate $U_f$ (the access to the unknown function $f$), and returnings either 0 or 1, dependeing one wether the function is constant or balanced.
+\begin{lstlisting}
+def deutsch(int n, qubk top, mati U) = int outcomeZero{       
+        qubk bottom;  # originally, the |1> qubit    
+        mati input; # input will be the tensor product of top and bottom register  
+        mati had;   # n-fold Hadamard gate  
+        mati meas;
+
+        bottom = |1>;
+        input = top @ bottom;
+        had = hadamard(n);
+        input = had * input;
+        
+        input = U*input;
+        input = (H @ I)*input;
+        
+        meas = measure (top);        
+        input = ((meas@I)*input;
+        
+        input = norm(input);
+        
+        if (eq(input,0)){
+                outcomeZero = 0;
+        }
+        else{
+                outcomeZero = 1;
+        }
+}
+\end{lstlisting}
+
+Finally, we can call (and test) our algorithm by defining two unitary transformations (here $U_b$ and $U_c$) and testing our function on them -- and print the output:
+\begin{lstlisting}
+def execute () = int outcome{
+        qubk top;
+        mati Ub;
+        mati Uc;
+        int n;
+        
+        n = 1;
+        top = |0>;
+        Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
+        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)]; # identity
+
+        outcome = deutsch (2,top, Ub);
+        print(outcome);
+        outcome = deutsch (2,top, Uc);
+        print(outcome);
+}
+\end{lstlisting}
+%\lstinputlisting{alg-deutsch.ql}

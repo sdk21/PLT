@@ -2,14 +2,13 @@ def hadamard(int n) = mati gate{
         #returns Hadamard gate of 2^n dimensions
         
         gate = H; 
-        for i from 0 to 2 by 1{
+        for i from 1 to n by 1{
                 gate = gate @ H;                 
         }       
 }
 
 def measure(qubk top) = mati result{
-        # returns the measurement matrix
-        
+        # returns the measurement matrix  
         mati adjoint = Adj(top);
         result = top * adjoint;
 }
@@ -53,10 +52,10 @@ def execute () = int outcome{
         n = 1;
         top = |0>;
         Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
-        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)];
+        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)]; # identity
 
-        outcome = deutsch (top, Ub);
-        print(outcome)
-        outcome = deutsch (top, Uc);
-        print(outcome)
+        outcome = deutsch (2,top, Ub);
+        print(outcome);
+        outcome = deutsch (2,top, Uc);
+        print(outcome);
 }
