@@ -11,34 +11,28 @@ type symbol_table =
     func_nam : string;
     mutable formal_param : svar_decl list;
     mutable local : svar_decl list; 
-    builtin : svar_decl list;
-  }
+    builtin : svar_decl list; }
 
 type environment =
   { scope : symbol_table;
-    mutable functions : Sast.sfunc_decl list;
-  }
+    mutable functions : Sast.sfunc_decl list; }
 
 let builtin_vars =
-  [
-    { styp = Sast.Float; sname = "e"; builtinv = true; };
+  [ { styp = Sast.Float; sname = "e"; builtinv = true; };
     { styp = Sast.Float; sname = "pi"; builtinv = true; };
     { styp = Sast.Mat; sname = "H"; builtinv = true; };
     { styp = Sast.Mat; sname = "X"; builtinv = true; };
     { styp = Sast.Mat; sname = "Y"; builtinv = true; };
-    { styp = Sast.Mat; sname = "IDT"; builtinv = true; };
-  ]
+    { styp = Sast.Mat; sname = "IDT"; builtinv = true; }; ]
 
 let builtin_funcs = 
-  [
-    { sret_typ = Sast.Poly;
+  [ { sret_typ = Sast.Poly;
       sret_name = "null";
       sfunc_name = "print";
       sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtinf = true;
-    };
+      builtinf = true; };
 
     { sret_typ = Sast.Poly;
       sret_name = "null";
@@ -46,9 +40,7 @@ let builtin_funcs =
       sformal_params = [{ styp = Sast.Mat; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtinf = true;
-    };
-  ]
+      builtinf = true; }; ]
 
 let root_symbol_table =
   { ret_typ = Sast.Void;
@@ -56,13 +48,11 @@ let root_symbol_table =
     func_nam = "";
     formal_param = [];
     local = []; 
-    builtin = builtin_vars;
-  }
+    builtin = builtin_vars; }
 
 let root_environment = 
   { scope = root_symbol_table;
-    functions = builtin_funcs;
-  }
+    functions = builtin_funcs; }
 
 (**************
  * Exceptions *
@@ -152,30 +142,22 @@ let program_error t = match t with
 *********************)
 
 let var_exists name scope =
-  if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then
-    true
-  else
-    if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then
-      true
-    else
-     List.exists (fun vdecl -> name = vdecl.sname) scope.builtin
+  if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then true
+  else if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then true
+  else List.exists (fun vdecl -> name = vdecl.sname) scope.builtin
 
 let func_exists name env =
   List.exists (fun fdecl -> name = fdecl.sfunc_name) env.functions
 
 let lookup_var name scope =
   let vdecl_found = 
-    try
-      List.find (fun vdecl -> name = vdecl.sname) scope.formal_param
+  try List.find (fun vdecl -> name = vdecl.sname) scope.formal_param
+  with Not_found ->
+    try List.find (fun vdecl -> name = vdecl.sname) scope.local
     with Not_found ->
-      try
-        List.find (fun vdecl -> name = vdecl.sname) scope.local
-      with Not_found ->
-        try
-          List.find (fun vdecl -> name = vdecl.sname) scope.builtin
-        with Not_found -> var_error name
-    in
-      vdecl_found
+      try List.find (fun vdecl -> name = vdecl.sname) scope.builtin
+      with Not_found -> var_error name in
+  vdecl_found
 
 let lookup_func name env =
   let fdecl_found = 
@@ -508,67 +490,47 @@ and check_expr env = function
   | Ast.Noexpr -> Sast.Expr(Sast.Noexpr, Sast.Void)
 
 and check_block stmts env =
-    let sstmts =
-      List.map (fun stmt -> check_stmt env stmt) stmts
-    in
-      Sast.Block(sstmts)
+  let sstmts = List.map (fun stmt -> check_stmt env stmt) stmts in
+  Sast.Block(sstmts)
 
 and check_if e s1 s2 env =
-    let se =
-      check_expr env e
-    in
+    let se = check_expr env e in
       match se with
         Sast.Expr(_,t) ->
           (match t with
             Sast.Int ->
-              let ss1 =
-                check_stmt env s1
-              in
-                let ss2 =
-                  check_stmt env s2
-                in
-                  Sast.If(se, ss1, ss2)
+              let ss1 = check_stmt env s1 in
+              let ss2 = check_stmt env s2 in
+              Sast.If(se, ss1, ss2)
             | _ -> stmt_error 0)
 
 and check_for e1 e2 e3 e4 s env =
-  let se1 =
-    check_expr env e1
-  in
+  let se1 = check_expr env e1 in
     match se1 with
       Sast.Expr(Sast.Id(_), Sast.Int) ->
-        let se2 =
-          check_expr env e2
-        in
+        let se2 = check_expr env e2 in
           (match se2 with
             Sast.Expr(_, Sast.Int) ->
-              let se3 =
-                check_expr env e3
-              in
+              let se3 = check_expr env e3 in
                 (match se3 with
                   Sast.Expr(_, Sast.Int) ->
-                    let se4 =
-                      check_expr env e4
-                    in
+                    let se4 = check_expr env e4 in
                       (match se4 with
-                          Sast.Expr(_, t) ->
-                            (match t with
-                                Sast.Int ->
-                                  let ss =
-                                    check_stmt env s in
-                                      Sast.For(se1, se2, se3, se4, ss)
-                              | Sast.Void ->
-                                  let ss =
-                                    check_stmt env s in
-                                      Sast.For(se1, se2, se3, Sast.Expr(Sast.Lit_int(1), Sast.Int), ss)
-                              | _ -> stmt_error 1))
+                        Sast.Expr(_, t) ->
+                          (match t with
+                            Sast.Int ->
+                              let ss = check_stmt env s in
+                              Sast.For(se1, se2, se3, se4, ss)
+                            | Sast.Void ->
+                                let ss = check_stmt env s in
+                                Sast.For(se1, se2, se3, Sast.Expr(Sast.Lit_int(1), Sast.Int), ss)
+                            | _ -> stmt_error 1))
                 | _ -> stmt_error 1)
           | _ -> stmt_error 1)
     | _ -> stmt_error 1
 
 and check_while e s env =
-  let se =
-    check_expr env e
-  in
+  let se = check_expr env e in
     match se with
       Sast.Expr(Sast.Binop(_, op, _), Sast.Int) ->
         (match op with
@@ -593,197 +555,121 @@ and vdecl_to_sdecl vdecl =
     | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtinv = false; }
 
 and formal_to_sformal scope formal_param  =
-  let found =
-    var_exists formal_param.name scope
-  in
-    match found with
-      true -> var_decl_error formal_param.name
-      | false ->
-          let sdecl = 
-            vdecl_to_sdecl formal_param
-          in
-            let new_formals = 
-              sdecl :: scope.formal_param
-            in
-              let new_scope =
-                { ret_typ = scope.ret_typ;
-                  ret_nam = scope.ret_nam;
-                  func_nam = scope.func_nam;
-                  formal_param = new_formals;
-                  local = scope.local; 
-                  builtin = scope.builtin; }
-              in
-                new_scope
+  let found = var_exists formal_param.name scope in
+  if found then var_decl_error formal_param.name
+  else let sdecl =  vdecl_to_sdecl formal_param in
+  let new_formals = sdecl :: scope.formal_param in
+  let new_scope =
+    { ret_typ = scope.ret_typ;
+      ret_nam = scope.ret_nam;
+      func_nam = scope.func_nam;
+      formal_param = new_formals;
+      local = scope.local; 
+      builtin = scope.builtin; } in
+  new_scope
 
 and formals_to_sformals scope formal_params =
-  let new_scope = 
-    if (formal_params = []) then
-      scope
-    else
-      List.fold_left formal_to_sformal scope (List.rev formal_params)
-  in
+  let new_scope =
+    if (formal_params = []) then scope
+    else List.fold_left formal_to_sformal scope (List.rev formal_params) in
     new_scope
 
 and local_to_slocal scope local =
-  let found =
-    var_exists local.name scope
-  in
-    match found with
-      true -> var_decl_error local.name
-      | false ->
-          let sdecl = 
-            vdecl_to_sdecl local
-          in
-            let new_locals = 
-              sdecl :: scope.local
-            in
-              let new_scope =
-                { ret_typ = scope.ret_typ;
-                  ret_nam = scope.ret_nam;
-                  func_nam = scope.func_nam;
-                  formal_param = scope.formal_param;
-                  local = new_locals; 
-                  builtin = scope.builtin; }
-              in
-                new_scope
+  let found = var_exists local.name scope in
+  if found then var_decl_error local.name
+  else let sdecl = vdecl_to_sdecl local in
+  let new_locals = sdecl :: scope.local in
+  let new_scope =
+    { ret_typ = scope.ret_typ;
+      ret_nam = scope.ret_nam;
+      func_nam = scope.func_nam;
+      formal_param = scope.formal_param;
+      local = new_locals; 
+      builtin = scope.builtin; } in
+  new_scope
 
 and locals_to_slocals scope locals =
-  let new_scope = 
-    List.fold_left local_to_slocal scope (List.rev locals)
-  in
-    new_scope
+  let new_scope =  List.fold_left local_to_slocal scope (List.rev locals) in
+  new_scope
 
 and ret_to_sret scope ret_typ =
   let sret_typ = 
     match ret_typ with
-      Ast.Int -> Sast.Int
+        Ast.Int -> Sast.Int
       | Ast.Float -> Sast.Float
       | Ast.Comp -> Sast.Comp
       | Ast.Mat -> Sast.Mat
-  in
+    in
     let new_scope =
       { ret_typ = sret_typ;
         ret_nam = scope.ret_nam;
         func_nam = scope.func_nam;
         formal_param = scope.formal_param;
         local = scope.local;
-        builtin = scope.builtin; }
-    in
-      new_scope
+        builtin = scope.builtin; } in
+    new_scope
 
 and rname_to_srname scope ret_name =
-    let new_scope =
-      { 
-        ret_typ = scope.ret_typ;
-        ret_nam = ret_name;
-        func_nam = scope.func_nam;
-        formal_param = scope.formal_param;
-        local = scope.local;
-        builtin = scope.builtin; }
-    in
-      new_scope
+  let new_scope = { ret_typ = scope.ret_typ;
+                    ret_nam = ret_name;
+                    func_nam = scope.func_nam;
+                    formal_param = scope.formal_param;
+                    local = scope.local; builtin = scope.builtin; } in
+  new_scope
 
 and fname_to_sfname scope func_name =
-    let new_scope =
-      { ret_typ = scope.ret_typ;
-        ret_nam = scope.ret_nam;
-        func_nam = func_name;
-        formal_param = scope.formal_param;
-        local = scope.local; 
-        builtin = scope.builtin; }
-    in
-      new_scope
+  let new_scope = { ret_typ = scope.ret_typ;
+                    ret_nam = scope.ret_nam;
+                    func_nam = func_name;
+                    formal_param = scope.formal_param;
+                    local = scope.local;
+                    builtin = scope.builtin; } in
+  new_scope
 
 and ret_to_slocal scope name typ =
-  let vdecl =
-    { typ = typ; name = name; }
-  in
-    let sdecl = 
-      vdecl_to_sdecl vdecl
-    in
-      let new_locals = 
-        sdecl :: scope.local
-      in
-        let new_scope =
-          { ret_typ = scope.ret_typ;
-            ret_nam = scope.ret_nam;
-            func_nam = scope.func_nam;
-            formal_param = scope.formal_param;
-            local = new_locals; 
-            builtin = scope.builtin; }
-        in
-          new_scope
+  let vdecl = { typ = typ; name = name; } in
+  let sdecl =  vdecl_to_sdecl vdecl in
+  let new_locals =  sdecl :: scope.local in
+  let new_scope ={ ret_typ = scope.ret_typ; 
+                   ret_nam = scope.ret_nam;
+                   func_nam = scope.func_nam;
+                   formal_param = scope.formal_param;
+                   local = new_locals;
+                   builtin = scope.builtin; } in
+  new_scope
 
 and fdecl_to_sdecl fdecl env = 
-  let new_scope =
-    ret_to_slocal env.scope fdecl.ret_name fdecl.ret_typ
-  in
-    let new_scope = 
-      formals_to_sformals new_scope fdecl.formal_params
-    in
-      let new_scope =
-        locals_to_slocals new_scope fdecl.locals
-      in
-        let new_scope =
-          ret_to_sret new_scope fdecl.ret_typ
-        in
-          let new_scope =
-            rname_to_srname new_scope fdecl.ret_name
-          in
-            let new_scope =
-              fname_to_sfname new_scope fdecl.func_name
-            in
-              let new_env =
-                { scope = new_scope; functions = env.functions; }
-              in
-                let stmts =
-                  List.map (fun stmt -> check_stmt new_env stmt) fdecl.body
-                in
-                  { sret_typ = new_scope.ret_typ;
-                    sret_name = new_scope.ret_nam;
-                    sfunc_name = new_scope.func_nam;
-                    sformal_params = new_scope.formal_param;
-                    slocals = new_scope.local;
-                    sbody = stmts;
-                    builtinf = false;
-                  }
+  let new_scope = ret_to_slocal env.scope fdecl.ret_name fdecl.ret_typ in
+  let new_scope = formals_to_sformals new_scope fdecl.formal_params in
+  let new_scope = locals_to_slocals new_scope fdecl.locals in
+  let new_scope = ret_to_sret new_scope fdecl.ret_typ in
+  let new_scope = rname_to_srname new_scope fdecl.ret_name in
+  let new_scope = fname_to_sfname new_scope fdecl.func_name in
+  let new_env = { scope = new_scope; functions = env.functions; } in
+  let stmts = List.map (fun stmt -> check_stmt new_env stmt) fdecl.body in
+  { sret_typ = new_scope.ret_typ;
+    sret_name = new_scope.ret_nam;
+    sfunc_name = new_scope.func_nam;
+    sformal_params = new_scope.formal_param;
+    slocals = new_scope.local;
+    sbody = stmts;
+    builtinf = false; }
 
 and check_function env fdecl =
-  let found =
-    func_exists fdecl.func_name env
-  in
-    match found with
-        true -> func_decl_error fdecl.func_name
-      | false ->
-          let sfdecl =
-            fdecl_to_sdecl fdecl env
-          in
-            let new_env =
-              { scope = env.scope;
-                functions = sfdecl :: env.functions; }
-            in
-              new_env
+  let found = func_exists fdecl.func_name env in
+  if found then func_decl_error fdecl.func_name
+  else let sfdecl = fdecl_to_sdecl fdecl env in
+  let new_env = { scope = env.scope; functions = sfdecl :: env.functions; } in
+  new_env
 
 and check_compute_fdecl fdecls =
-  let fdecl =
-    List.hd (List.rev fdecls)
-  in 
-    let name =
-      fdecl.func_name
-    in
-      if (name = "compute") then
-        fdecls
-      else
-        program_error 0
+  let fdecl = List.hd (List.rev fdecls) in 
+  let name = fdecl.func_name in
+  if (name = "compute") then fdecls
+  else program_error 0
 
 and check_program fdecls =
-  let fdecls =
-    check_compute_fdecl fdecls
-  in
-    let env =
-      List.fold_left check_function root_environment fdecls
-    in
-      let sfdecls =
-        List.rev env.functions
-      in
-        sfdecls
+  let fdecls = check_compute_fdecl fdecls in
+  let env = List.fold_left check_function root_environment fdecls in
+  let sfdecls = List.rev env.functions in
+  sfdecls
