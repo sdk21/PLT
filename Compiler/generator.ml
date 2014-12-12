@@ -39,7 +39,7 @@ and gen_program fileName prog =
         #include <complex>
         #include <cmath>
         #include <Eigen/Dense>
-        #include \"../../cpp/qlang.hpp\"
+        #include \"../include/qlang/qlang.hpp\"
         using namespace Eigen;
         using namespace std;
         %s" cppString in 
@@ -117,6 +117,10 @@ and cppExpr expr = match expr with
       if is_builtin_func name then
         writeBuiltinFuncCall name l
       else
+<<<<<<< HEAD
+=======
+
+>>>>>>> e04164e22cd62986d291f0a9a32bd5173b035fc5
         name ^ "(" ^ writeFunCall l ^ ")"    
   | Noexpr -> ""
 
@@ -150,7 +154,7 @@ and writePrintqStmt l =
     match expr_wrap with
         Sast.Expr(_,t) -> 
           (match t with 
-            Sast.Mat -> sprintf "cout << qubitToString(%s) << endl" expr
+            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl" expr
           | _ -> sprintf "cout << %s << endl" expr)
 
 (* generate block *)  
@@ -204,7 +208,7 @@ and writeUnop op expr =
         | Ast.Not   -> sprintf "  !(%s)" exp
         | Ast.Re    -> sprintf "  real(%s)" exp   (* assumes exp is matrix*)
         | Ast.Im    -> sprintf "  imag(%s)" exp
-        | Ast.Norm  -> sprintf "  norm(%s)" exp
+        | Ast.Norm  -> sprintf "  %s.norm()" exp
         | Ast.Trans -> sprintf "  %s.transpose()" exp
         | Ast.Det   -> sprintf "  %s.determinant()" exp
         | Ast.Adj   -> sprintf "  %s.adjoint()" exp
@@ -225,7 +229,7 @@ and writeBinop expr1 op expr2 =
 		| Ast.Sub 	-> sprintf "%s - %s" e1 e2
 		| Ast.Mult 	-> sprintf "%s * %s" e1 e2
 		| Ast.Div 	-> sprintf "%s / %s" e1 e2
-		| Ast.Mod 	-> sprintf "%s ! %s" e1 e2
+		| Ast.Mod 	-> sprintf "%s %% %s" e1 e2
 		| Ast.Expn 	-> sprintf "pow(%s,%s)" e1 e2
 		| Ast.Tens 	-> sprintf "tensor(%s, %s)" e1 e2
 		| Ast.Eq 	-> equalCaseWise e1 t1 e2

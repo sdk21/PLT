@@ -1,4 +1,4 @@
-def func_test(int z) : int ret_name { 
+def func_test1(int z) : int ret_name { 
         int a;
         int b;
         int d;

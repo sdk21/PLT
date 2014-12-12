@@ -80,59 +80,110 @@ MatrixXcf genQubit(string s, int bra) {
 	return qub;
 }
 
-string qubitToString(MatrixXcf qub) {
+string vectorToBraket(MatrixXcf qub) {
 	int bra;
 	int qlen;
 	if(qub.rows() == 1) { qlen = qub.cols(); bra = 1; }
 	//int qlen = qub.cols();
 	else if(qub.cols() == 1) { qlen = qub.rows(); bra = 0;}
 	else { 
-		cerr << "Incorrect matrix size for qubitToString" << endl;
+		cerr << "Incorrect matrix size for vectorToBraket" << endl;
 		exit(1);
 	}
 	//cout << "bra " << bra << endl;
 
 	//gets position of 1 in the qubit
-	complex<float> one(1,0);
+	complex<float> zero(0,0);
 	int xi = 0;
 	int yi = 0;
 	int number;
-	for(number = 0; number < qlen; number++) {
-		if(bra) { xi = number; }
-		else { yi = number; }
-
-		if(qub(yi,xi) == one) {
-			if(bra) { number = qlen-1-number; }
-			//cout << i << endl;
-			break;
-		}
-	}
-
-	//converts position to binary number reversed
-	string bin = "";
-	do {
-		if ( (number & 1) == 0 )
-			bin += "0";
-		else
-			bin += "1";
-
-		number >>= 1;
-	} while ( number );
-
-	int outQubLen = sqrt(qlen);
-	//if(qlen%2) { outQubLen++; }
-
-	//adds necessary 0s
-	for(int i = bin.length(); i < outQubLen; i++) {
-		bin += "0";
-	}
-
-	reverse(bin.begin(), bin.end()); //reverses
-
-	//generates appropriate bra or ket representation
+	int index;
 	string result;
-	if(bra) { result = "<" + bin + "|"; }
-	else { result = "|" + bin + ">"; }
+	int count = 0;
+	for(index = 0; index < qlen; index++) {
+		if(bra) { xi = index; }
+		else { yi = index; }
+
+		if(qub(yi,xi) != zero) {
+			if(bra) { number = qlen-1-index; }
+			else { number = index; }
+			//cout << i << endl;
+			//break;
+
+			//converts position to binary number reversed
+			string bin = "";
+			do {
+				if ( (number & 1) == 0 )
+					bin += "0";
+				else
+					bin += "1";
+
+				number >>= 1;
+			} while ( number );
+
+			int outQubLen = sqrt(qlen);
+			//if(qlen%2) { outQubLen++; }
+
+			//adds necessary 0s
+			for(int i = bin.length(); i < outQubLen; i++) {
+				bin += "0";
+			}
+
+			reverse(bin.begin(), bin.end()); //reverses
+
+			ostringstream convert;
+			int re = qub(yi,xi).real();
+			int im = qub(yi,xi).imag();
+			string oper = "";
+			string rstr = "";
+			string istr = "";
+
+			convert << "(";
+			if(re != 0) { convert << re; }
+			if(re != 0 && im != 0) { convert << "+"; }
+			if(im != 0) { convert << im << "i"; }
+			convert << ")";
+
+			
+
+			//generates appropriate bra or ket representation
+			string qubstr;
+			if(bra) { qubstr = convert.str() + "<" + bin + "|"; }
+			else { qubstr = convert.str() + "|" + bin + ">"; }
+
+			if(count > 0) {
+				result += " + " + qubstr;
+			} else { result = qubstr; }
+			count++;
+		}
+
+	}
+
+//	//converts position to binary number reversed
+//	string bin = "";
+//	do {
+//		if ( (number & 1) == 0 )
+//			bin += "0";
+//		else
+//			bin += "1";
+//
+//		number >>= 1;
+//	} while ( number );
+//
+//	int outQubLen = sqrt(qlen);
+//	//if(qlen%2) { outQubLen++; }
+//
+//	//adds necessary 0s
+//	for(int i = bin.length(); i < outQubLen; i++) {
+//		bin += "0";
+//	}
+//
+//	reverse(bin.begin(), bin.end()); //reverses
+//
+//	//generates appropriate bra or ket representation
+//	string result;
+//	if(bra) { result = "<" + bin + "|"; }
+//	else { result = "|" + bin + ">"; }
 
 	return result;
 }
@@ -165,30 +216,32 @@ MatrixXcf genQubits(string s) {
 		qub = MatrixXcf::Zero(1,qlen);
 		qub(0,qlen-1-base10num) = 1;
 		//	} else if(!bra){
-	} else {
-		qub = MatrixXcf::Zero(qlen,1);
-		qub(base10num,0) = 1;
-	}
+} else {
+	qub = MatrixXcf::Zero(qlen,1);
+	qub(base10num,0) = 1;
+}
 
-	return qub;
+return qub;
 }
 
 /*
 int main() {
-	   cout << genQubit("00",1) << endl;
-	   cout << genQubit("01",1) << endl;
-	   cout << genQubit("10",1) << endl;
-	   cout << genQubit("11",1) << endl;
-	 cout << genQubit("11",1).isApprox(genQubit("11",1))<< endl;
-	 //cout << genQubit("01",1).isApprox( genQubit("10",1)) << endl;
-	//cout << genQubit("1101",0) << endl;
-	cout << qubitToString(genQubit("01100",0)) << endl;
-	complex<float> com(2,1);
-	//cout << (Matrix2i()<<1,0,0,1).finished()*(Matrix2cf()<<com,com,com,com).finished()<< endl;
-
-	Matrix<int, 2,2> in; in << 1,0,0,1;
-	Matrix<complex<float>,2,2> cM; cM << 2,1.01,com,2;
-	cout << cM << endl;
+	//	   cout << genQubit("00",1) << endl;
+	//	   cout << genQubit("01",1) << endl;
+	//	   cout << genQubit("10",1) << endl;
+	//	   cout << genQubit("11",1) << endl;
+	//	 cout << genQubit("11",1).isApprox(genQubit("11",1))<< endl;
+	//	 //cout << genQubit("01",1).isApprox( genQubit("10",1)) << endl;
+	//	//cout << genQubit("1101",0) << endl;
+	//	cout << vectorToBraket(genQubit("01100",0)) << endl;
+		complex<float> com(2,1);
+	//	//cout << (Matrix2i()<<1,0,0,1).finished()*(Matrix2cf()<<com,com,com,com).finished()<< endl;
+	//
+	//	Matrix<int, 2,2> in; in << 1,0,0,1;
+	Matrix<complex<float>,4,1> cM; cM << 25,1,com,0;
+	cout << vectorToBraket(cM) << endl;
+	cout << vectorToBraket(genQubit("10",1) + genQubit("01",1)) << endl;
+	cout << vectorToBraket(cM) << endl;
 
 
 	return 0;

@@ -9,7 +9,7 @@ def compute() : int ret_name_test
 				23 ^ 2;
 				2 lt 3;
 				45 lt 67;
-				ret_name_test = 68 % 2;
+				ret_name_test = 68 % 3;
 				
 
 			}

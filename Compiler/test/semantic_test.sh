@@ -2,9 +2,8 @@
 
 SCAN="../qlc -s" 
 
-#files="SemanticFailures/*.ql"
-files="SemanticSuccess/*.ql"
-#files="SemanticSuccess/binop_int_arith.ql"
+files="SemanticFailures/*.ql"
+#files="SemanticSuccess/*.ql"
 count=1
 
 

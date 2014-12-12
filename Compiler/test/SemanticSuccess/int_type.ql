@@ -4,6 +4,6 @@ def func_test(int z) : int ret_name {
         a = z;
         ret_name = a; 
 }
-def compute(int a):int try {
+def compute(int a):int trial {
 
 }
