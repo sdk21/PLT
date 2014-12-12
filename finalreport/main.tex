@@ -9,6 +9,11 @@
 \input{preamble}
 \input{package-qcircuit} % To draw quantum circuits in LaTeX
 
+\newcommand{\complex}{\textsf{com}\xspace}
+\newcommand{\integ}{\textsf{int}\xspace}
+\newcommand{\float}{\textsf{float}\xspace}
+\newcommand{\mat}{\textsf{mat}\xspace}
+
 \newcommand{\QL}{\textsf{QLang}\xspace}
 \title{\QL: Qubit Language\\ \Large(Final Report)}
 \author{
@@ -24,11 +29,16 @@
 \maketitle
 \tableofcontents
 
+\ifnum\withnotes=1
+  \listoftodos
+\fi
+
 \chapter{An Introduction to the Language}
   \input{sec-introduction}
 \chapter{\QL in practice: a Tutorial}
   \input{sec-tutorial}
-\chapter{Reference Manual}
+\chapter{Reference Manual}\label{sec:reference}
+  \input{sec-reference}
 \chapter{Project Plan and Organization}
 \chapter{Architectural Design}
 \chapter{Test Plan}

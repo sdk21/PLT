@@ -32,10 +32,24 @@ def foo( mat bar ): mat blah {
 \end{lstlisting}
 As examplified above, each statement (declaration, assignment, operation) can span any number of lines, and end with a semicolon.
 
+\paragraph{Qubits, matrices and vectors.} Before turning to the flow control structures, recall that \QL is designed specifically for the sake of implementing quantum algorithms; as such, it supports the usual quantum notations for bra and kets (although it stores and recognize then as of type \textsf{mat}):
+\begin{lstlisting}
+  mat idt;
+  mat vct;
+  mat qub;
+  qub = |11>;            # this is a bra
+  qub = <01|;            # this is a ket
+  idt = [(1,0)(0,1)];    # this is a matrix
+  vct = [(1,2,C(3.2 + 1.I))];   # this is a vector (with complex entries)
+  vct = qub;             # this is OK
+\end{lstlisting}
+In the above, the 3 variables have the same type -- the difference is only syntatical, in order to provide the user with an intuitive way to program the quantum operations.
+
+
 \section{Control structures, built-in functions and conversions}
 Now that the basic syntax of the language has been described, it is time to have a look at the fundamental blocks of any algorithm: the control structures, such as loops and conditional statements. 
 
-\paragraph{Loops.} \QL supports two sorts of loop, the \textsf{for} and \textsf{while} statements. While their bahavior is illustrated below, it is important to remember two features of the \textsf{for} loop: namely, that \textsf{(a)} the loop index must be a variable declared beforehand; and \textsf{(b)} that the (mandatory) keyword \textsf{by} allows to set the increment size by any integer, even negative.
+\paragraph{Loops.} \QL supports two sorts of loop, the \textsf{for} and \textsf{while} statements. While their bahavior is illustrated below, it is important to remember two features of the \textsf{for} loop: namely, that \textsf{(a)} the loop index must be a variable declared beforehand; and \textsf{(b)} that the (optional) keyword \textsf{by} allows to set the increment size by any integer, even negative.
 
 \begin{lstlisting}
  int i; # Will be used as 'for' loop index
@@ -51,7 +65,7 @@ Now that the basic syntax of the language has been described, it is time to have
      print(a);
  }
  
- for( i from 1 to 10 ) # Not OK: missing "by"
+ for( i from 1 to 10 ) # OK: missing "by 1" is implicit
  {
      a=a-3;
      break; # For the sake of the example: leaves the loop.
@@ -80,7 +94,7 @@ As shown above, braces are optional when the body of the loop comprises only one
           # Do something else
        }
 \end{lstlisting}
-The predicate can be any expressio evaluating to an integer: if non-zero, the \textsf{if} statement is entered; otherwise, the (optional) \textsf{else} statement is entered, if it exists. Note that \QL does not provide a builtin construct \textsf{elseif}, but instead relies on a nested combination of \textsf{if} and \textsf{else}:
+The predicate can be any expression evaluating to an integer: if non-zero, the \textsf{if} statement is entered; otherwise, the (optional) \textsf{else} statement is entered, if it exists. Note that \QL does not provide a builtin construct \textsf{elseif}, but instead relies on a nested combination of \textsf{if} and \textsf{else}:
 \begin{lstlisting}
  if(z eq 5) a = 0;
        
@@ -107,11 +121,12 @@ The predicate can be any expressio evaluating to an integer: if non-zero, the \t
 
 \paragraph{Builtin functions and operators.} As shown in the previous two examples, \QL provides builtin constructs to perform basic or fundamental tasks:
 \begin{description}
-  \item[\rm\em Logical operators:] \textsf{gt}, \textsf{lt}, \textsf{geq}, \textsf{leq}, \textsf{eq}, \textsf{neq} take two operands $a$, $b$, and return 0 (resp. 1) if respectively $a > b$, $a < b$, $a \geq b$, $a \leq b$, $a \leq b$ and $a = b$ and $a \neq b$;
-  \item[\rm\em Builtin functions:] \todonote{fill in}
-  \item[\rm\em Operators:] \todonote{fill in}
-  \item[\rm\em Constants:] \todonote{fill in}
+  \item[\rm\em Comparison operators:] \textsf{gt}, \textsf{lt}, \textsf{geq}, \textsf{leq}, \textsf{eq}, \textsf{neq} take two operands $a$, $b$, and return 0 (resp. 1) if respectively $a > b$, $a < b$, $a \geq b$, $a \leq b$, $a \leq b$ and $a = b$ and $a \neq b$;
+  \item[\rm\em Builtin functions:] these are convenient functions such as \textsf{print}, \textsf{printq} (for qubit syntax), or mathematical ones applying to matrices such as \textsf{norm}, \textsf{adj}, to complex values ($\textsf{sin}$, $\textsf{im}$, \dots) or to $0/1$ integers (``Booleans'') such as \textsf{and}, \textsf{xor}.
+  \item[\rm\em Operators:] the language supports the usual unary (negation $-$, logical negation $\textsf{not}$), binary (addition $+$, substraction $-$, exponentiation $\hat{}$ \dots) operators, as well as some more specific ones (tensor product $@$).
+%  \item[\rm\em Constants:] \todonote{fill in}
 \end{description}
+The complete list of these functions, operators and builtin constants can be found in \autoref{sec:reference}.
 
 \paragraph{Implicit conversions.} 
 Implicit conversions for some operators such as \textsf{eq} is possible, according to the following rule: \texttt{int}$\leadsto$\texttt{float}$\leadsto$\texttt{comp}$\leadsto$\texttt{mat}. However, the language is otherwise strongly typed: it is not possible to assign a complex number to a variable of type $\texttt{mat}$, for instance.
@@ -199,4 +214,6 @@ def compute (): int outcome{
         print(outcome);
 }
 \end{lstlisting}
-%\lstinputlisting{alg-deutsch.ql}
+
+
+\todo[inline]{Other algorithms?}
