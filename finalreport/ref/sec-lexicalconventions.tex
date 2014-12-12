@@ -1,0 +1,29 @@
+There are five kinds of tokens in the language, namely \textsf{(1)} identifiers, \textsf{(2)} keywords, \textsf{(3)} constants, \textsf{(4)} expression operators, and \textsf{(5)} other separators. At a given point in the parsing, the next token is chosen as to include the longest possible string of characters forming a token.
+
+\subsection{Character set}
+\QL supports a subset of ASCII; that is, allowed characters are
+\fbox{\texttt{a-zA-Z0-9@\#,-\_;:()[]\{\}<>=+/|*}}, as well as tabulations \texttt{\textbackslash{}t}, spaces, and line returns \texttt{\textbackslash{}n} and {\textbackslash{}r}.
+\subsection{Comments}
+Comments start with a \# sign, which then extends until the next carriage return. Multiline comments are not supported.
+
+\subsection{Identifier (names)}
+An identifier is an arbitrarily long sequence of alphabetic and numeric characters, where \texttt{\_} is included as ``alphabetic''. It must start with a lowercase or uppercase letter, i.e. one of $\texttt{a-zA-Z}$.
+
+\noindent The language is case-sensitive: \texttt{hullabaloo} and \texttt{hullABaLoo} are considered as different.
+
+\subsection{Keywords}
+The following identifiers as reserved for keywords: using them as function of variable name will result in an error at compilation time.
+\verbatiminput{ref/keywords.txt}
+\subsection{Constants}
+There are fours sorts of constants in the language, namely \emph{integer}, \emph{float}, \emph{complex} and \emph{identifier} constants. The first are comprised of any sequence of integers of the form \texttt{0|([1-9][0-9]*)} (recall that integers are non-negative), and have type \integ. The second are of type \float  and have the form \texttt{$R$}, while the third are of type \complex and have the form 
+\texttt{$R$|$R$+$R$i|$R$i}
+where $R$ consists of a \textsf{(i)} sign, \textsf{(ii)} an integer part followed by \textsf{(iii)} a point, \textsf{(iv)} a decimal part, then  \textsf{(v)} either a \texttt{e} or a \texttt{E} followed by an exponent part, possibly signed. \textsf{(i)} and \textsf{(v)} are optional, and either \textsf{(ii)} or \textsf{(iv)} can be missing as well. In more detail, $R$ 
+is defined as \texttt{[+-]\{0,1\}((($A$.$B$*|.$B$+)([eE][+-]?B+)?)|$A$[eE][+-]?B+)} and $A=$\texttt{0|([1-9]$B$*)}, $B=$\texttt{0|[1-9]} (that is, $R$ matches a real number such as \texttt{2.78e5}, \texttt{1.5E-1} or \texttt{10.25}).\todo{check this paragraph.}
+
+\noindent Finally, the identifier constants are a subset of the reserved keywords, and include:
+\begin{description}
+  \item[\texttt{e}] the base of natural logarithm $e=\sum_{k=0}^\infty \frac{1}{k!}$. Equivalent to \texttt{exp(1)}; has type \complex.
+  \item[\texttt{pi}] the constant $\pi$. Has type \float.
+  \item[\texttt{true}] represents the Boolean value \textsf{true}. Stored internally  as \integ 1.
+  \item[\texttt{false}] represents the Boolean value \textsf{false}. Stored internally  as \integ 0.
+\end{description}

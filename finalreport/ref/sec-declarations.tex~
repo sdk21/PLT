@@ -1,0 +1,50 @@
+Declarations are used within functions to specify how to interpret each identifier. Declarations have the form\\
+
+	\textit{ declaration: }
+		\\*\indent\indent\textit{ type-specifier declarator-list}
+
+\subsection{Type Specifiers}
+
+There are five main type specifiers:
+
+	\textit{type-specifier: }
+\begin{itemize}[~]
+  \item \integ
+  \item \float
+  \item \complex
+  \item \mat
+  \item \qubit
+\end{itemize}
+
+\subsection{ Declarator List }
+The declarator-list consist of either a single declarator, or a series of declarators separated by commas.\\
+
+	\textit{declarator-list:}
+		\\*\indent\indent\textit{declarator}
+		\\*\indent\indent\textit{declarator , declarator-list}\\
+
+A declarator refers to an object with a type determined by the type-specifier in the overall declaration. Declarators can have the following form\\
+
+	\textit{declarator:}
+		\\*\indent\indent\textit{identifier}
+		\\*\indent\indent\textit{declarator ( )}
+		\\*\indent\indent\textit{declarator [ constant-expression ]}
+		\\*\indent\indent\textit{( declarator )}\\
+
+\subsection{ Meaning of Declarators }
+Each declarator that appears in an expression is a call to create an object of the specified type. Each declarator has one identifier, and it is this identifier that is now associated with the created object. 
+
+If declarator D has the form\\
+		\\*\indent\indent\textit{D ( )}\\\\
+then the contained identifier has the type "function" that is returning an object. This object has the type which the identifier would have had if the declarator had just been D.\\\\
+If a declarator has the form\\
+		\\*\indent\indent\textit{D[constant-expression]}\\
+or
+		\\*\indent\indent\textit{D[ ]}\\\\
+then it is a declarator whose identifier is of type "array". In the first case, the constant- expression is an expression whose value can be defined at compile time.  The type of that constant-expression is int. In the second case, the constant expression 1 is used. \\
+
+An array may be constructed from one of the basic types, or from another array.\\
+
+Parentheses in declarators do not change the the type of contained identifier, but can affect the relations between the individual components of the declarator.\\
+
+Not all possible combinations of the above syntax are permitted. There are certain restrictions such as how array of functions cannot be declared.

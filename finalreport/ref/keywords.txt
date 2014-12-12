@@ -1,0 +1,3 @@
+int float comp mat C I def return eq neq lt gt leq geq 
+true false not and or xor norm trans det adj conj unit @
+im re sin cos tan if else for from to by while break continue 
