@@ -4,6 +4,7 @@ def func_test(int z) : int ret_name {
         int d;
         a = z;
         b = C(7.5I);
+        
         d = a+b*a+b/a-b;
         ret_name=d;
 }
