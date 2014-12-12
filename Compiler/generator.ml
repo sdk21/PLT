@@ -39,7 +39,7 @@ and gen_program fileName prog =
         #include <complex>
         #include <cmath>
         #include <Eigen/Dense>
-        #include \"../../cpp/qlang.hpp\"
+        #include \"../include/qlang/qlang.hpp\"
         using namespace Eigen;
         using namespace std;
         %s" cppString in 
