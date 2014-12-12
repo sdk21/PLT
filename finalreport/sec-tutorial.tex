@@ -7,7 +7,7 @@ def compute(int a): int trial {
 }
 \end{lstlisting}
 In particular, the main entry point \textsf{compute()} receives an integer argument, \textsf{a}, and returns an integer value, \textsf{type}.
-Note also that \QL is case-sensitive: \textsf{compute} and \textsf{Compute} would be two different functions.
+Note also that \QL is case-sensitive: \textsf{compute} and \textsf{Compute} would be two different functions (however, indentation is completely unrestricted).
 
 As hinted above, comments in the language are single-line, and start with a \#: everything following this symbol, until the next line return, will be ignored by the compiler. Furthermore, a function is defined (and declared -- there is no forward declaration) by the keyword \textsf{def} followed by the details of the function:
 \begin{lstlisting}
@@ -33,23 +33,92 @@ def foo( mat bar ): mat blah {
 As examplified above, each statement (declaration, assignment, operation) can span any number of lines, and end with a semicolon.
 
 \section{Control structures, built-in functions and conversions}
-Now that the basic syntax of the language has been described, it is time to have a look at the fundamental blocks of any algorithm: the control structures, such as loops and conditional statements. In \QL,
+Now that the basic syntax of the language has been described, it is time to have a look at the fundamental blocks of any algorithm: the control structures, such as loops and conditional statements. 
+
+\paragraph{Loops.} \QL supports two sorts of loop, the \textsf{for} and \textsf{while} statements. While their bahavior is illustrated below, it is important to remember two features of the \textsf{for} loop: namely, that \textsf{(a)} the loop index must be a variable declared beforehand; and \textsf{(b)} that the (mandatory) keyword \textsf{by} allows to set the increment size by any integer, even negative.
+
+\begin{lstlisting}
+ int i; # Will be used as 'for' loop index
+ int a;
+
+ for( i from 0 to 2 by 1 ) # OK
+   a=a+5;
+
+ for( i from 2 to 0 by -1 ) # OK
+ {
+     a=a*10;
+     continue; # going to next iteration: the next instruction will never be executed.
+     print(a);
+ }
+ 
+ for( i from 1 to 10 ) # Not OK: missing "by"
+ {
+     a=a-3;
+     break; # For the sake of the example: leaves the loop.
+ }
+ 
+ while( a leq 10 ) # OK
+ a=a+1;
+ 
+ while( a neq 0 )  # OK
+ {
+     a = (a+1) % 42;
+     continue;
+     print(0); # never reached
+ }
+\end{lstlisting}
+As shown above, braces are optional when the body of the loop comprises only one line.
+
+\paragraph{Conditional constructs.} As in many languages, \QL supports a C-like \textsf{if}\dots\textsf{else} construct:
+\begin{lstlisting}
+       if( predicate )
+       {
+          # Do something
+       }
+       else
+       {
+          # Do something else
+       }
+\end{lstlisting}
+The predicate can be any expressio evaluating to an integer: if non-zero, the \textsf{if} statement is entered; otherwise, the (optional) \textsf{else} statement is entered, if it exists. Note that \QL does not provide a builtin construct \textsf{elseif}, but instead relies on a nested combination of \textsf{if} and \textsf{else}:
+\begin{lstlisting}
+ if(z eq 5) a = 0;
+       
+ a = a - 2;
+ if( z leq 5 )
+ {
+    a = 0;
+ }
+ else
+ {
+    a = 10;
+    b = 24;
+ }
+       
+ if( a gt 100 )
+ {
+    print(b); # a > 100
+ }
+ else if( a eq 10 )
+ {
+    print(a);
+ }
+\end{lstlisting}
+
+\paragraph{Builtin functions and operators.} As shown in the previous two examples, \QL provides builtin constructs to perform basic or fundamental tasks:
+\begin{description}
+  \item[\rm\em Logical operators:] \textsf{gt}, \textsf{lt}, \textsf{geq}, \textsf{leq}, \textsf{eq}, \textsf{neq} take two operands $a$, $b$, and return 0 (resp. 1) if respectively $a > b$, $a < b$, $a \geq b$, $a \leq b$, $a \leq b$ and $a = b$ and $a \neq b$;
+  \item[\rm\em Builtin functions:] \todonote{fill in}
+  \item[\rm\em Operators:] \todonote{fill in}
+  \item[\rm\em Constants:] \todonote{fill in}
+\end{description}
+
+\paragraph{Implicit conversions.} 
+Implicit conversions for some operators such as \textsf{eq} is possible, according to the following rule: \texttt{int}$\leadsto$\texttt{float}$\leadsto$\texttt{comp}$\leadsto$\texttt{mat}. However, the language is otherwise strongly typed: it is not possible to assign a complex number to a variable of type $\texttt{mat}$, for instance.
 
 \todo{Do we support recursive functions?}
 
-Implicit conversions for some operators such as \textsf{eq} is possible, according to the following rule: \texttt{int}$\leadsto$\texttt{float}$\leadsto$\texttt{comp}$\leadsto$\texttt{mat}. However, the language is otherwise strongly typed: it is not possible to assign a complex number to a variable of type $\texttt{mat}$, for instance.
-
-
-
-- implicit conversions for eq and assignment (should) work:
-        int -> float -> comp -> mat
-- statements end with ";", mandatory
-- no declaration+assignment: variables are declared at the top of the
-block, assigned later
-- in particular, in 'for' loops, the loop variable must be declared
-beforehand
-
-\section{Diving in: Deutsch-Jozsa Algorithm}
+\section{Diving in: Deutsch--Jozsa Algorithm}
 
 To illustrate and describe the process of writing in \QL, this section will walk the reader through the implementation of one of the most emblematic quantum examples, namely \emph{Deutsch-Jozsa Algorithm}. The goal of this algorithm is to answer the following question: given query access to an unknown fucntion $f\colon\{0,1\}^n \to \{0,1\}$, promised to be either constant or balanced\footnote{$f$ is said to be balanced if $f(x)=0$ for exactly half of the inputs $x\in\{0,1\}^n$; or, equivalently, if $\shortexpect_{x}[f(x)] = \frac{1}{2}$.}, which of the two holds?  Classically, it is easy to see that this requires (in the worst case) querying just over half the solution space, that is $2^{n-1} + 1$ queries.  Quantumly, the Deutsch-Jozsa algorithm enables us to answer this question with just \emph{one} query!\medskip
 
@@ -111,7 +180,7 @@ def deutsch(int n, qubk top, mat U): int outcomeZero{
 }
 \end{lstlisting}
 
-Finally, we can call (and test) our algorithm by defining two unitary transformations (here $U_b$ and $U_c$) and testing our function on them -- and print the output. This is done by definiting the entry point function, \textsf{compute}:
+Finally, we can call (and test) our algorithm by defining two unitary transformations (here $U_b$ and $U_c$) and testing our function on them -- and print the output. This is done by writing the entry point function, \textsf{compute}:
 \begin{lstlisting}
 def compute (): int outcome{
         qubk top;
