@@ -16,6 +16,10 @@ def func_test(int z) : int ret_name {
         {
             a=a-3;
         }
+
+	for(i from 1 to 100){
+		print (a*100);
+	}
 }
 
 def compute(int a): int trial {

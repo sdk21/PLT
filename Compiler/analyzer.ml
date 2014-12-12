@@ -552,10 +552,14 @@ and check_for e1 e2 e3 e4 s env =
                       (match se4 with
                           Sast.Expr(_, t) ->
                             (match t with
-                                Sast.Int | Sast.Void ->
+                                Sast.Int ->
                                   let ss =
                                     check_stmt env s in
                                       Sast.For(se1, se2, se3, se4, ss)
+                              | Sast.Void ->
+                                  let ss =
+                                    check_stmt env s in
+                                      Sast.For(se1, se2, se3, Sast.Expr(Sast.Lit_int(1), Sast.Int), ss)
                               | _ -> stmt_error 1))
                 | _ -> stmt_error 1)
           | _ -> stmt_error 1)

@@ -117,10 +117,6 @@ and cppExpr expr = match expr with
       if is_builtin_func name then
         writeBuiltinFuncCall name l
       else
-<<<<<<< HEAD
-=======
-
->>>>>>> e04164e22cd62986d291f0a9a32bd5173b035fc5
         name ^ "(" ^ writeFunCall l ^ ")"    
   | Noexpr -> ""
 
