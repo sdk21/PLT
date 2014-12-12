@@ -172,7 +172,7 @@ and writeElseStmt stmt =
     let body =
         cppStmt stmt
     in
-        if ((String.compare body ";\n\t") = 0) then
+        if ((String.compare body "\t;\n") = 0) then
             sprintf "\n"
         else
             sprintf "\telse%s" body
