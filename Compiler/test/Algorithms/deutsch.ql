@@ -1,30 +1,33 @@
 def hadamard(int n) : mat gate{
         
         #returns Hadamard gate of 2^n dimensions
-        
-        gate = H; 
-        for( i from 0 to 2 by 1 ){
+        int i; 
+        gate = H;
+        for(i from 0 to 2 by 1){
                 gate = gate @ H;                 
         }       
 }
 
-def measure(qubk top) : mat result{
+def measure(mat top) : mat result{
         
         # returns the measurement matrix
         
-        mat adjoint = adj(top);
-        result = top * adjoint;
+       mat adjoint;
+       adjoint = adj(top);
+       result = top * adjoint;
 }
 
 
-def deutsch(int n, qubk top, mat U) : int outcomeZero{
+def deutsch(int n, mat top, mat U) : int outcomeZero{
 
         # input is tensor product of top and bottom register       
         
-        qubk bottom;       
+        mat bottom;  # qubit     
         mat input;
         mat had;        
         mat meas;
+        mat Idt;
+        Idt = [(1,0)(0,1)];
 
         bottom = |1>;
         input = top @ bottom;
@@ -32,14 +35,14 @@ def deutsch(int n, qubk top, mat U) : int outcomeZero{
         input = had * input;
         
         input = U*input;
-        input = (H @ I)*input;
+        input = (H @ Idt)*input;
         
         meas = measure (top);        
-        input = ((meas@I)*input;
+        input = (meas @ Idt)*input;
         
         input = norm(input);
         
-        if (eq(input,0)){
+        if( input eq 0 ){
                 outcomeZero = 0;
         }
         else{
@@ -47,8 +50,8 @@ def deutsch(int n, qubk top, mat U) : int outcomeZero{
         }
 }
 
-def execute () : int outcome{
-        qubk top;
+def compute () : int outcome{
+        mat top; # qubit
         mat Ub;
         mat Uc;
         int n;
@@ -58,8 +61,8 @@ def execute () : int outcome{
         Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
         Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)];
 
-        outcome = deutsch (2, top, Ub);
+        outcome = deutsch (n, top, Ub);
         print(outcome);
-        outcome = deutsch (2, top, Uc);
+        outcome = deutsch (n, top, Uc);
         print(outcome);
 }
