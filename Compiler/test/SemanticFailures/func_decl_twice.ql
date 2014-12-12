@@ -6,7 +6,6 @@ def func_test1(int z) : int ret_name {
         ret_name = z;
 
 }
-
 def func_test1(int z) : int ret_name2 { 
 
         ret_name2 = z;

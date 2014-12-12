@@ -1,8 +1,7 @@
 def func_test(comp val1, comp val2) : comp ret_name { 
 
 	comp val3;
-
-	val3 = 1;
+    val3 = 1;
 	
 	ret_name = val1 + val2 * val3;
 }

@@ -10,7 +10,6 @@ def func_test(int z) : int ret_name {
        if(z eq 5)
        {
        a =0;
-
        }
        else
        {
