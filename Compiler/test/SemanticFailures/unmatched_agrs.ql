@@ -1,4 +1,4 @@
-def func_test1(int z) : int ret_name { 
+def func_test1(int z, int c) : int ret_name { 
         int a;
         int b;
         int d;
@@ -7,11 +7,6 @@ def func_test1(int z) : int ret_name {
 
 }
 
-def func_test1(int z) : int ret_name2 { 
-
-        ret_name2 = z;
-
-}
 def compute( int a):int trial {
       trial = func_test1(4);
 }
