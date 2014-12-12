@@ -3,6 +3,7 @@ def func_test1(int z) : int ret_name {
         int b;
         int d;
         a = z;
+        
         ret_name = z;
 
 }
