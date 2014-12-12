@@ -5,17 +5,28 @@ def func_test(int z) : int ret_name {
       # comment before b; just checking for end of comment being correct
 
        int b;
-       a =10;
-
-       if(z eq 5)
+       a = 10;
+       
+       if(z eq 5) a = 0;
+       
+       a = a - 2;
+       if( z leq 5 )
        {
-       a =0;
-
+          a = 0;
        }
        else
        {
-       a = 10;
-       b = 24;
+           a = 10;
+           b = 24;
+       }
+       
+       if( a gt 100 )
+       {
+           print(b); # a > 100
+       }
+       else if( a eq 10 )
+       {
+          print(a);
        }
 }
 
