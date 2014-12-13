@@ -413,19 +413,11 @@ and check_binop e1 op e2 env =
                       (match t2 with
                           Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
                         | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
-                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
                         | _ -> binop_error op)
                     | Sast.Float ->
                       (match t2 with
                           Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
                         | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
-                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
-                        | _ -> binop_error op)
-                    | Sast.Comp ->
-                      (match t2 with 
-                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
-                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
-                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
                         | _ -> binop_error op)
                     | _ -> binop_error op)
                 | Ast.Or | Ast.And | Ast.Xor -> 
