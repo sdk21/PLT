@@ -12,5 +12,6 @@ def func_test1(int z) : int ret_name2 {
 
 }
 def compute( int a):int trial {
+      
       trial = func_test1(4);
 }
