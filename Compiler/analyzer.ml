@@ -40,7 +40,25 @@ let builtin_funcs =
       sformal_params = [{ styp = Sast.Mat; sname = "print_val"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtinf = true; }; ]
+      builtinf = true; }; 
+     
+    { sret_typ = Sast.Int;
+      sret_name = "null";
+      sfunc_name = "row";
+      sformal_params = [{ styp = Sast.Mat; sname = "row_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; };
+
+    { sret_typ = Sast.Int;
+      sret_name = "null";
+      sfunc_name = "col";
+      sformal_params = [{ styp = Sast.Mat; sname = "col_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; }; 
+     
+      ]
 
 let root_symbol_table =
   { ret_typ = Sast.Void;

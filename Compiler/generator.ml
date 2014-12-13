@@ -2,7 +2,7 @@ open Sast
 open Printf
 open String
 
-let builtin_funcs = ["print";"printq"]
+let builtin_funcs = ["print";"printq";"row";"col";"element"]
 
 let is_builtin_func name =
   List.exists (fun func_name -> func_name = name) builtin_funcs
@@ -125,7 +125,24 @@ and writeBuiltinFuncCall name l =
   match name with
     "print" -> writePrintStmt l
   | "printq" -> writePrintqStmt l
+  | "row" -> writeRowStmt l
+  | "col" -> writeColStmt l
   | _ -> ""
+
+
+(* generate row *)
+and writeRowStmt l =
+    let expr_wrap = List.hd l
+       in
+    let expr = cppExpr (expr_of expr_wrap)
+    in sprintf "%s.rows()" expr
+    
+(* generate col *)
+and writeColStmt l =
+    let expr_wrap = List.hd l
+       in
+    let expr = cppExpr (expr_of expr_wrap)
+    in sprintf "%s.cols()" expr
 
 (* generate print statement *)
 and writePrintStmt l =
