@@ -506,27 +506,27 @@ and check_if e s1 s2 env =
 
 and check_for e1 e2 e3 e4 s env =
   let se1 = check_expr env e1 in
-    match se1 with
-      Sast.Expr(Sast.Id(_), Sast.Int) ->
-        let se2 = check_expr env e2 in
-          (match se2 with
-            Sast.Expr(_, Sast.Int) ->
-              let se3 = check_expr env e3 in
-                (match se3 with
-                  Sast.Expr(_, Sast.Int) ->
-                    let se4 = check_expr env e4 in
-                      (match se4 with
-                        Sast.Expr(_, t) ->
-                          (match t with
-                            Sast.Int ->
-                              let ss = check_stmt env s in
-                              Sast.For(se1, se2, se3, se4, ss)
-                            | Sast.Void ->
-                                let ss = check_stmt env s in
-                                Sast.For(se1, se2, se3, Sast.Expr(Sast.Lit_int(1), Sast.Int), ss)
-                            | _ -> stmt_error 1))
-                | _ -> stmt_error 1)
-          | _ -> stmt_error 1)
+  match se1 with
+    Sast.Expr(Sast.Id(_), Sast.Int) ->
+      let se2 = check_expr env e2 in
+      (match se2 with
+         Sast.Expr(_, Sast.Int) ->
+           let se3 = check_expr env e3 in
+           (match se3 with
+              Sast.Expr(_, Sast.Int) ->
+              let se4 = check_expr env e4 in
+              (match se4 with
+                 Sast.Expr(_, t) ->
+                 (match t with
+                    Sast.Int ->
+                      let ss = check_stmt env s in
+                      Sast.For(se1, se2, se3, se4, ss)
+                  | Sast.Void ->
+                      let ss = check_stmt env s in
+                      Sast.For(se1, se2, se3, Sast.Expr(Sast.Lit_int(1), Sast.Int), ss)
+                | _ -> stmt_error 1))
+            | _ -> stmt_error 1)
+        | _ -> stmt_error 1)
     | _ -> stmt_error 1
 
 and check_while e s env =
