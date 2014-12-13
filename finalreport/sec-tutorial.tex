@@ -37,11 +37,11 @@ As examplified above, each statement (declaration, assignment, operation) can sp
   mat idt;
   mat vct;
   mat qub;
-  qub = |11>;            # this is a bra
-  qub = <01|;            # this is a ket
-  idt = [(1,0)(0,1)];    # this is a matrix
+  qub = |11>;                   # this is a bra
+  qub = <01|;                   # this is a ket
+  idt = [(1,0)(0,1)];           # this is a matrix
   vct = [(1,2,C(3.2 + 1.I))];   # this is a vector (with complex entries)
-  vct = qub;             # this is OK
+  vct = qub;                    # this is OK
 \end{lstlisting}
 In the above, the 3 variables have the same type -- the difference is only syntatical, in order to provide the user with an intuitive way to program the quantum operations.
 

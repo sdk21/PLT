@@ -8,8 +8,9 @@ EXEC=0
 
 if [ $1 == "clean" ]
 then
-rm -f ast_error_log sast_error_log gen_error_log comp_error_log ast_log sast_log ast_output sast_output
+rm -f ast_error_log sast_error_log gen_error_log comp_error_log ast_log sast_log ast_output sast_output exec_output
 else
+
 if [ $1 == "a" ]
 then
 AST=1
@@ -29,7 +30,6 @@ fi
 if [ $1 == "e" ]
 then
 EXEC=1
-fi
 fi
 
 if [ $2 == "ss" ]
@@ -148,4 +148,6 @@ ExecutionCheck
 fi
 fi
 done
+fi
+
 fi
