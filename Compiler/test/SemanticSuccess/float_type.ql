@@ -12,4 +12,5 @@ def func_test(float b) : float ret_name {
 def compute() : float trial {
 
 	trial = func_test(3.7);
+
 }

@@ -1,6 +1,6 @@
 def func_test(mat z) : mat ret_name { 
         mat a;
-        mat  b;
+        mat b;
         a =[(1,9,9)(4,5,5)];
         b = adj(a);
 
@@ -8,5 +8,6 @@ def func_test(mat z) : mat ret_name {
 
 
 def compute(int a):int trial {
+		trial = 8;
 
 }

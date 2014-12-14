@@ -14,7 +14,7 @@ def compute() : mat ret_val {
 	comp b;
 	comp c;
 	comp d;
-        mat k;
+    mat  k;
 
 	a = C(4.+5.I);
 	b = C(6.+6.I);

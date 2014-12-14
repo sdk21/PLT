@@ -184,7 +184,7 @@ and writeIfStmt expr stmt1 stmt2 =
 	let cond = cppExpr expr in
     let body = cppStmt stmt1 in
     let ebody = writeElseStmt stmt2 in
-    sprintf "if(%s)%s%s" cond body ebody  
+    sprintf " if(%s)%s%s" cond body ebody  
 
 (* generate else statements *)
 and writeElseStmt stmt =

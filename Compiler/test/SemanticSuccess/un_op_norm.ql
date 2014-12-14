@@ -1,18 +1,14 @@
-def func_test(mat z) : comp ret_name { 
-        mat a;
-	mat m;
-        comp b;
-        a = [(1,9,9)(4,5,5)];
-        b = norm(a);
-	b = norm(z);
+def func_test(mat z) : float ret_name { 
+	float b;
+        b = norm(z);
 	print(b);
 	ret_name = b;
 }
-def compute(int a):int trial {
-	mat m;
-
-	m = IDT;
+def compute():int trial {
+        mat m;
+        m = [(1,9,9)(4,5,5)];
 	
 	func_test(m);
 
+	trial = 8;
 }
