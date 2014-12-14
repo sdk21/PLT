@@ -87,8 +87,11 @@ string vectorToBraket(MatrixXcf qub) {
 	//int qlen = qub.cols();
 	else if(qub.cols() == 1) { qlen = qub.rows(); bra = 0;}
 	else { 
-		cerr << "Incorrect matrix size for vectorToBraket" << endl;
-		exit(1);
+		//cerr << "Incorrect matrix size for vectorToBraket" << endl;
+		//exit(1);
+		ostringstream  test;
+		test << qub << endl;
+		return test.str();
 	}
 	//cout << "bra " << bra << endl;
 
