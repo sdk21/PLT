@@ -5,5 +5,6 @@ def func_test(int z) : int ret_name {
         ret_name = a; 
 }
 def compute(int a):int trial {
+	trial = 8;
 
 }

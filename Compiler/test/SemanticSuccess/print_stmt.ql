@@ -5,8 +5,11 @@ def func_test(int z) : int ret_name {
         ret_name = a; 
         
 }
-def compute(int a):int trial {
-   
+def compute():int trial {
+	int a;
+	a = 5;
+    print(a);
+    trial = 8;
 }
 
 

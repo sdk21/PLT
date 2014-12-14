@@ -7,4 +7,6 @@ def func_test(float z) : float ret_name {
 
 def compute(int a):int trial {
 
+	trial = 8;
+
 }
