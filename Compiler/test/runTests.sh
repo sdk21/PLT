@@ -66,7 +66,7 @@ GenerationCheck()
 
 CompilationCheck()
 {
-    eval "g++ -w -o out $1 -I../../includes/headers -L../../includes/libs -lqlang" 2>> comp_error_log
+    eval "g++ -w -o ${1%.cpp} $1 -I../includes/headers -L../includes/libs -lqlang" 2>> comp_error_log
     wc comp_error_log | awk '{print $1}'
 }
 
