@@ -24,7 +24,7 @@ def func_test(int z) : int ret_name {
        {
            print(b); # a > 100
        }
-       else if( a eq 10 )
+       else 
        {
           print(a);
        }
