@@ -123,8 +123,8 @@ string vectorToBraket(MatrixXcf qub) {
 			reverse(bin.begin(), bin.end()); //reverses
 
 			ostringstream convert;
-			int re = qub(yi,xi).real();
-			int im = qub(yi,xi).imag();
+			float re = qub(yi,xi).real();
+			float im = qub(yi,xi).imag();
 			string oper = "";
 			string rstr = "";
 			string istr = "";
