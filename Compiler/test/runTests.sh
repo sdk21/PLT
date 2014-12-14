@@ -177,7 +177,7 @@ if [ "$errors" -le "$prev_errors" ]
 then
 echo "Pass (compilation): " $file
 exec_output=$(ExecutionCheck)
-if [ "$exec_output" = "0" ]
+if [ "$exec_output" != "0" ]
 then
 echo "Pass (execution): " $file
 else
