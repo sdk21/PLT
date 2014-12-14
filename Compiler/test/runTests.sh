@@ -167,9 +167,10 @@ fi
 if [ $EXEC == 1 ]
 then
 echo "* Compilation and Execution *"
-rm -f exec_outputs
+rm -f comp_error_log exec_output
 errors=0
 prev_errors=0
+exec_output=0
 for file in $cfiles
 do
 errors=$(CompilationCheck $file)
@@ -180,6 +181,7 @@ exec_output=$(ExecutionCheck)
 if [ "$exec_output" != "0" ]
 then
 echo "Pass (execution): " $file
+echo $exec_output
 else
 echo "Fail (execution): " $file
 fi
