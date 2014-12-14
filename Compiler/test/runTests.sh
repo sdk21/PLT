@@ -35,15 +35,15 @@ fi
 if [ $2 == "ss" ]
 then
 files="SemanticSuccess/*.ql"
-cfiles="SemanticSuccess/*.cpp"
+cfiles="SemanticSuccess/cpp"
 elif [ $2 = "sf" ]
 then
 files="SemanticFailures/*.ql"
-cfiles="SemanticFailures/*.cpp"
+cfiles="SemanticFailures/cpp"
 elif [ $2 = "al" ]
 then
 files="SemanticFailures/*.ql"
-cfiles="SemanticFailures/*.cpp"
+cfiles="SemanticFailures/cpp"
 fi
 
 ASTCheck()
@@ -66,7 +66,7 @@ GenerationCheck()
 
 CompilationCheck()
 {
-    eval "g++ -w -o out $1 -I../../includes/headers -L../../includes/libs -lqlang" 2>> comp_error_log
+    eval "g++ -w -o ${1%.ql} $1 -I../includes/headers -L../includes/libs -lqlang" 2>> comp_error_log
     wc comp_error_log | awk '{print $1}'
 }
 
@@ -121,6 +121,8 @@ for file in $files
 do
 errors=0
 errors=$(GenerationCheck $file)
+eval "mkdir cpp"
+eval "mv *.cpp cpp/"
 if [ "$errors" -eq 0 ]
 then
 echo "Test: " $file " generated code successfully."
