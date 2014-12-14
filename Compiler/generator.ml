@@ -2,7 +2,7 @@ open Sast
 open Printf
 open String
 
-let builtin_funcs = ["print";"printq"]
+let builtin_funcs = ["print";"printq";"rows";"cols";"elem"]
 
 let is_builtin_func name =
   List.exists (fun func_name -> func_name = name) builtin_funcs
@@ -125,15 +125,37 @@ and writeBuiltinFuncCall name l =
   match name with
     "print" -> writePrintStmt l
   | "printq" -> writePrintqStmt l
+  | "rows" -> writeRowStmt l
+  | "cols" -> writeColStmt l
+  | "elem" -> writeElemStmt l
   | _ -> ""
 
+(* generate row statement *)
+and writeRowStmt l =
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
+  sprintf "%s.rows()" expr
+
+(* generate col statement *)
+and writeColStmt l =
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
+  sprintf "%s.cols()" expr
+
+(* generate elem statement *)
+and writeElemStmt l =
+  let ew1 = List.hd l in
+  let e1 = cppExpr (expr_of ew1)
+  and ew2 = List.hd (List.tl l) in
+  let e2 = cppExpr (expr_of ew2)
+  and ew3 = List.hd (List.tl (List.tl l)) in
+  let e3 = cppExpr (expr_of ew3) in
+  sprintf "%s(%s,%s)" e1 e2 e3
+ 
 (* generate print statement *)
 and writePrintStmt l =
-  let expr_wrap = List.hd l
-    in
-  let expr =
-    cppExpr (expr_of expr_wrap)
-  in 
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
     match expr_wrap with
       Sast.Expr(_,t) -> 
         (match t with 
@@ -142,11 +164,8 @@ and writePrintStmt l =
 
 (* generate qubit print statement *)
 and writePrintqStmt l =
-  let expr_wrap = List.hd l
-    in
-  let expr =
-    cppExpr (expr_of expr_wrap)
-  in 
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
     match expr_wrap with
         Sast.Expr(_,t) -> 
           (match t with 

@@ -1,12 +1,16 @@
-def func_test(float z) : float ret_name { 
+def func_test(float b) : float ret_name { 
         
         float a; 
+	float c;
+
         a = 5.0;
-        ret_name = z;  
+	c = a * b;
+
+        ret_name = c;  
 }
 
-def compute(int a):int trial {
+def compute() : float trial {
 
-	trial = 8;
+	trial = func_test(3.7);
 
 }
