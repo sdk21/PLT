@@ -33,4 +33,4 @@ $(AL)/%.o: $(AL)/%.cpp
 
 .PHONY : clean
 clean:
-
+	rm $(SS)/*.cpp $(SS)/*.out $(SF)/*.cpp $(SF)/*.out

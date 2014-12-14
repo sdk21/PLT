@@ -8,6 +8,7 @@
 using namespace Eigen;
 using namespace std;
 
+
 MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2) {
 
 	int mat1rows = mat1.rows();
@@ -32,7 +33,7 @@ MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2) {
 
 Matrix4cf control(Matrix2cf mat) {
 	Matrix4cf output;
-	output.topLeftCorner(2,2) = I;
+	output.topLeftCorner(2,2) = IDT;
 	output.topRightCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	output.bottomLeftCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
 	output.bottomRightCorner(2,2) = mat;
@@ -43,10 +44,6 @@ Matrix4cf control(Matrix2cf mat) {
 MatrixXcf genQubit(string s, int bra) {
 	
 	int slen = s.length();
-	//int qstrlen = slen-2; //length of the qubit string removing end chars
-
-	//string qstr = s.substr(1, qstrlen); //binary substring from qubit rep
-	//int qlen = pow(2, qstrlen); //length of the vector
 	int qlen = pow(2,slen); //length of vector
 
 	int base10num = 0;
@@ -54,21 +51,15 @@ MatrixXcf genQubit(string s, int bra) {
 	//iterates through qstr. Whenever digit is a 1, it adds the associated 
 	//power of 2 for that position to base10num
 	const char * cq = s.c_str();
-	//const char * cq = qstr.c_str();
 	char * c = new char();
 	for(int i = 0; i < slen; i++) {
-	//for(int i = 0; i < qstrlen; i++) {
 		strncpy(c,cq+i,1);
-		//base10num += strtol(c,NULL,10) * pow(2,(qstrlen-1-i));  
 		base10num += strtol(c,NULL,10) * pow(2,(slen-1-i));  
 	}
 	delete c;
 
-	//cout << base10num << endl;
-
 	//creates the vector and sets correct bit to 1
 	MatrixXcf qub;
-	//if(!s.compare(0, 1, "<")) {
 	if(bra) {
 		qub = MatrixXcf::Zero(1,qlen);
 		qub(0,qlen-1-base10num) = 1;
@@ -83,17 +74,17 @@ MatrixXcf genQubit(string s, int bra) {
 string vectorToBraket(MatrixXcf qub) {
 	int bra;
 	int qlen;
+
+	//determines whether bra or ket
 	if(qub.rows() == 1) { qlen = qub.cols(); bra = 1; }
-	//int qlen = qub.cols();
 	else if(qub.cols() == 1) { qlen = qub.rows(); bra = 0;}
-	else { 
+	else { //prints reg matrix if not row or column vector
 		//cerr << "Incorrect matrix size for vectorToBraket" << endl;
 		//exit(1);
 		ostringstream  test;
 		test << qub << endl;
 		return test.str();
 	}
-	//cout << "bra " << bra << endl;
 
 	//gets position of 1 in the qubit
 	complex<float> zero(0,0);
@@ -110,8 +101,6 @@ string vectorToBraket(MatrixXcf qub) {
 		if(qub(yi,xi) != zero) {
 			if(bra) { number = qlen-1-index; }
 			else { number = index; }
-			//cout << i << endl;
-			//break;
 
 			//converts position to binary number reversed
 			string bin = "";
@@ -125,7 +114,6 @@ string vectorToBraket(MatrixXcf qub) {
 			} while ( number );
 
 			int outQubLen = sqrt(qlen);
-			//if(qlen%2) { outQubLen++; }
 
 			//adds necessary 0s
 			for(int i = bin.length(); i < outQubLen; i++) {
@@ -141,56 +129,33 @@ string vectorToBraket(MatrixXcf qub) {
 			string rstr = "";
 			string istr = "";
 
+			//adds constant expression
 			convert << "(";
 			if(re != 0) { convert << re; }
 			if(re != 0 && im != 0) { convert << "+"; }
 			if(im != 0) { convert << im << "i"; }
 			convert << ")";
 
-			
+			//cleans up (1) and (1i) cases
+			string constant = convert.str();
+			if(constant.compare("(1)") == 0) { constant = ""; }
+			else if(constant.compare("(1i)") == 0) { constant = "i"; }
 
 			//generates appropriate bra or ket representation
 			string qubstr;
-			if(bra) { qubstr = convert.str() + "<" + bin + "|"; }
-			else { qubstr = convert.str() + "|" + bin + ">"; }
+			if(bra) { qubstr = constant + "<" + bin + "|"; }
+			else { qubstr = constant + "|" + bin + ">"; }
 
 			if(count > 0) {
 				result += " + " + qubstr;
 			} else { result = qubstr; }
 			count++;
 		}
-
 	}
-
-//	//converts position to binary number reversed
-//	string bin = "";
-//	do {
-//		if ( (number & 1) == 0 )
-//			bin += "0";
-//		else
-//			bin += "1";
-//
-//		number >>= 1;
-//	} while ( number );
-//
-//	int outQubLen = sqrt(qlen);
-//	//if(qlen%2) { outQubLen++; }
-//
-//	//adds necessary 0s
-//	for(int i = bin.length(); i < outQubLen; i++) {
-//		bin += "0";
-//	}
-//
-//	reverse(bin.begin(), bin.end()); //reverses
-//
-//	//generates appropriate bra or ket representation
-//	string result;
-//	if(bra) { result = "<" + bin + "|"; }
-//	else { result = "|" + bin + ">"; }
-
 	return result;
 }
 
+/*
 MatrixXcf genQubits(string s) {
 
 	int slen = s.length();
@@ -226,43 +191,4 @@ MatrixXcf genQubits(string s) {
 
 return qub;
 }
-
-/*
-int main() {
-	//	   cout << genQubit("00",1) << endl;
-	//	   cout << genQubit("01",1) << endl;
-	//	   cout << genQubit("10",1) << endl;
-	//	   cout << genQubit("11",1) << endl;
-	//	 cout << genQubit("11",1).isApprox(genQubit("11",1))<< endl;
-	//	 //cout << genQubit("01",1).isApprox( genQubit("10",1)) << endl;
-	//	//cout << genQubit("1101",0) << endl;
-	//	cout << vectorToBraket(genQubit("01100",0)) << endl;
-		complex<float> com(2,1);
-	//	//cout << (Matrix2i()<<1,0,0,1).finished()*(Matrix2cf()<<com,com,com,com).finished()<< endl;
-	//
-	//	Matrix<int, 2,2> in; in << 1,0,0,1;
-	Matrix<complex<float>,4,1> cM; cM << 25,1,com,0;
-	cout << vectorToBraket(cM) << endl;
-	cout << vectorToBraket(genQubit("10",1) + genQubit("01",1)) << endl;
-	cout << vectorToBraket(cM) << endl;
-
-
-	return 0;
-}
 */
-/*
-   int main() {
-
-   complex<float> c1 = 2;
-   complex<float> c2 = 3;
-   Matrix2cf mat1, mat2;
-   mat1 << c1,c1,c1,c1;
-   mat2 << c2,c2,c2,0;
-
-   cout << tensor(mat1,mat2) << endl;
-
-
-   return 0;
-   }
- */
-
