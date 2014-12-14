@@ -23,7 +23,7 @@ if [ $1 == "g" ] || [ $1 == "c" ] || [ $1 == "e" ]
 then
 GEN=1
 fi
-if [ $1 == "c" ] || [ $1 == "e" ]
+if [ $1 == "c" ]
 then
 COMP=1
 fi
@@ -35,15 +35,15 @@ fi
 if [ $2 == "ss" ]
 then
 files="SemanticSuccess/*.ql"
-cfiles="SemanticSuccess/cpp"
+cfiles="SemanticSuccess/*.cpp"
 elif [ $2 = "sf" ]
 then
 files="SemanticFailures/*.ql"
-cfiles="SemanticFailures/cpp"
+cfiles="SemanticFailures/*.cpp"
 elif [ $2 = "al" ]
 then
 files="SemanticFailures/*.ql"
-cfiles="SemanticFailures/cpp"
+cfiles="SemanticFailures/*.cpp"
 fi
 
 ASTCheck()
@@ -66,106 +66,128 @@ GenerationCheck()
 
 CompilationCheck()
 {
-    eval "g++ -w -o ${1%.ql} $1 -I../includes/headers -L../includes/libs -lqlang" 2>> comp_error_log
+    eval "g++ -w -o ${1%.cpp} $1 -I../includes/headers -L../includes/libs -lqlang" 2>> comp_error_log
     wc comp_error_log | awk '{print $1}'
 }
 
 ExecutionCheck()
 {
-    eval "./out" 1>> exec_output
+    output=$(eval "./out")
+    echo "$output" >> exec_output
+    echo "$output"
 }
 
 #Check AST
 if [ $AST == 1 ]
 then
+echo "* AST Generation *"
 rm -f ast_error_log ast_output
+errors=0
+prev_errors=0
 for file in $files
 do
 errors=0
 errors=$(ASTCheck $file)
-if [ "$errors" -eq 0 ]
+if [ "$errors" -le "$prev_errors" ]
 then
 count=1
-echo "Test " $count ": " $file " passed."
+echo "Pass " $file
 else
-echo "Test " $count ": " $file " failed to pass."
+echo "Fail " $file
 fi
-count=$((count+1))
+prev_errors=$errors
 done
+echo ""
 fi
 
 #Check SAST
 if [ $SAST == 1 ]
 then
+echo "* SAST Generation *"
 rm -f sast_error_log sast_output
+errors=0
+prev_errors=0
 for file in $files
 do
-errors=0
 errors=$(SASTCheck $file)
-if [ "$errors" -eq 0 ]
+if [ "$errors" -le "$prev_errors" ]
 then
-count=1
-echo "Test " $count ": " $file " passed."
+echo "Pass: " $file
 else
-echo "Test " $count ": " $file " failed to pass."
+echo "Fail: " $file
 fi
-count=$((count+1))
+prev_errors=$errors
 done
+echo ""
 fi
 
 #Check Generation
 if [ $GEN == 1 ]
 then
+echo "* Code Generation *"
 rm -f gen_error_log
+errors=0
+prev_errors=0
 for file in $files
 do
-errors=0
 errors=$(GenerationCheck $file)
-eval "mkdir cpp"
-eval "mv *.cpp cpp/"
-if [ "$errors" -eq 0 ]
+if [ "$errors" -le "$prev_errors" ]
 then
-echo "Test: " $file " generated code successfully."
+echo "Pass: " $file
 else
-echo $file "could not generate code."
+echo "Fail: " $file
 fi
+prev_errors=$errors
 done
+echo ""
 fi
 
 #Check Compilation
 if [ $COMP == 1 ]
 then
+echo "* Compilation *"
 rm -f comp_error_log
-for file in $cfiles
-do
 errors=0
-errors=$(CompilationCheck $file)
-if [ "$errors" -eq 0 ]
-then
-echo "Test: " $file " compiled code successfully."
-else
-echo $file "could not compile code."
-fi
-done
-fi
-
-if [ $EXEC == 1 ]
-then
-rm -f exec_outputs
-fi
+prev_errors=0
 for file in $cfiles
 do
 errors=$(CompilationCheck $file)
-if [ "$errors" -eq 0 ]
+if [ "$errors" -le "$prev_errors" ]
 then
-echo $file "executable generated."
+echo "Pass: " $file
 else
-echo $file "executable could not be generated"
+echo "Fail: " $file
+fi
+prev_errors=$errors
+done
+echo ""
+fi
+
+# Execution check
 if [ $EXEC == 1 ]
 then
-ExecutionCheck
+echo "* Compilation and Execution *"
+rm -f exec_outputs
+errors=0
+prev_errors=0
+for file in $cfiles
+do
+errors=$(CompilationCheck $file)
+if [ "$errors" -le "$prev_errors" ]
+then
+echo "Pass (compilation): " $file
+exec_output=$(ExecutionCheck)
+if [ "$exec_output" != "0" ]
+then
+echo "Pass (execution): " $file
+else
+echo "Fail (execution): " $file
 fi
+else
+echo "Fail (compilation): " $file
 fi
+prev_errors=$errors
 done
 fi
 
+fi
