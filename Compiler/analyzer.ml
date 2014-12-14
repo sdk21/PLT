@@ -26,7 +26,7 @@ let builtin_vars =
     { styp = Sast.Mat; sname = "IDT"; builtinv = true; }; ]
 
 let builtin_funcs = 
-  [ { sret_typ = Sast.Poly;
+  [ { sret_typ = Sast.Void;
       sret_name = "null";
       sfunc_name = "print";
       sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtinv = true; };];
@@ -34,10 +34,36 @@ let builtin_funcs =
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
       builtinf = true; };
 
-    { sret_typ = Sast.Poly;
+    { sret_typ = Sast.Void;
       sret_name = "null";
       sfunc_name = "printq";
-      sformal_params = [{ styp = Sast.Mat; sname = "print_val"; builtinv = true; };];
+      sformal_params = [{ styp = Sast.Mat; sname = "printq_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; }; 
+
+    { sret_typ = Sast.Int;
+      sret_name = "null";
+      sfunc_name = "rows";
+      sformal_params = [{ styp = Sast.Mat; sname = "rows_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; };
+
+    { sret_typ = Sast.Int;
+      sret_name = "null";
+      sfunc_name = "cols";
+      sformal_params = [{ styp = Sast.Mat; sname = "rows_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; };
+
+    { sret_typ = Sast.Comp;
+      sret_name = "null";
+      sfunc_name = "elem";
+      sformal_params = [{ styp = Sast.Mat; sname = "elem_mat"; builtinv = true; };
+                        { styp = Sast.Int; sname = "elem_row"; builtinv = true; };
+                        { styp = Sast.Int; sname = "elem_col"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
       builtinf = true; }; ]
@@ -429,41 +455,33 @@ and check_binop e1 op e2 env =
                     | _ -> binop_error op)))
 
 and check_assign name e env =
-  let vdecl =
-    lookup_var name env.scope
-    in
-      let e = check_expr env e in
-        match e with
-          Sast.Expr(_, t1) -> 
-            let t2 = vdecl.styp in
-              if (t1 = t2) then
-                Sast.Expr(Sast.Assign(name, e), t1)
-              else
-                assignment_error name
+  let vdecl = lookup_var name env.scope in
+  let e = check_expr env e in
+  match e with
+    Sast.Expr(_, t1) -> 
+      let t2 = vdecl.styp in
+        if (t1 = t2) then
+          Sast.Expr(Sast.Assign(name, e), t1)
+        else
+          assignment_error name
 
 and check_call_params formal_params params =
   if ((List.length formal_params) = 0)
     then true
   else
-    let fdecl_arg =
-      List.hd formal_params
-    in
-      let param = match (List.hd params) with
-        Sast.Expr(_, t) -> t
-      in
-        if (fdecl_arg.styp = Sast.Poly || (fdecl_arg.styp = param))
-          then check_call_params (List.tl formal_params) (List.tl params)
-        else false
+    let fdecl_arg = List.hd formal_params in
+    let param = match (List.hd params) with
+      Sast.Expr(_, t) -> t in
+      if (fdecl_arg.styp = Sast.Poly || (fdecl_arg.styp = param))
+        then check_call_params (List.tl formal_params) (List.tl params)
+      else false
 
 and check_call name params env = 
   let fdecl =
     try
       lookup_func name env
-    with Not_found -> call_error 0
-  in
-    let params =
-      List.map (check_expr env) params
-    in
+    with Not_found -> call_error 0 in
+    let params = List.map (check_expr env) params in
       if ((List.length fdecl.sformal_params) != (List.length params))
         then call_error 1
       else
