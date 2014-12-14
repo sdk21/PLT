@@ -2,7 +2,6 @@ def test_func(comp a, comp b, comp c, comp d) : mat ret_val {
 
 	mat x;
 	mat f;
-
 	x = [(a,b)(c,f)];
 	ret_val = x;
 }

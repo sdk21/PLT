@@ -1,12 +1,15 @@
 #!/bin/bash
 
-files="SemanticSuccess/*.ql"
-
 AST=0
 SAST=0
 GEN=0
 COMP=0
 EXEC=0
+
+if [ $1 == "clean" ]
+then
+rm -f ast_error_log sast_error_log gen_error_log comp_error_log ast_log sast_log ast_output sast_output exec_output
+else
 
 if [ $1 == "a" ]
 then
@@ -27,6 +30,17 @@ fi
 if [ $1 == "e" ]
 then
 EXEC=1
+fi
+
+if [ $2 == "ss" ]
+then
+files="SemanticSuccess/*.ql"
+elif [ $2 = "sf" ]
+then
+files="SemanticFailures/*.ql"
+elif [ $2 = "al" ]
+then
+files="SemanticFailures/*.ql"
 fi
 
 ASTCheck()
@@ -134,4 +148,6 @@ ExecutionCheck
 fi
 fi
 done
+fi
+
 fi

@@ -1,11 +1,14 @@
 Applying unary or binary operators to some values may cause an implicit conversion of their operands. In this section, we list the possible conversions, and their expected result -- any conversion not listed here is impossible, and attempting to force it would generate a compilation error.
 
 \begin{itemize}
-  \item $\integ\to\float$, $\float\to\complex$, $\integ\to\complex$.
-  \item $\complex\to\float$: the imaginary part of the complex number is dropped (will generate a warning).
-  \item $\float\to\integ$: the floating number is rounded towards zero.
-  \item $\complex\to\integ$: equivalent to $\complex\to\float\to\integ$.
-  \item $\complex\to\mat$: the floating number $z$ becomes the $1\times1$ $\begin{bmatrix} z \end{bmatrix}$ (will generate a warning).
-  \item $\float\to\mat$: the floating number $x$ becomes the $1\times1$ matrix $\begin{bmatrix} x \end{bmatrix}$ (will generate a warning).
-  \item $\integ\to\mat$: the integer $a$ becomes the $1\times1$ matrix $\begin{bmatrix} a \end{bmatrix}$ (will generate a warning).
+  \item $\integ\to\float$
+  \item $\float\to\complex$
+  \item $\integ\to\complex$
+%   \item $\complex\to\float$: the imaginary part of the complex number is dropped (will generate a warning).
+%   \item $\float\to\integ$: the floating number is rounded towards zero.
+%   \item $\complex\to\integ$: equivalent to $\complex\to\float\to\integ$.
+%   \item $\complex\to\mat$: the floating number $z$ becomes the $1\times1$ $\begin{bmatrix} z \end{bmatrix}$ (will generate a warning).
+%   \item $\float\to\mat$: the floating number $x$ becomes the $1\times1$ matrix $\begin{bmatrix} x \end{bmatrix}$ (will generate a warning).
+%   \item $\integ\to\mat$: the integer $a$ becomes the $1\times1$ matrix $\begin{bmatrix} a \end{bmatrix}$ (will generate a warning).
 \end{itemize}
+The equality and comparison operators (\textsf{eq}, \textsf{leq}, \textsf{geq}, \textsf{lt}, \textsf{gt}) will perform the implicit conversions above, when they make sense. For instance, $0\ \textsf{eq} \ C(0.0+0.0I)$ is valid, and the comparison will be between two complex numbers (after the first operand is converted into a \complex). Similarly, $1\ \textsf{lt}\ 2.5$ is valid, the integer left-hand side being cast into a float (note that \textsf{leq}, \textsf{geq}, \textsf{lt}, \textsf{gt} are not defined for complex numbers, but only \integ and \float).
