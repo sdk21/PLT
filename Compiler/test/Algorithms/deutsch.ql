@@ -27,8 +27,9 @@ def deutsch(int n, mat top, mat U) : int outcomeZero{
         mat had;        
         mat meas;
         mat Idt;
+        float m;       
+ 
         Idt = [(1,0)(0,1)];
-
         bottom = |1>;
         input = top @ bottom;
         had = hadamard(n);
@@ -40,9 +41,9 @@ def deutsch(int n, mat top, mat U) : int outcomeZero{
         meas = measure (top);        
         input = (meas @ Idt)*input;
         
-        input = norm(input);
+        m = norm(input);
         
-        if( input eq 0 ){
+        if( m eq 0.0 ){
                 outcomeZero = 0;
         }
         else{
