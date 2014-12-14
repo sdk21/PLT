@@ -62,7 +62,6 @@ rule token = parse
 | "conj"     { CONJ }   (* Get complex conjugate *)
 | "unit"     { UNIT }   (* Is unit matrix? *)
 | '@'        { TENS }   (* Tensor product *)
-
 | "im"       { IM }     (* Is imaginary number? *)
 | "re"       { RE }     (* Is real number *)
 | "sin"      { SIN }    (* Sine *)

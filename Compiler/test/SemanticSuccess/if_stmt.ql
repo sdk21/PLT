@@ -1,5 +1,5 @@
 def func_test(int z) : int ret_name { 
-       
+      
        int a;
 
       # comment before b; just checking for end of comment being correct
@@ -24,13 +24,15 @@ def func_test(int z) : int ret_name {
        {
            print(b); # a > 100
        }
-       else if( a eq 10 )
+       else 
        {
           print(a);
        }
+
+       ret_name = 8;
 }
 
 
 def compute(int a):int trial {
-
+  trial = func_test(20);
 }

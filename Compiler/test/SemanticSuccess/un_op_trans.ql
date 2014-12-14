@@ -5,5 +5,5 @@ def func_test(mat z) : mat ret_name {
         b = trans(a);
 }
 def compute(int a):int trial {
-
+	trial = 8;
 }

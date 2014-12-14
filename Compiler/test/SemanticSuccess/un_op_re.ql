@@ -6,5 +6,5 @@ def func_test(comp z) : comp ret_name {
  
 }
 def compute(int a):int trial {
-
+	trial = 8;
 }

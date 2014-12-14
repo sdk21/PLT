@@ -20,8 +20,11 @@ def func_test(int z) : int ret_name {
 	for(i from 1 to 100){
 		print (a*100);
 	}
+
+    ret_name = 5;
 }
 
 def compute(int a): int trial {
 
+   trial = func_test(20);
 }

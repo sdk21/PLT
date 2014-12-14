@@ -3,7 +3,7 @@ CXX = g++
 
 #../../includes should direct to the includes directory
 #located in the home directory of the qlang project
-INC = ./ ../../includes/libs
+INC = ./ ../includes/libs
 INCLUDES =$(INC:%=-I%)
 CFLAGS = -g -Wall $(INCLUDES)
 CXXFLAGS = -g -Wall $(INCLUDES)
@@ -13,8 +13,8 @@ CXXFLAGS = -g -Wall $(INCLUDES)
 
 .PHONY: default
 default: libqlang.a
-	mv libqlang.a ../../includes/libs
-	cp qlang.hpp ../../includes/headers/qlang
+	mv libqlang.a ../includes/libs
+	cp qlang.hpp ../includes/headers/qlang
 
 
 libqlang.a: qlang.o

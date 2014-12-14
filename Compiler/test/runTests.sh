@@ -9,6 +9,9 @@ EXEC=0
 if [ $1 == "clean" ]
 then
 rm -f ast_error_log sast_error_log gen_error_log comp_error_log ast_log sast_log ast_output sast_output exec_output
+rm -f SemanticSuccess/*.cpp SemanticSuccess/*.o
+rm -f SemanticFailure/*.cpp SemanticFailure/*.o
+rm -f Analyzer/*.cpp Analyzer/*.o
 else
 
 if [ $1 == "a" ]
@@ -42,8 +45,8 @@ files="SemanticFailures/*.ql"
 cfiles="SemanticFailures/*.cpp"
 elif [ $2 = "al" ]
 then
-files="SemanticFailures/*.ql"
-cfiles="SemanticFailures/*.cpp"
+files="Algorithms/*.ql"
+cfiles="Algorithms/*.cpp"
 fi
 
 ASTCheck()
@@ -66,13 +69,13 @@ GenerationCheck()
 
 CompilationCheck()
 {
-    eval "g++ -w -o out $1 -I../../includes/headers -L../../includes/libs -lqlang" 2>> comp_error_log
+    eval "g++ -w $1 -I../includes/headers -L../includes/libs -lqlang" 2>> comp_error_log
     wc comp_error_log | awk '{print $1}'
 }
 
 ExecutionCheck()
 {
-    output=$(eval "./out")
+    output=$(eval "./a.out")
     echo "$output" >> exec_output
     echo "$output"
 }
@@ -167,9 +170,10 @@ fi
 if [ $EXEC == 1 ]
 then
 echo "* Compilation and Execution *"
-rm -f exec_outputs
+rm -f comp_error_log exec_output
 errors=0
 prev_errors=0
+exec_output=0
 for file in $cfiles
 do
 errors=$(CompilationCheck $file)
@@ -180,6 +184,7 @@ exec_output=$(ExecutionCheck)
 if [ "$exec_output" != "0" ]
 then
 echo "Pass (execution): " $file
+echo $exec_output
 else
 echo "Fail (execution): " $file
 fi
