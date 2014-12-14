@@ -35,12 +35,15 @@ fi
 if [ $2 == "ss" ]
 then
 files="SemanticSuccess/*.ql"
+cfiles="SemanticSuccess/*.cpp"
 elif [ $2 = "sf" ]
 then
 files="SemanticFailures/*.ql"
+cfiles="SemanticFailures/*.cpp"
 elif [ $2 = "al" ]
 then
 files="SemanticFailures/*.ql"
+cfiles="SemanticFailures/*.cpp"
 fi
 
 ASTCheck()
@@ -63,7 +66,7 @@ GenerationCheck()
 
 CompilationCheck()
 {
-    eval "g++ -w -o out $1 ../cpp/qlang.cpp" 2>> comp_error_log
+    eval "g++ -w -o out $1 -I../../includes/headers -L../../includes/libs -lqlang" 2>> comp_error_log
     wc comp_error_log | awk '{print $1}'
 }
 
@@ -131,17 +134,31 @@ fi
 if [ $COMP == 1 ]
 then
 rm -f comp_error_log
+for file in $cfiles
+do
+errors=0
+errors=$(CompilationCheck $file)
+if [ "$errors" -eq 0 ]
+then
+echo "Test: " $file " compiled code successfully."
+else
+echo $file "could not compile code."
+fi
+done
+fi
+
 if [ $EXEC == 1 ]
 then
 rm -f exec_outputs
 fi
-files="SemanticSuccess/*.cpp"
-for file in $files
+for file in $cfiles
 do
 errors=$(CompilationCheck $file)
 if [ "$errors" -eq 0 ]
 then
 echo $file "executable generated."
+else
+echo $file "executable could not be generated"
 if [ $EXEC == 1 ]
 then
 ExecutionCheck
@@ -150,4 +167,3 @@ fi
 done
 fi
 
-fi

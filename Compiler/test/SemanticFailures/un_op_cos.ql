@@ -6,6 +6,7 @@ def func_test(int z) : int ret_name {
 
         comp d;
         d = C(7.5I);
+        
         z = cos(d);
         ret_name=b;
 }
