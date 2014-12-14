@@ -250,7 +250,11 @@ and check_unop op e env =
             (match t with
                 Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Int)
               | _ ->  unop_error op)
-          | Ast.Norm | Ast.Det ->
+          | Ast.Norm ->
+            (match t with
+                Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Float)
+              | _ ->  unop_error op)
+          | Ast.Det ->
             (match t with
                 Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
               | _ ->  unop_error op)
