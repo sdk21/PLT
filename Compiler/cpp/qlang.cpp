@@ -22,7 +22,7 @@ MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2) {
 	//2nd matrix
 	for(int m = 0; m < mat1rows; m++) {
 		for(int n = 0; n < mat1cols; n++) {
-			output.block(m*mat2cols,n*mat2rows,mat2rows,mat2cols) = 
+			output.block(m*mat2rows,n*mat2cols,mat2rows,mat2cols) = 
 				mat1(m,n) * mat2;
 		}
 	}
