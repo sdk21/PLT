@@ -3,7 +3,7 @@ CXX = g++
 
 #../../includes should direct to the includes directory
 #located in the home directory of the qlang project
-INC = ./ ../includes/libs
+INC = ./ ../includes/headers
 INCLUDES =$(INC:%=-I%)
 CFLAGS = -g -Wall $(INCLUDES)
 CXXFLAGS = -g -Wall $(INCLUDES)
