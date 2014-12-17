@@ -48,8 +48,6 @@ rule token = parse
 | "leq"      { LEQ }    (* Less than or equal to *)
 | "geq"      { GEQ }    (* Greater than or equal to *)
 
-| "true"     { TRUE }   (* Boolean true *)
-| "false"    { FALSE }  (* Boolean false *)
 | "not"      { NOT }    (* Boolean not *)
 | "and"      { AND }    (* Boolean and *)
 | "or"       { OR }     (* Boolean or *)

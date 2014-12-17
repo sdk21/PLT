@@ -1,3 +1,8 @@
+(* Semantically Analyzed Syntax Tree
+    - Produced by semantic analyzer
+    - Consumed by compiler
+*)
+
 open Ast
 
 type sdata_type =
@@ -5,7 +10,11 @@ type sdata_type =
   | Float
   | Comp
   | Mat
-  | Poly
+  | Mati
+  | Matf
+  | Matc
+  | Qubb
+  | Qubk
   | Void
 
 type expr_wrapper = 
@@ -27,16 +36,16 @@ and  sexpr =
 and sstmt =
     Sexpr of expr_wrapper
   | Block of sstmt list
-  | If of expr_wrapper * sstmt * sstmt
+  | If of expr_wrapper * sstmt
   | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
   | While of expr_wrapper * sstmt
-  | BreakCont of int
+  | Print of expr_wrapper
  
 and svar_decl = 
   { 
     styp : sdata_type;
     sname : string;
-    builtinv : bool;
+    builtin : bool;
   }
 
 and sfunc_decl = 
@@ -47,7 +56,6 @@ and sfunc_decl =
     sformal_params : svar_decl list;
     slocals : svar_decl list;
     sbody : sstmt list;
-    builtinf : bool;
   }
 
 type sprogram =
@@ -110,7 +118,9 @@ and string_of_expr_wrapper w =
         Expr(Lit_int(i), Int) -> Lit_int(i)
       | Expr(Lit_float(f), Float) -> Lit_float(f)
       | Expr(Lit_comp(f1, f2), Comp) -> Lit_comp(f1, f2)
-      | Expr(Mat(l), Mat) -> Mat(l)
+      | Expr(Mat(l), Mati) -> Mat(l)
+      | Expr(Mat(l), Matf) -> Mat(l)
+      | Expr(Mat(l), Matc) -> Mat(l)
       | Expr(Id(name), typ) -> Id(name)
       | Expr(Unop(op, e), _) -> Unop(op, e) 
       | Expr(Binop(e1, op, e2), _) -> Binop(e1, op, e2)
@@ -128,6 +138,8 @@ and string_of_svar_decl svar_decl =
     | Float -> "float," ^ " name: " ^ svar_decl.sname ^ "  "
     | Comp -> "comp," ^ " name: " ^ svar_decl.sname ^ "  "
     | Mat -> "mat," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Qubb -> "qubb," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Qubk -> "qubk," ^ " name: " ^ svar_decl.sname ^ "  "
     | _ -> "")
 
 and string_of_sexprs e = 
@@ -136,18 +148,11 @@ and string_of_sexprs e =
 and string_of_sstmt = function
     Sexpr(e) -> string_of_expr_wrapper e ^ "\n"
   | Block(l) -> "{\n" ^ string_of_sstmts l ^ "\n}"
-  | If(e, s, Block([])) -> "if (" ^ string_of_expr_wrapper e ^ ")\n" ^ string_of_sstmt s
-  | If(e, s1, s2) ->  "if (" ^ string_of_expr_wrapper e ^ ")\n" ^string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
+  | If(e,s) -> "If condition : " ^ string_of_expr_wrapper e ^ "\nstatement :\n" ^ string_of_sstmt s
   | For(e1, e2, e3, e4, s) -> "For args : " ^ string_of_expr_wrapper e1 ^ " " ^ string_of_expr_wrapper e2 ^ " "^ string_of_expr_wrapper e3 ^ 
                                  " "^ string_of_expr_wrapper e4 ^ "\nstatement :\n" ^ string_of_sstmt s 
   | While(e,s) -> "While condition : " ^ string_of_expr_wrapper e ^ "\nstatement : " ^ string_of_sstmt s
-  | BreakCont(t) -> string_of_breakcont t
-
-and string_of_breakcont t =
-  if (t = 0) then
-  "break"
-  else
-  "continue"
+  | Print(e) -> "Print(" ^ string_of_expr_wrapper e ^")"
 
 and string_of_sstmts sstmts = 
   String.concat "\n" (List.map string_of_sstmt sstmts) 
@@ -159,6 +164,8 @@ and string_of_sfdecl sfdecl =
     | Float -> " float "
     | Comp -> " comp "
     | Mat -> " mat "
+    | Qubb -> " qubb "
+    | Qubk -> " qubk "
     | _ -> "") ^
       "\nsret_name: " ^ sfdecl.sret_name ^ "\nsfunc_name: "  ^ sfdecl.sfunc_name ^  "\n(" ^
         String.concat "" (List.map string_of_svar_decl sfdecl.sformal_params) ^ ")\n{\n" ^

@@ -8,7 +8,7 @@
 %token COMMA COLON SEMI LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE LCAR RCAR BAR
 %token PLUS MINUS TIMES DIV MOD EXPN
 %token EQ NEQ LT GT LEQ GEQ
-%token TRUE FALSE NOT AND OR XOR
+%token NOT AND OR XOR
 %token TENS UNIT NORM TRANS DET ADJ CONJ IM RE SIN COS TAN
 %token IF ELIF ELSE FOR FROM TO BY WHILE BREAK CONT
 %token EOF
@@ -140,6 +140,8 @@ stmt:
   | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE          { If($3, $5, Ast.Expr(Ast.Noexpr)) }
   | IF LPAREN expr RPAREN stmt ELSE stmt             { If($3, $5, $7) }
+  | BREAK SEMI                                       { BreakCont(0) }
+  | CONT  SEMI                                       { BreakCont(1) }
 
 stmt_list:
     /* nothing  */ { [] }

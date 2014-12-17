@@ -1,28 +1,26 @@
 def hadamard(int n) : mat gate{
-        
         #returns Hadamard gate of 2^n dimensions
+        
         int i; 
         gate = H;
-        for(i from 0 to 2 by 1){
+        for(i from 0 to n-1 by 1){
                 gate = gate @ H;                 
         }       
 }
 
 def measure(mat top) : mat result{
+       # returns the measurement matrix
         
-        # returns the measurement matrix
-        
-       mat adjoint;
-       adjoint = adj(top);
-       result = top * adjoint;
+       mat ad;
+       ad = adj(top);
+       result = top * ad;
 }
 
 
 def deutsch(int n, mat top, mat U) : int outcomeZero{
-
         # input is tensor product of top and bottom register       
         
-        mat bottom;  # qubit     
+        mat bottom;    
         mat input;
         mat had;        
         mat meas;
@@ -31,6 +29,7 @@ def deutsch(int n, mat top, mat U) : int outcomeZero{
  
         Idt = [(1,0)(0,1)];
         bottom = |1>;
+
         input = top @ bottom;
         had = hadamard(n);
         input = had * input;
@@ -52,7 +51,7 @@ def deutsch(int n, mat top, mat U) : int outcomeZero{
 }
 
 def compute () : int outcome{
-        mat top; # qubit
+        mat top; 
         mat Ub;
         mat Uc;
         int n;
