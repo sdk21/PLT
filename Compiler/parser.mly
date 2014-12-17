@@ -84,17 +84,17 @@ mat_row_list:
   | mat_row_list LPAREN mat_row RPAREN { List.rev($3) :: $1 }
 
 inner_comp:
-    FLOAT_LIT                  { [$1; 0.] }
-  | FLOAT_LIT I                { [0.; $1] }
-  | FLOAT_LIT PLUS FLOAT_LIT I { [$1; $3] }
+    expr                       { [$1; Lit_float(0.)] }
+  | expr I                     { [Lit_float(0.); $1] }
+  | expr PLUS expr I           { [$1; $3] }
 
 expr:
     ID                             { Id($1) }
   | INT_LIT                        { Lit_int(int_of_string $1) }
   | FLOAT_LIT                      { Lit_float($1) }
-  | C LPAREN inner_comp RPAREN     { Lit_comp(List.hd $3, List.hd (List.rev $3)) } 
   | LCAR INT_LIT BAR               { Lit_qub($2, 0) }
   | BAR INT_LIT RCAR               { Lit_qub($2, 1) }
+  | C LPAREN inner_comp RPAREN     { Comp(List.hd $3, List.hd (List.rev $3)) } 
   | LBRACK mat_row_list RBRACK     { Mat(List.rev($2)) }
   | LPAREN expr RPAREN             { $2 }
   | ID ASSIGN expr                 { Assign($1, $3) }
