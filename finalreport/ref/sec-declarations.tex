@@ -27,7 +27,6 @@ A declarator refers to an object with a type determined by the type-specifier in
 	\textit{declarator:}
 		\\*\indent\indent\textit{identifier}
 		\\*\indent\indent\textit{declarator ( )}
-		\\*\indent\indent\textit{declarator [ constant-expression ]}
 		\\*\indent\indent\textit{( declarator )}\\
 
 \subsection{ Meaning of Declarators }
@@ -36,13 +35,6 @@ Each declarator that appears in an expression is a call to create an object of t
 If declarator D has the form\\
 		\\*\indent\indent\textit{D ( )}\\\\
 then the contained identifier has the type "function" that is returning an object. This object has the type which the identifier would have had if the declarator had just been D.\\\\
-If a declarator has the form\\
-		\\*\indent\indent\textit{D[constant-expression]}\\
-or
-		\\*\indent\indent\textit{D[ ]}\\\\
-then it is a declarator whose identifier is of type "array". In the first case, the constant- expression is an expression whose value can be defined at compile time.  The type of that constant-expression is int. In the second case, the constant expression 1 is used. \\
-
-An array may be constructed from one of the basic types, or from another array.\\
 
 Parentheses in declarators do not change the the type of contained identifier, but can affect the relations between the individual components of the declarator.\\
 

@@ -3,10 +3,10 @@ As in C, ``an object is a manipulatable region of storage; an lvalue is an expre
 
 \subsection{Valid types}
 
-The language features 5 elementary types, namely \integ, \float, \complex, \mat. (In particular, column and row vectors are represented respectively as $n\times1$ or $1\times n$ matrices.) Is also valid any type that inductively can be built from an a valid type as follows:
+The language features 4 elementary types, namely \integ, \float, \complex, \mat. Is also valid, any type that inductively can be built from a valid type as follows:
 \begin{itemize}
   \item elementary types are valid;
-  \item an \emph{array} of a valid type is valid. Arrays have fixed size (that must be declared at compilation time), and are comprised of elements of a single, fixed valid type;
+  \item an \emph{matrix} of a valid type is valid. Matrices have fixed size (that must be declared at compilation time), and are comprised of any elements of any type (that is, a matrix can have elements of non-necessarily identical types);
   \item a \emph{function} taking as input a fixed number of elements from (non-necessarily identical) valid types, and returning a valid type.
 \end{itemize}
 
