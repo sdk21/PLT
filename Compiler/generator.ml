@@ -133,8 +133,9 @@ and writeBuiltinFuncCall name l =
   match name with
     "print" -> writePrintStmt l
   | "printq" -> writePrintqStmt l
-  | "row" -> writeRowStmt l
-  | "col" -> writeColStmt l
+  | "rows" -> writeRowStmt l
+  | "cols" -> writeColStmt l
+  | "elem" -> writeElemStmt l
   | _ -> ""
 
 (* generate row statement *)
