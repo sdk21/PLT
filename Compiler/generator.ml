@@ -65,8 +65,11 @@ and cpp_funcList func =
       and cppLocals = cppVarDecl func.slocals ";\n\t"
         in
       if cppFName = "compute" then
-                  sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
-      else 
+      sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
+      else
+        if (cppFParam = "") then
+        sprintf "\n%s %s ()\n{\n\t%s\n%s\n\treturn %s;\n}" cppRtnType cppFName cppLocals cppFBody cppRtnValue
+        else
         sprintf "\n%s %s (%s)\n{\n\t%s\n%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
 
 (* generate variable declarations *)
@@ -114,7 +117,7 @@ and writeBreakCont t =
 and cppExpr expr = match expr with
     Lit_int(lit) -> string_of_int lit
   | Lit_float(flit) -> string_of_float flit
-  | Lit_comp(re,im) -> " complex<float>(" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
+  | Comp(re,im) -> " complex<float>(" ^ cppExpr (expr_of re)  ^ "," ^ cppExpr (expr_of im)   ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
   | Lit_qub(vec, t) -> writeQubit vec t
@@ -292,6 +295,9 @@ and rowMatrix expr_wrap =
 
 (* generate function call *)
 and writeFunCall expr_wrap =
+    if expr_wrap = [] then
+    sprintf ""
+    else
     let argvStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ ",") "" expr_wrap in
     let argvStrCom = String.sub argvStr 0 ((String.length argvStr)-1) in
     sprintf "%s" argvStrCom
