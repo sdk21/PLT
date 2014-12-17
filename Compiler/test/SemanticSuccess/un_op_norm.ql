@@ -1,7 +1,6 @@
 def func_test(mat z) : float ret_name { 
 	float b;
-        b = norm(z);
-	print(b);
+    b = norm(z);
 	ret_name = b;
 }
 def compute():int trial {
