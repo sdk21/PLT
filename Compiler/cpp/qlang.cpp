@@ -99,8 +99,9 @@ string vectorToBraket(MatrixXcf qub) {
 		else { yi = index; }
 
 		if(qub(yi,xi) != zero) {
-			if(bra) { number = qlen-1-index; }
-			else { number = index; }
+			//if(bra) { number = qlen-1-index; }
+			//else { number = index; }
+			number = index;
 
 			//converts position to binary number reversed
 			string bin = "";
@@ -156,6 +157,22 @@ string vectorToBraket(MatrixXcf qub) {
 }
 
 /*
+int main() {
+
+	MatrixXcf mat(1,2);
+
+	complex<float> c1(1,0);
+	complex<float> c2(0,0);
+
+	mat << c1,c2;
+
+	cout << mat << endl;
+	cout << vectorToBraket(mat) << endl;
+	
+
+	return 0;
+}
+
 MatrixXcf genQubits(string s) {
 
 	int slen = s.length();

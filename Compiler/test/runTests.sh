@@ -6,6 +6,7 @@ GEN=0
 COMP=0
 EXEC=0
 
+
 if [ $1 == "clean" ]
 then
 rm -f ast_error_log sast_error_log gen_error_log comp_error_log ast_log sast_log ast_output sast_output exec_output
@@ -129,6 +130,9 @@ fi
 #Check Generation
 if [ $GEN == 1 ]
 then
+cd ../cpp
+make
+cd ../test
 echo "* Code Generation *"
 rm -f gen_error_log
 errors=0

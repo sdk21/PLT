@@ -136,8 +136,9 @@ and writeBuiltinFuncCall name l =
   match name with
     "print" -> writePrintStmt l
   | "printq" -> writePrintqStmt l
-  | "row" -> writeRowStmt l
-  | "col" -> writeColStmt l
+  | "rows" -> writeRowStmt l
+  | "cols" -> writeColStmt l
+  | "elem" -> writeElemStmt l
   | _ -> ""
 
 (* generate row statement *)
@@ -169,8 +170,8 @@ and writePrintStmt l =
     match expr_wrap with
       Sast.Expr(_,t) -> 
         (match t with 
-            Sast.Mat -> sprintf "cout << %s << endl" expr
-          | _ -> sprintf "cout << %s << endl" expr)
+            Sast.Mat -> sprintf "cout << %s << endl << endl" expr
+          | _ -> sprintf "cout << %s << endl << endl" expr)
 
 (* generate qubit print statement *)
 and writePrintqStmt l =
@@ -179,8 +180,8 @@ and writePrintqStmt l =
     match expr_wrap with
         Sast.Expr(_,t) -> 
           (match t with 
-            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl" expr
-          | _ -> sprintf "cout << %s << endl" expr)
+            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl << endl" expr
+          | _ -> sprintf "cout << %s << endl << endl" expr)
 
 (* generate block *)  
 and cppStmtBlock sstmtl = 

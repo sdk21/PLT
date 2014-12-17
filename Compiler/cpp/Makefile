@@ -22,7 +22,7 @@ libqlang.a: qlang.o
 	ranlib libqlang.a
 
 qlang.o: qlang.cpp
-	$(CXX) -c qlang.cpp $(CFLAGS)
+	$(CXX) -c qlang.cpp $(CXXFLAGS)
 
 clean:
 	rm *.o *.a
