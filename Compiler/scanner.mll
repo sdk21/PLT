@@ -18,7 +18,6 @@ rule token = parse
 | "I"        { I }      (*  Imaginary component *)
 
 | "def"      { DEF }    (* Define function *)
-| "return"   { RETURN }
 
 | '='        { ASSIGN } (* Assignment *)
 | ','        { COMMA }  (* Separate list elements *)
