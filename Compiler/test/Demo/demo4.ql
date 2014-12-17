@@ -28,16 +28,17 @@ def prepareU (int n) : mat gate {
 }
 
 def prepareG (int n) : mat gate{
-        mat s;
-        mat sa;
-        mat i;
+        mat s; mat sa; mat i; mat h;
 
         s = ntensor(n,|0>);
         sa = adj(s);
         i = ntensor(n,IDT);
         gate = 2*s*sa - i;
+        h = ntensor(n, H);
+        gate = h*gate*h;
         gate = gate @ IDT;         
 }
+
 def grover (int n) : float outcomeZero{
 
         mat bottom; mat top; mat input;
@@ -54,9 +55,11 @@ def grover (int n) : float outcomeZero{
         g = prepareG(n);
         
         go = g*u;
+        
+        for (i from 0 to n by 1){
+                input = go*input; 
+        }
 
-        input = go*input; 
- 
         meas = measure(top);
         input = (meas @ IDT)* input;
         outcomeZero = norm(input);
@@ -73,9 +76,5 @@ def compute () : float outcome{
         print(outcome);
         
         n = 2;
-        outcome = grover(n);
-        print(outcome);
-
-        n = 3;
         outcome = grover(n);
 }
