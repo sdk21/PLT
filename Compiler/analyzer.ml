@@ -20,9 +20,10 @@ type environment =
 let builtin_vars =
   [ { styp = Sast.Float; sname = "e"; builtinv = true; };
     { styp = Sast.Float; sname = "pi"; builtinv = true; };
-    { styp = Sast.Mat; sname = "H"; builtinv = true; };
     { styp = Sast.Mat; sname = "X"; builtinv = true; };
     { styp = Sast.Mat; sname = "Y"; builtinv = true; };
+    { styp = Sast.Mat; sname = "Z"; builtinv = true; };   
+    { styp = Sast.Mat; sname = "H"; builtinv = true; };
     { styp = Sast.Mat; sname = "IDT"; builtinv = true; }; ]
 
 let builtin_funcs = 
@@ -560,6 +561,7 @@ and check_stmt env = function
   | Ast.If(e, s1, s2) -> check_if e s1 s2 env
   | Ast.For(e1, e2, e3, e4, s) -> check_for e1 e2 e3 e4 s env
   | Ast.While(e, s) -> check_while e s env
+  | Ast.BreakCont(t) -> Sast.BreakCont(t)
 
 and vdecl_to_sdecl vdecl =
   match vdecl.typ with

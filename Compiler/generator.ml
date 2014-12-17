@@ -101,6 +101,14 @@ and cppStmt stmts = match stmts with
   | Sast.If(expr_wrap , sstmt1, sstmt2) -> writeIfStmt (expr_of expr_wrap) sstmt1 sstmt2
   | Sast.For(var,init, final, increment, stmt) -> writeForStmt var init final increment stmt
   | Sast.While(expr_wrap , sstmt) -> writeWhileStmt (expr_of expr_wrap) sstmt
+  | Sast.BreakCont(t) -> writeBreakCont t
+
+(* generate break/continue statement *)
+and writeBreakCont t =
+  if (t =0) then
+  sprintf "break;"
+  else
+  sprintf "continue;"
 
 (* generate expression *)
 and cppExpr expr = match expr with
