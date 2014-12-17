@@ -166,8 +166,8 @@ and writePrintStmt l =
     match expr_wrap with
       Sast.Expr(_,t) -> 
         (match t with 
-            Sast.Mat -> sprintf "cout << %s << endl << endl;" expr
-          | _ -> sprintf "cout << %s << endl << endl;" expr)
+            Sast.Mat -> sprintf "cout << %s << endl << endl" expr
+          | _ -> sprintf "cout << %s << endl << endl" expr)
 
 (* generate qubit print statement *)
 and writePrintqStmt l =
