@@ -9,7 +9,10 @@ let _ =
       let program = Parser.program Scanner.token  lexbuf in
         match action with 
           Ast ->  print_string (Ast.string_of_program program)
-          | Sast -> let sprogram = Analyzer.check_program program in
-                      print_string (Sast.string_of_sprogram sprogram)
+          | Sast -> 
+            let sprogram =
+              Analyzer.check_program program
+            in
+              print_string (Sast.string_of_sprogram sprogram)
           | Gen -> Generator.gen_program output_file (Analyzer.check_program program)
           | Debug -> print_string "debug"

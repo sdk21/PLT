@@ -1,0 +1,418 @@
+2014-12-17: khadka	- main
+2014-12-17: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: Christopher Campbell	- removed vestigial tokens
+2014-12-17: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: khadka	- main
+2014-12-17: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: Winnie Narang	- tex
+2014-12-17: Christopher Campbell	- lessons learned
+2014-12-17: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: khadka	- lessons learned
+2014-12-17: Jonathan Wong	- script to compile to execution file for single .ql file
+2014-12-17: Jonathan Wong	- cleaned up directory and minor change to Makefile
+2014-12-17: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: Winnie Narang	- main.tex
+2014-12-17: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: khadka	- demo2
+2014-12-17: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: Winnie Narang	- PPT
+2014-12-17: khadka	- grover
+2014-12-17: Winnie Narang	- merge
+2014-12-17: khadka	- grover
+2014-12-17: khadka	- lessions, examples
+2014-12-17: khadka	- revised tutorial and introduction
+2014-12-17: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: khadka	- demo 2 for probability
+2014-12-17: khadka	- demo 3 Deutsch
+2014-12-17: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: Winnie Narang	- tex files
+2014-12-17: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-17: Christopher Campbell	- negative numbers in floats and funcitons with no params working
+2014-12-17: khadka	- demo 1 added
+2014-12-16: Jonathan Wong	- fixed up rows/cols
+2014-12-16: Jonathan Wong	- added cpp compilation to Makefile in Compiler directory
+2014-12-16: Jonathan Wong	- just kidding didn't get rid of them all
+2014-12-16: Jonathan Wong	- got rid of extraneous ; in generator print
+2014-12-16: Jonathan Wong	- added compile cpp to runTest script
+2014-12-16: Jonathan Wong	- cleaned directory
+2014-12-16: Jonathan Wong	- fixed vectorToBraket
+2014-12-16: Jonathan Wong	- Added double endl to print
+2014-12-16: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-16: Christopher Campbell	- fixed qlang.hpp
+2014-12-16: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-16: Christopher Campbell	- should be fixed
+2014-12-16: Winnie Narang	- Removed conflict
+2014-12-16: Winnie Narang	- Merge
+2014-12-16: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-16: Christopher Campbell	- added break and continue
+2014-12-16: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-16: khadka	- introduciton
+2014-12-16: Winnie Narang	- Formatted result in exec_output a little
+2014-12-16: Winnie Narang	- Comp n float matrix binop tests
+2014-12-16: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-16: Christopher Campbell	- more updates
+2014-12-16: Christopher Campbell	- more updates to presentation
+2014-12-16: Christopher Campbell	- more updates to presentation
+2014-12-16: Christopher Campbell	- more updates2
+2014-12-16: Christopher Campbell	- more updates
+2014-12-16: Christopher Campbell	- working on powerpoint2
+2014-12-16: Christopher Campbell	- working on powerpoint2
+2014-12-16: Christopher Campbell	- working on powerpoint
+2014-12-16: Christopher Campbell	- working on powerpoint
+2014-12-16: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-15: Jonathan Wong	- duplicate Eigen, fixed cpp makefile
+2014-12-15: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- fixed tensor product
+2014-12-14: khadka	- merge
+2014-12-14: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Winnie Narang	- Better test for im,not and neg
+2014-12-14: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- for some reason Eigen was deleted. Fixed vectorToBraket to 
+                                  handle float coefficients
+2014-12-14: Winnie Narang	- Fixup for assertion failed issue for determinant
+2014-12-14: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Winnie Narang	- Fixed adjoint
+2014-12-14: Jonathan Wong	- minor changes to norm test
+2014-12-14: Jonathan Wong	- minor change
+2014-12-14: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Winnie Narang	- Merge
+2014-12-14: Jonathan Wong	- added constants test
+2014-12-14: Winnie Narang	- All tests passing execution except for those with printq
+2014-12-14: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Christopher Campbell	- added rows, cols, and elem builtin funcs
+2014-12-14: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- added some mat operators and qubit printing
+2014-12-14: Winnie Narang	- Fixed else if keyword bug in generator.ml
+2014-12-14: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Christopher Campbell	- updated test suite
+2014-12-14: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- accidently removed if_stmt.ql
+2014-12-14: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Christopher Campbell	- updated test suite
+2014-12-14: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- moved includes directory into Compiler dir, since that is 
+                                  the directory we are going to submit
+2014-12-14: Christopher Campbell	- analzyer
+2014-12-14: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: khadka	- chaning deutsch
+2014-12-14: Jonathan Wong	- minor changes to merge
+2014-12-14: Christopher Campbell	- updated test suite again
+2014-12-14: Christopher Campbell	- updated test suite
+2014-12-14: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- fixed tests for norm and det to reflect them returning comp
+2014-12-14: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-14: Christopher Campbell	- fixed det
+2014-12-14: Jonathan Wong	- reorganized cpp directory and eigen lib. Added compilation to 
+                                  runTests.sh.
+2014-12-14: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-14: Jonathan Wong	- some modifications to qlang.cpp
+2014-12-13: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-13: Winnie Narang	- Refined failures folder and added powerpoint
+2014-12-13: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-13: khadka	- row and column
+2014-12-13: Clement Canonne	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-13: Clement Canonne	- LRM, changes to get it consistent with the language.
+2014-12-13: Clement Canonne	- LRM, changes to get it consistent with the language.
+2014-12-13: Christopher Campbell	- really fixed it this time
+2014-12-13: Christopher Campbell	- fixed comp comparisons
+2014-12-12: Christopher Campbell	- script updates
+2014-12-12: Christopher Campbell	- updated test script
+2014-12-12: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-12: Christopher Campbell	- updated test script to take folder param
+2014-12-12: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-12: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-12: Christopher Campbell	- syntax changes to analyzer
+2014-12-12: Jonathan Wong	- changed const I to IDT
+2014-12-12: Winnie Narang	- Refined failure test cases
+2014-12-12: Christopher Campbell	- run tests update
+2014-12-12: Christopher Campbell	- updated run tests
+2014-12-12: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-12: Winnie Narang	- Failure test cases refined
+2014-12-12: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-12: Christopher Campbell	- updated run tests script
+2014-12-12: Jonathan Wong	- fix to if else
+2014-12-12: Jonathan Wong	- Removed merge tokens from generator
+2014-12-12: Clement Canonne	- Including the previous LRM, roughly (un)modified for now.
+2014-12-12: Clement Canonne	- Tutorial: finished for now (i.e., not finished: DS algo and some
+                                  others (?) still to add. Turning to the refence manual.
+2015-12-12: Christopher Campbell	- fixed by x in for loop'
+2014-12-12: Clement Canonne	- Added tests for while, for and if
+2014-12-12: Clement Canonne	- Tutorial: if, loops, etc
+2014-12-12: Clement Canonne	- Going through the tutorial: added basics
+2014-12-12: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-12: khadka	- parts by parts
+2014-12-12: Clement Canonne	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-12: Clement Canonne	- Fixing parsing errors.
+2014-12-12: Christopher Campbell	- changed norm, det, and equality/inequality analysis
+2014-12-12: khadka	- generator
+2014-12-11: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-11: Winnie Narang	- Added some meaningful failures
+2014-12-11: Christopher Campbell	- makefile for compiling our test output cpp
+2014-12-11: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-11: Christopher Campbell	- fixed mod
+2014-12-11: Winnie Narang	- generating outputs for qland programs complete
+2014-12-11: Winnie Narang	- Got cpp code compilation working in general
+2014-12-11: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-11: Jonathan Wong	- added multiple qubit functionality to qubitToString -> vectorToBraket
+2014-12-11: khadka	- small change in function call
+2014-12-11: Winnie Narang	- runTests.sh working
+2014-12-11: Clement Canonne	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-11: Winnie Narang	- Resolving merge issues
+2014-12-11: Clement Canonne	- Updated code for the tutotial, improved syntax for the code 
+                                  highlighting.
+2014-12-11: Clement Canonne	- Started fixing deutsch.ql, not valid yet (parsing errors)
+2014-12-11: Winnie Narang	- Updated runTests.sh
+2014-12-11: Clement Canonne	- Adding stuff to the tutorial. TODO: check the Deutsch algo .ql 
+                                  file in the tests, it seems to be buggy.
+2014-12-11: Christopher Campbell	- small updates
+2014-12-11: Christopher Campbell	- print working
+2014-12-10: Christopher Campbell	- working
+2014-12-10: Christopher Campbell	- updated
+2014-12-10: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-10: Christopher Campbell	- updated
+2014-12-10: Winnie Narang	- Cleaning up temp cpp and ql files
+2014-12-10: Winnie Narang	- Merge
+2014-12-10: Winnie Narang	- Updated testing
+2014-12-10: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-10: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-10: Christopher Campbell	- adding support for polymorphing print function
+2014-12-10: khadka	- print stuff
+2014-12-10: Christopher Campbell	- commit
+2014-12-10: Christopher Campbell	- removed qub
+2014-12-10: khadka	- print qubit
+2014-12-10: Jonathan Wong	- enforced 1 dimensionality of qubitToString
+2014-12-10: khadka	- test cases
+2014-12-10: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-10: khadka	- generator to handle print and equals
+2014-12-10: Jonathan Wong	- removed main from qlang.cpp
+2014-12-10: Jonathan Wong	- moved eigen lib into directory
+2014-12-10: Jonathan Wong	- added qubitToString to generate string representation (|> & <|) of 
+                                  a qubit
+2014-12-10: Clement Canonne	- Tutorial
+2014-12-10: Clement Canonne	- Tutorial
+2014-12-10: Clement Canonne	- iAdd tutorial file.
+2014-12-10: Clement Canonne	- Add package for quantum circuits in Latex.
+2014-12-10: Clement Canonne	- Starting to add final report, first attempt (wip)
+2014-12-10: Clement Canonne	- Starting the first commit for the final report.
+2014-12-10: Jonathan Wong	- Fixed qlang.cpp so test1.cpp and test2.cpp compiles
+2014-12-09: Christopher Campbell	- trying to get test algorithms to work
+2014-12-06: khadka	- algorithms to test for
+2014-12-06: Christopher Campbell	- if else working
+2014-12-06: Christopher Campbell	- implemented if else
+2014-12-06: Christopher Campbell	- matricies and complex working
+2014-12-05: Christopher Campbell	- fixed matricies
+2014-12-05: Christopher Campbell	- blah
+2014-12-05: khadka	- gen
+2014-12-05: khadka	- function call defined
+2014-12-05: khadka	- mat defination changed
+2014-12-05: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-05: khadka	- print statement and qlc file output
+2014-12-05: Christopher Campbell	- reading this?
+2014-12-05: khadka	- additional test cases
+2014-12-05: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-05: Christopher Campbell	- still no one reading this
+2014-12-05: Christopher Campbell	- no one is reading this
+2014-12-05: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-05: Christopher Campbell	- you suck more
+2014-12-05: Christopher Campbell	- you suck
+2014-12-05: khadka	- damn
+2014-12-05: khadka	- qubit def
+2014-12-05: Christopher Campbell	- fixed qubits
+2014-12-05: Christopher Campbell	- fixed qubits
+2014-12-05: khadka	- new qub
+2014-12-05: Christopher Campbell	- updated
+2014-12-04: Jonathan Wong	- changed all matrix gen to matrixXcf
+2014-12-03: Jonathan Wong	- midfix of cpp qubit
+2014-12-03: Jonathan Wong	- code gen qubit bra ket functionality
+2014-12-03: Jonathan Wong	- attempt to add qubit func
+2014-12-03: Christopher Campbell	- started final report document
+2014-12-03: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-03: Christopher Campbell	- fixed qubit and return variable issue with analyzer
+2014-12-03: khadka	- working generator
+2014-12-03: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-03: khadka	- merge conflict resolution
+2014-12-03: Winnie Narang	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-03: Winnie Narang	- Semantic checks error output formatted
+2014-12-03: Jonathan Wong	- Fixed semicolons and added initializer for return
+2014-12-03: Winnie Narang	- Test Script and few cases
+2014-12-03: Christopher Campbell	- remove test.sh
+2014-12-03: Christopher Campbell	- fixed weird matrix output issue
+2014-12-03: khadka	- test2
+2014-12-03: khadka	- example test1
+2014-12-03: khadka	- working qlc.ml
+2014-12-03: khadka	- almost complete code generator; works
+2014-12-03: khadka	- working qlc
+2014-12-03: khadka	- working code generator with fixes
+2014-12-03: khadka	- changes in test1.ql
+2014-12-03: khadka	- working qlc with entire pipeline
+2014-12-03: khadka	- Working makefile with all the requirements
+2014-12-02: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-02: Christopher Campbell	- implemented matrix checking with the analyzer and printing 
+                                  with the ast and sast pretty printer
+2014-12-02: Winnie Narang	- semantic testing; not working yet
+2014-12-02: Jonathan Wong	- updated generator
+2014-12-02: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-02: Christopher Campbell	- analyzer is working. also made changes to qubits across all 
+                                  files that may affect your work. please review them and we
+                                  can talk about it
+2014-12-01: Jonathan Wong	- removed extraneous headers
+2014-12-01: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-01: Jonathan Wong	- Some minor fixes
+2014-12-01: khadka	- vardecl
+2014-12-01: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-01: khadka	- vardecl
+2014-12-01: Jonathan Wong	- Added return variable initializer
+2014-12-01: khadka	- vardecl
+2014-12-01: Winnie Narang	- Merged
+2014-12-01: Winnie Narang	- Call
+2014-12-01: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-12-01: Jonathan Wong	- writeQubit and changes to header
+2014-12-01: Jonathan Wong	- Consolidated qlang.h and constants.h into one file
+2014-12-01: khadka	- merging
+2014-12-01: khadka	- writeMatrix included
+2014-12-01: Winnie Narang	- Lit_comp
+2014-12-01: Winnie Narang	- cppExpr
+2014-12-01: Jonathan Wong	- Finished writeUnop
+2014-12-01: Christopher Campbell	- removing uncessary comments now that we have a better 
+                                  understanding of how everything works
+2014-12-01: Christopher Campbell	- analyzer compiles, but not complete and not tested
+2014-12-01: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-12-01: Christopher Campbell	- big progress on analyzer, but still not compiling
+2014-11-30: khadka	- more generator
+2014-11-30: Jonathan Wong	- Added cpp directory with qubit gen
+2014-11-30: Winnie Narang	- Working on Unop
+2014-11-30: Winnie Narang	- Worked on cppExpr
+2014-11-30: Winnie Narang	- Fixed cppStmt
+2014-11-30: Jonathan Wong	- Merged conflicts, includes most of the controlflow
+2014-11-30: Jonathan Wong	- Initial merge
+2014-11-30: Winnie Narang	- Merged While and For
+2014-11-30: Winnie Narang	- generator - added codegen skeleton for while
+2014-11-30: khadka	- conflict solved
+2014-11-30: khadka	- sast with updated statements
+2014-11-30: khadka	- changes with generator
+2014-11-30: khadka	- qlc with generator
+2014-11-30: khadka	- additional generator.ml
+2014-11-30: Jonathan Wong	- start writeIfStmt in code gen
+2014-11-30: Jonathan Wong	- Fixed minor typing mistakes
+2014-11-30: khadka	- code generator starting point
+2014-11-30: Christopher Campbell	- more updates...
+2014-11-29: Christopher Campbell	- more updates to analyzer
+2014-11-29: Christopher Campbell	- cleaned up analyzer
+2014-11-29: Christopher Campbell	- sast is back
+2014-11-29: Christopher Campbell	- updates to analyzer
+2014-11-26: Christopher Campbell	- successfully able to parse full programs
+2014-11-26: Christopher Campbell	- got statement lists working, program will be next
+2014-11-26: Christopher Campbell	- getting further along withe testing
+2014-11-26: Christopher Campbell	- compile script
+2014-11-26: Christopher Campbell	- basic testing
+2014-11-26: Christopher Campbell	- small changes
+2014-11-26: Christopher Campbell	- merged
+2014-11-26: Christopher Campbell	- updates to analyzer
+2014-11-23: Winnie Narang	- Merge with exampleCPP
+2014-11-23: Winnie Narang	- Pretty printing working...
+2014-11-23: Jonathan Wong	- Made initial fixes to grover search
+2014-11-23: Jonathan Wong	- Added control, updated problems, more examples
+2014-11-23: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-11-23: Jonathan Wong	- Updated examples. Created constants and tensorProd
+2014-11-23: khadka	- test1 program
+2014-11-23: Jonathan Wong	- Fixed example 3
+2014-11-23: Jonathan Wong	- Possible fix to example 3
+2014-11-23: Jonathan Wong	- Made initial changes to LRM based on TA feedback
+2014-11-22: Christopher Campbell	- small change
+2014-11-22: Christopher Campbell	- added more to ananalyzer, but I know it's not compiling 
+                                  right now so don't even try
+2014-11-20: Christopher Campbell	- updated analyzer
+2014-11-20: Christopher Campbell	- completed unop and binop checks for analyzer nad made
+                                  small changes to the other files
+2014-11-19: Christopher Campbell	- still working on analyzer
+2014-11-19: Christopher Campbell	- merging
+2014-11-19: Christopher Campbell	- working analyzer - far from done
+2014-11-19: khadka	- a first working sast
+2014-11-19: khadka	- included sast.mli in make
+2014-11-19: Jonathan Wong	- Added C++ code for examples in LRM. Prob 3 broken
+2014-11-17: Winnie Narang	- Pretty printer for AST added, not compete yet
+2014-11-16: Christopher Campbell	- added files for sast, analyzer, and compiler
+2014-11-16: Christopher Campbell	- fixed shift/reduce conflicts for our 'for' statements 
+                                  and complex numbers ; '
+2014-11-12: Christopher Campbell	- added project examples
+2014-11-10: Christopher Campbell	- finished ast, parse, and scanner for the most part, but
+                                  need to be carefully reviewed and tested
+2014-11-09: Christopher Campbell	- updated ast, parser, and scanner
+2014-11-09: Christopher Campbell	- updated ast and parser
+2014-11-09: Christopher Campbell	- updated ast and parser
+2014-11-09: Christopher Campbell	- updated scanner
+2014-11-09: Christopher Campbell	- updated ast and parser
+2014-11-04: Christopher Campbell	- Updated Ast and scanner
+2014-11-04: khadka	- new tokens added
+2014-11-04: khadka	- fix merge conflicts
+2014-11-04: khadka	- updated with all the token from the scanner
+2014-11-04: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-11-04: Christopher Campbell	- Finished AST, although it will almost certainly need 
+                                  revision
+2014-11-04: Jonathan Wong	- Added some tokens to parser
+2014-10-27: khadka	- build main.pdf
+2014-10-27: Jonathan Wong	- turned off colour and notes in main.tex
+2014-10-27: Jonathan Wong	- redo scope commit
+2014-10-27: khadka	- examples
+2014-10-27: Winnie Narang	- Refined Statements and Scope
+2014-10-27: Winnie Narang	- Added statements and scope rules
+2014-10-27: Jonathan Wong	- Fixed rolled back changes in sec-declarations
+2014-10-27: Clement Canonne	- Added matrix and array access [i] and [i,j]
+2014-10-27: Clement Canonne	- Changes (fixed inconsistencies and types; added valid types and 
+                                  conversions).
+2014-10-27: Clement Canonne	- Added files for new sections.
+2014-10-27: Clement Canonne	- Second round of change: fixed some inconsistencies.
+2014-10-27: Clement Canonne	- First round of changes: (lexical conventions updated soon).
+2014-10-26: khadka	- main
+2014-10-26: khadka	- grover circuit
+2014-10-26: khadka	- new examples
+2014-10-26: Christopher Campbell	- Finished sec-expressions.text
+2014-10-26: Jonathan Wong	- Merge https://github.com/thejonathanwong/PLT
+2014-10-26: khadka	- main
+2014-10-26: Jonathan Wong	- Fixed sec-declarations.tex
+2014-10-26: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-10-26: khadka	- main
+2014-10-26: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-10-26: Christopher Campbell	- Updating sec-expressions.tex
+2014-10-26: khadka	- troubleshooting
+2014-10-26: khadka	- updated examples
+2014-10-26: khadka	-  section on constant expressions
+2014-10-26: khadka	-  main with updated sections
+2014-10-26: Christopher Campbell	- Added sec-expressions-table.tex
+2014-10-26: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-10-26: Christopher Campbell	- Fixed formatting and compile issues with sec-declarations.tex
+2014-10-26: khadka	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-10-26: khadka	- section for examples
+2014-10-26: khadka	- just the main
+2014-10-26: thejonathanwong	- Added declarations section
+2014-10-26: khadka	- new section for constant expressions
+2014-10-26: khadka	- new package for graphics
+2014-10-26: khadka	- new section examples
+2014-10-26: khadka	- images
+2014-10-26: khadka	- updated packages with listling for code formatting
+2014-10-26: khadka	- example section
+2014-10-24: Christopher Campbell	- Completed a large part of 'expressions' section and small 
+                                  changes other places
+2014-10-20: Christopher Campbell	- Made small changes to the scanner and added package and 
+                                  preamble files
+2014-10-15: Clement Canonne	- Filled section 2.
+2014-10-15: Clement Canonne	- Filled lexical conventions, added packages and preamble files.
+2014-10-15: Clement Canonne	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-10-15: Clement Canonne	- (latest changes)
+2014-10-14: Christopher Campbell	- Completed most of the scanner
+2014-10-13: Christopher Campbell	- added . to symbols
+2014-10-13: Christopher Campbell	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-10-13: Christopher Campbell	- Started scanner
+2014-10-13: Clement Canonne	- It goes on: started filling the reference manual, added a file for 
+                                  the keywords.
+2014-10-13: Clement Canonne	- Merge branch 'master' of https://github.com/thejonathanwong/PLT
+2014-10-13: Clement Canonne	- First push: baby reference manual, take #1.
+2014-10-13: Christopher Campbell	- Added folder and documents for our compiler
+2014-10-13: Christopher Campbell	- Adding microc to resources
+2014-10-13: khadka	- starter for langauge referece manual
+2014-10-13: Sankalpa Khadka	- starter ast
+2014-10-12: khadka	- Project proposal
+2014-09-30: Christopher Campbell	- Adding a Resources folder. It already contains two quantum 
+                                  computing resources that are pretty helpful.
+2014-09-29: thejonathanwong	- Initial commit

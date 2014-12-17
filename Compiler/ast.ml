@@ -44,8 +44,8 @@ type bi_op =
 type expr =
     Lit_int of int
   | Lit_float of float
+  | Lit_comp of float * float
   | Lit_qub of string * int
-  | Comp of expr * expr
   | Mat of expr list list
   | Id of string
   | Unop of un_op * expr
@@ -93,10 +93,10 @@ type program =
 let rec string_of_expr = function
     Lit_int(n) -> string_of_int n
   | Lit_float(n) -> string_of_float n
+  | Lit_comp(f1,f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
   | Lit_qub(s,t) -> let typ = string_of_int t in (match typ with
                       "0" -> "Qub-bra of "^ s 
                     | _ -> "Qub-ket of "^ s)
-  | Comp(e1,e2) -> string_of_comp e1 e2
   | Mat(l) ->  string_of_mat l
   | Id(s) -> s
   | Unop(un1,exp1) -> 
@@ -125,9 +125,6 @@ let rec string_of_expr = function
   | Assign(str,expr) -> str ^ " = " ^ string_of_expr expr
   | Call(str,expr_list) -> "Calling " ^ str ^ " on " ^string_of_exprs expr_list
   | Noexpr -> ""
-
-and string_of_comp e1 e2 =
-  string_of_expr e1 ^ " + " ^ string_of_expr e2 ^ "I"
 
 and string_of_mat l =
   let row_strs = 

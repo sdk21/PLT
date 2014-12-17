@@ -65,8 +65,8 @@ and cpp_funcList func =
       and cppLocals = cppVarDecl func.slocals ";\n\t"
         in
       if cppFName = "compute" then
-      sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
-      else
+                  sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
+      else 
         if (cppFParam = "") then
         sprintf "\n%s %s ()\n{\n\t%s\n%s\n\treturn %s;\n}" cppRtnType cppFName cppLocals cppFBody cppRtnValue
         else
@@ -117,7 +117,7 @@ and writeBreakCont t =
 and cppExpr expr = match expr with
     Lit_int(lit) -> string_of_int lit
   | Lit_float(flit) -> string_of_float flit
-  | Comp(re,im) -> " complex<float>(" ^ cppExpr (expr_of re)  ^ "," ^ cppExpr (expr_of im)   ^ ") " (* Not sure how to do this *)
+  | Lit_comp(re,im) -> " complex<float>(" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
   | Unop(op, expr) ->  writeUnop op expr
   | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
   | Lit_qub(vec, t) -> writeQubit vec t
@@ -170,8 +170,8 @@ and writePrintStmt l =
     match expr_wrap with
       Sast.Expr(_,t) -> 
         (match t with 
-            Sast.Mat -> sprintf "cout << %s << endl << endl" expr
-          | _ -> sprintf "cout << %s << endl << endl" expr)
+            Sast.Mat -> sprintf "cout << %s << endl" expr
+          | _ -> sprintf "cout << %s << endl" expr)
 
 (* generate qubit print statement *)
 and writePrintqStmt l =
@@ -180,8 +180,8 @@ and writePrintqStmt l =
     match expr_wrap with
         Sast.Expr(_,t) -> 
           (match t with 
-            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl << endl" expr
-          | _ -> sprintf "cout << %s << endl << endl" expr)
+            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl" expr
+          | _ -> sprintf "cout << %s << endl" expr)
 
 (* generate block *)  
 and cppStmtBlock sstmtl = 
@@ -192,7 +192,7 @@ let slist = List.fold_left (fun output element ->
 
 (* generate if statement *)
 and writeIfStmt expr stmt1 stmt2 = 
-	let cond = cppExpr expr in
+  let cond = cppExpr expr in
     let body = cppStmt stmt1 in
     let ebody = writeElseStmt stmt2 in
     sprintf " if(%s)%s%s" cond body ebody  
@@ -250,24 +250,24 @@ and writeBinop expr1 op expr2 =
     let e1 = cppExpr (expr_of expr1) 
     and t1 = type_of expr1  
     and e2 = cppExpr (expr_of expr2) in 
-    	let binopFunc e1 t1 op e2 = match op with 
-		 Ast.Add 	-> sprintf "%s + %s" e1 e2
-		| Ast.Sub 	-> sprintf "%s - %s" e1 e2
-		| Ast.Mult 	-> sprintf "%s * %s" e1 e2
-		| Ast.Div 	-> sprintf "%s / %s" e1 e2
-		| Ast.Mod 	-> sprintf "%s %% %s" e1 e2
-		| Ast.Expn 	-> sprintf "pow(%s,%s)" e1 e2
-		| Ast.Tens 	-> sprintf "tensor(%s, %s)" e1 e2
-		| Ast.Eq 	-> equalCaseWise e1 t1 e2
-		| Ast.Neq 	-> sprintf "%s != %s" e1 e2
-		| Ast.Lt 	-> sprintf "%s < %s" e1 e2
-		| Ast.Gt 	-> sprintf "%s > %s" e1 e2
-		| Ast.Leq 	-> sprintf "%s <= %s" e1 e2
-		| Ast.Geq 	-> sprintf "%s >= %s" e1 e2
-		| Ast.Or 	-> sprintf "%s || %s" e1 e2
-		| Ast.And 	-> sprintf "%s && %s" e1 e2
-		| Ast.Xor 	-> sprintf "%s ^ %s" e1 e2
-	in binopFunc e1 t1 op e2 
+      let binopFunc e1 t1 op e2 = match op with 
+     Ast.Add  -> sprintf "%s + %s" e1 e2
+    | Ast.Sub   -> sprintf "%s - %s" e1 e2
+    | Ast.Mult  -> sprintf "%s * %s" e1 e2
+    | Ast.Div   -> sprintf "%s / %s" e1 e2
+    | Ast.Mod   -> sprintf "%s %% %s" e1 e2
+    | Ast.Expn  -> sprintf "pow(%s,%s)" e1 e2
+    | Ast.Tens  -> sprintf "tensor(%s, %s)" e1 e2
+    | Ast.Eq  -> equalCaseWise e1 t1 e2
+    | Ast.Neq   -> sprintf "%s != %s" e1 e2
+    | Ast.Lt  -> sprintf "%s < %s" e1 e2
+    | Ast.Gt  -> sprintf "%s > %s" e1 e2
+    | Ast.Leq   -> sprintf "%s <= %s" e1 e2
+    | Ast.Geq   -> sprintf "%s >= %s" e1 e2
+    | Ast.Or  -> sprintf "%s || %s" e1 e2
+    | Ast.And   -> sprintf "%s && %s" e1 e2
+    | Ast.Xor   -> sprintf "%s ^ %s" e1 e2
+  in binopFunc e1 t1 op e2 
 
 (* generate equality expressions (structural equality is used) *)
 and equalCaseWise e1 t1 e2 = match t1 with

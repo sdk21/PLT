@@ -67,25 +67,7 @@ let builtin_funcs =
                         { styp = Sast.Int; sname = "elem_col"; builtinv = true; };];
       slocals  = [];
       sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtinf = true; }; 
-     
-    { sret_typ = Sast.Int;
-      sret_name = "null";
-      sfunc_name = "row";
-      sformal_params = [{ styp = Sast.Mat; sname = "row_val"; builtinv = true; };];
-      slocals  = [];
-      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtinf = true; };
-
-    { sret_typ = Sast.Int;
-      sret_name = "null";
-      sfunc_name = "col";
-      sformal_params = [{ styp = Sast.Mat; sname = "col_val"; builtinv = true; };];
-      slocals  = [];
-      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
-      builtinf = true; }; 
-     
-      ]
+      builtinf = true; }; ]
 
 let root_symbol_table =
   { ret_typ = Sast.Void;
@@ -113,10 +95,6 @@ let qub_error t = match t with
     0 -> raise (Except("Invalid qubit: incorrect use of |expr>"))
   | 1 -> raise (Except("Invalid qubit: incorrect use of <expr|"))
   | _ -> raise (Except("Invalid qubit"))
-
-let comp_error t = match t with
-    0 -> raise (Except("Invalid complex number: incorrect numerical types"))
-  | _ -> raise (Except("Invalid complex number"))
 
 let assignment_error s =
   raise (Except("Invalid assignment to variable: " ^ s))
@@ -516,8 +494,8 @@ and check_call name params env =
 and check_expr env = function
     Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
   | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
+  | Ast.Lit_comp(f1, f2) -> Sast.Expr(Sast.Lit_comp(f1, f2), Sast.Comp)
   | Ast.Lit_qub(i, t) -> check_qub i t
-  | Ast.Comp(e1, e2) -> check_comp e1 e2 env
   | Ast.Mat(l) -> check_mat l env
   | Ast.Id(s) -> check_id s env
   | Ast.Unop(op, e) -> check_unop op e env
@@ -525,14 +503,6 @@ and check_expr env = function
   | Ast.Assign(s, e) -> check_assign s e env
   | Ast.Call(s, l) -> check_call s l env
   | Ast.Noexpr -> Sast.Expr(Sast.Noexpr, Sast.Void)
-
-and check_comp e1 e2 env =
-  let se1 = check_expr env e1 in
-  let se2 = check_expr env e2 in
-    match (se1, se2) with
-       (Sast.Expr(_,Sast.Float), Sast.Expr(_,Sast.Float)) ->
-         Sast.Expr(Sast.Comp(se1, se2), Sast.Comp)
-      | _ -> comp_error 0
 
 and check_block stmts env =
   let sstmts = List.map (fun stmt -> check_stmt env stmt) stmts in
