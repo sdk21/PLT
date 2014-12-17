@@ -14,8 +14,8 @@ type expr_wrapper =
 and  sexpr =
     Lit_int of int
   | Lit_float of float
+  | Lit_comp of float * float
   | Lit_qub of string * int
-  | Comp of expr_wrapper * expr_wrapper
   | Mat of expr_wrapper list list
   | Id of string
   | Unop of Ast.un_op * expr_wrapper
@@ -94,8 +94,8 @@ and string_of_row r =
 and string_of_sexpr = function
     Lit_int(i) -> string_of_int i
     | Lit_float(f) -> string_of_float f
+    | Lit_comp(f1, f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
     | Lit_qub(i, t) -> i
-    | Comp(e1, e2) -> string_of_comp e1 e2
     | Mat(l) ->  string_of_mat l
     | Id(s) -> s
     | Unop(op, e) -> string_of_unop op e
@@ -104,15 +104,12 @@ and string_of_sexpr = function
     | Call(name, params) -> "Calling " ^ name ^ " on " ^ string_of_sexprs params
     | Noexpr -> "noexpr"
 
-and string_of_comp e1 e2 =
-  string_of_expr_wrapper e1 ^ " + " ^ string_of_expr_wrapper e2 ^ "i"
-
 and string_of_expr_wrapper w =
   let sexpr =
     match w with
         Expr(Lit_int(i), Int) -> Lit_int(i)
       | Expr(Lit_float(f), Float) -> Lit_float(f)
-      | Expr(Comp(e1, e2), Comp) -> Comp(e1, e2)
+      | Expr(Lit_comp(f1, f2), Comp) -> Lit_comp(f1, f2)
       | Expr(Mat(l), Mat) -> Mat(l)
       | Expr(Id(name), typ) -> Id(name)
       | Expr(Unop(op, e), _) -> Unop(op, e) 
