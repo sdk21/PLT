@@ -2,26 +2,27 @@
 
 A \QL file (extension \texttt{.ql} by convention) comprises several functions, each of them having its own variables. Once compiled, a program will start by calling the \textsf{compute()} function that must appear in the \texttt{.ql} file, and whose prototype is as follows:
 \begin{lstlisting}
-def compute(int a): int trial {
-  # do some stuff, call some other functions
+def compute(): int trial {
+ 	trial =10;
 }
 \end{lstlisting}
-In particular, the main entry point \textsf{compute()} receives an integer argument, \textsf{a}, and returns an integer value, \textsf{type}.
+In particular, the main entry point \textsf{compute()} receives no argument and, automatically prints the return variable defined in the function declaration. The execution of above program prints 10.
 Note also that \QL is case-sensitive: \textsf{compute} and \textsf{Compute} would be two different functions (however, indentation is completely unrestricted).
 
-As hinted above, comments in the language are single-line, and start with a \#: everything following this symbol, until the next line return, will be ignored by the compiler. Furthermore, a function is defined (and declared -- there is no forward declaration) by the keyword \textsf{def} followed by the details of the function:
+Comments in the language are single-line, and start with a \#: everything following this symbol, until the next line return, will be ignored by the compiler. Furthermore, a function is defined (and declared -- there is no forward declaration) by the keyword \textsf{def} followed by the details of the function:
 \begin{lstlisting}
 def function_name(type1 param1, type2 param2, ..., typek paramk): type returnvar {
   # variable declarations
   # body of the function
 }
 \end{lstlisting}
-The valid types  in \QL for parameters, return variables and variables are \texttt{int}, \texttt{float}, \texttt{comp}, \texttt{mat}: respectively integers, real numbers, complex numbers and matrices (the latter including, as we shall see, qubits). In the above, the return variable \textsf{returnvar} is available in the body of the function, and its value will be returned at the end of the function call. All other local variables must be declared, one by line, at the beginning of the function body: in particular, it is not possible to mix variable declaration and assignment:
+The valid types  in \QL for parameters, return variables and variables are \texttt{int}, \texttt{float}, \texttt{comp}, \texttt{mat}: respectively integers, real numbers, complex numbers and matrices (the latter including, as we shall see, qubits). In the above, the return variable \textsf{returnvar} is available in the body of the function, and its value will be returned at the end of the function call. All other local variables must be declared, at the beginning of the function body: in particular, it is not possible to mix variable declaration and assignment:
 \begin{lstlisting}
 def foo( mat bar ): mat blah {
   int bleh;                       # OK
   int bluh = 0;                   # Not OK: parsing error
   comp blih, bloh;                # Not OK: one variable at a time
+  comp blih; comp bloh;		#OK
   bleh = 5;                       # OK
   bleh = bleh+1                   # Not OK: missing semicolon
   bleh = bleh * 4 +
@@ -37,8 +38,8 @@ As examplified above, each statement (declaration, assignment, operation) can sp
   mat idt;
   mat vct;
   mat qub;
-  qub = |11>;                   # this is a bra
-  qub = <01|;                   # this is a ket
+  qub = |11>;                   # this is a ket of dirac notation
+  qub = <01|;                   # this is a bra of dirac notation
   idt = [(1,0)(0,1)];           # this is a matrix
   vct = [(1,2,C(3.2 + 1.I))];   # this is a vector (with complex entries)
   vct = qub;                    # this is OK
@@ -49,7 +50,7 @@ In the above, the 3 variables have the same type -- the difference is only synta
 \section{Control structures, built-in functions and conversions}
 Now that the basic syntax of the language has been described, it is time to have a look at the fundamental blocks of any algorithm: the control structures, such as loops and conditional statements. 
 
-\paragraph{Loops.} \QL supports two sorts of loop, the \textsf{for} and \textsf{while} statements. While their bahavior is illustrated below, it is important to remember two features of the \textsf{for} loop: namely, that \textsf{(a)} the loop index must be a variable declared beforehand; and \textsf{(b)} that the (optional) keyword \textsf{by} allows to set the increment size by any integer, even negative.
+\paragraph{Loops.} \QL supports two sorts of loop, the \textsf{for} and \textsf{while} statements. While their behaviors are illustrated below, it is important to remember two features of the \textsf{for} loop: namely, that \textsf{(a)} the loop index must be a variable declared beforehand; and \textsf{(b)} that the (optional) keyword \textsf{by} allows to set the increment size by any integer, even negative.
 
 \begin{lstlisting}
  int i; # Will be used as 'for' loop index
@@ -68,7 +69,7 @@ Now that the basic syntax of the language has been described, it is time to have
  for( i from 1 to 10 ) # OK: missing "by 1" is implicit
  {
      a=a-3;
-     break; # For the sake of the example: leaves the loop.
+     break; # leaves the loop.
  }
  
  while( a leq 10 ) # OK
@@ -76,7 +77,7 @@ Now that the basic syntax of the language has been described, it is time to have
  
  while( a neq 0 )  # OK
  {
-     a = (a+1) % 42;
+     a = (a+1) ;
      continue;
      print(0); # never reached
  }
@@ -131,8 +132,6 @@ The complete list of these functions, operators and builtin constants can be fou
 \paragraph{Implicit conversions.} 
 Implicit conversions for some operators such as \textsf{eq} is possible, according to the following rule: \texttt{int}$\leadsto$\texttt{float}$\leadsto$\texttt{comp}$\leadsto$\texttt{mat}. However, the language is otherwise strongly typed: it is not possible to assign a complex number to a variable of type $\texttt{mat}$, for instance.
 
-\todo{Do we support recursive functions?}
-
 \section{Diving in: Deutsch--Jozsa Algorithm}
 
 To illustrate and describe the process of writing in \QL, this section will walk the reader through the implementation of one of the most emblematic quantum examples, namely \emph{Deutsch-Jozsa Algorithm}. The goal of this algorithm is to answer the following question: given query access to an unknown fucntion $f\colon\{0,1\}^n \to \{0,1\}$, promised to be either constant or balanced\footnote{$f$ is said to be balanced if $f(x)=0$ for exactly half of the inputs $x\in\{0,1\}^n$; or, equivalently, if $\shortexpect_{x}[f(x)] = \frac{1}{2}$.}, which of the two holds?  Classically, it is easy to see that this requires (in the worst case) querying just over half the solution space, that is $2^{n-1} + 1$ queries.  Quantumly, the Deutsch-Jozsa algorithm enables us to answer this question with just \emph{one} query!\medskip
@@ -145,75 +144,90 @@ To illustrate and describe the process of writing in \QL, this section will walk
  }
 \end{align*}
 
-To implement it in \QL, we first have to implement the $n$-fold Hadamard gate $H^{\otimes n}$; recalling that the Hadamard gate $H$ is a built-in operator of the language, this can be done as follows:\todonote{Check the QL code for Deutsch-Jozsa -- there were typos and mistakes in the .ql file.}
+To implement it in \QL, we first have to implement the $n$-fold Hadamard gate $H^{\otimes n}$; recalling that the Hadamard gate $H$ is a built-in operator of the language, this can be done as follows:
 \begin{lstlisting}
   def hadamard(int n): mat gate{
         #returns Hadamard gate of 2^n dimensions
+        int i;
         gate = H; 
-        for(i from 1 to n by 1){
+        for(i from 1 to n-1 by 1){
                 gate = gate @ H;                 
         }       
 }
 \end{lstlisting}
 Now, to implement the measurement gate (or, more precisely, to return the measurement matrix), we write the following code that takes a ket $\ket{x}$ and returns the matrix $\ket{x}\bra{x}$:
 \begin{lstlisting}
-def measure(qubk top): mat result{
+def measure(mat top): mat result{
         # returns the measurement matrix  
-        mat adjoint = Adj(top);
-        result = top * adjoint;
+        mat ad;
+        mat ad = Adj(top);
+        result = top * ad;
 }
 \end{lstlisting}
 (Note that $\ket{x}\bra{x}$ was written as $\ket{x}\operatorname{adjoint}(\ket{x})$, which is performed above using the transparent conversion between vectors and matrices provided by the language.)\medskip
 
-Once all the ``building blocks'' (gates) of the algorithm have been implemented, we can write down the algorithm \emph{as it appears from the circuit above}: the function takes as argument a qubit \textsf{top} (in the diagram, $\ket{0}$), the parameter size $n$, as well as the unitary matrix implementing the quantum  gate $U_f$ (the access to the unknown function $f$), and returnings either 0 or 1, dependeing one wether the function is constant or balanced.
+Since the qubit in the top register is n-bit, we can write a function that allows us to create such a qubit for any n.
+
 \begin{lstlisting}
-def deutsch(int n, qubk top, mat U): int outcomeZero{       
-        qubk bottom;  # originally, the |1> qubit    
-        mat input; # input will be the tensor product of top and bottom register  
-        mat had;   # n-fold Hadamard gate  
-        mat meas;
+def topqubit(int n): mat input{
+        # n-bit qubit
+        int i;
+        input = |0>;
+        for(i from 1 to n-1 by 1){
+                input = input @ |0>;                 
+        }    
+}
+\end{lstlisting}
+
+Once all the ``building blocks'' (gates) of the algorithm have been implemented, we can write down the algorithm \emph{as it appears from the circuit above}: the function takes as argument the parameter size $n$, as well as the unitary matrix implementing the quantum  gate $U_f$ (the access to the unknown function $f$), and returning either 0 or 1, depending one wether the function is constant or balanced.
+\begin{lstlisting}
+def deutsch(int n, qubk top, mat U): float outcomeZero{ 
+        mat bottom; mat top; mat input;
+        mat hadtop; mat meas;
 
         bottom = |1>;
+        top = topqubit(n);
         input = top @ bottom;
-        had = hadamard(n);
-        input = had * input;
         
-        input = U*input;
-        input = (H @ I)*input;
-        
-        meas = measure (top);        
-        input = ((meas@I)*input;
-        
-        input = norm(input);
-        
-        if (eq(input,0)){
-                outcomeZero = 0;
+        hadtop = hadamard(n);
+        input = (hadtop @ H)*input;
+        input = U * input;
+        input = (hadtop @ IDT)*input;
+        meas = measure(top);
+
+        input = (meas @ IDT)* input;
+        outcomeZero = norm(input);
+
         }
-        else{
-                outcomeZero = 1;
-        }
-}
 \end{lstlisting}
 
 Finally, we can call (and test) our algorithm by defining two unitary transformations (here $U_b$ and $U_c$) and testing our function on them -- and print the output. This is done by writing the entry point function, \textsf{compute}:
 \begin{lstlisting}
-def compute (): int outcome{
-        qubk top;
-        mat Ub;
-        mat Uc;
-        int n;
-        
-        n = 1;
-        top = |0>;
-        Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
-        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)]; # identity
+def compute (): float outcome{
+        int n; mat Ub; mat Uc;
 
-        outcome = deutsch (2,top, Ub);
+        n = 1;
+        Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
+        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)];
+
+        outcome = deutsch(n, Ub);
         print(outcome);
-        outcome = deutsch (2,top, Uc);
+        
+        outcome = deutsch(n, Uc);
         print(outcome);
+
+        n = 2;
+        Ub = [(1,0,0,0,0,0,0,0) 
+              (0,1,0,0,0,0,0,0)
+              (0,0,1,0,0,0,0,0)
+              (0,0,0,1,0,0,0,0) 
+              (0,0,0,0,0,1,0,0) 
+              (0,0,0,0,1,0,0,0)
+              (0,0,0,0,0,0,0,1)
+              (0,0,0,0,0,0,1,0)];
+
+        outcome = deutsch(n, Ub);
 }
 \end{lstlisting}
 
-
-\todo[inline]{Other algorithms?}
+The above program will print 0, 1, 0 for balanced function, constant function and balanced function respectively.

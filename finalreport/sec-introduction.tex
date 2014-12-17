@@ -67,16 +67,12 @@ A quantum algorithm is an algorithm that, in addition to operations on bits, can
 	\end{equation}
 	where $f$ is a function that takes an $n$ qubit input register and returns an $m$ qubit output and $\oplus$ represents mod-$2$ bitwise addition.
 
-
-\section{Related Work}
-
-\todo{Fill the related work here. Other languages, etc.}
 \section{Goal and objectives}
 
 \QL has been designed with a handful of key characteristics in mind:
 \begin{description}
-  \item[Intuitive.] Any student or researcher familiar with quantum computing should be able to transpose and implement their algorithms easily and quickly, without wasting time struggling to udnerstand idiosyncrasies of the language. 
-  \item[Specific.] The language has one purpose -- implementing quantum algorithms. Anything that is not related to nor useful for this purpose should not be -- and is not -- part of \QL (e.g., the language does not support strings).
+  \item[Intuitive.] Any student or researcher familiar with quantum computing should be able to transpose and implement their algorithms easily and quickly, without wasting time struggling to understand idiosyncrasies of the language. 
+  \item[Specific.] The language has one purpose -- implementing quantum algorithms. Though, the language supports many linear algebraic computation, it is mainly aims for quantum computation. Anything that is not related to nor useful for this purpose should not be -- and is not -- part of \QL (e.g., the language does not support strings).
   \item[Simple.] Matrices, vector operations are pervasive in quantum computing -- thus, they must be easy to use and understand. All predefined structures and functions are straightforward to use, and have no puzzling nor counter-intuitive behavior.
 \end{description}
 In a nutshell, \QL is simple, includes everything it should -- and nothing it should not.
