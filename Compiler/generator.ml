@@ -176,8 +176,8 @@ and writePrintqStmt l =
     match expr_wrap with
         Sast.Expr(_,t) -> 
           (match t with 
-            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl << endl;" expr
-          | _ -> sprintf "cout << %s << endl << endl;" expr)
+            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl << endl" expr
+          | _ -> sprintf "cout << %s << endl << endl" expr)
 
 (* generate block *)  
 and cppStmtBlock sstmtl = 
