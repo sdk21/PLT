@@ -1,18 +1,10 @@
 \section{Testing Phases}
 
 \subsection{Unit Testing}
-Unit testing was done at very frequent intervals, where each unit developed was tested rigorously using
-multiple cases. The scanner,parse and the ast were tested in phase 1 and in the later phase the semantic
-checker and the code generator were tested.
-
+Unit testing was done at very point essentially, as we were in the coding phase. Every building block was tested rigorously using multiple cases. We tested for recognition of dataypes, variables , expression statements and functions initially, and then moved on to AST generation.
 
 \subsection{Integration Testing}
-In this phase,the various modules were put together and tested incrementally again. Initially the syntax of the
-code was tested using multiple test cases and it was also ensured that only the correct syntax is
-accepted by running multiple fail test cases. Later on, the semantic checker was integrated and the
-semantics of the code were checked to be accurate without violating any of the rules of the language.
-In the final phase the code generator was added to the system and was tested to generate the
-corresponding C code. 
+In this phase,the various modules were put together and tested incrementally again. So once the AST could be generated, we moved on to test the semantic analysis and code generation.
 
 \subsection{System Testing}
 System testing entailed end to end testing of our entire language framework. The input program written in QLang is fed to the compiler and it gives out the final output of the program, having passed through the parsing, scanning, compiling, code generation and execution phases. The final results were piped to an output file where we could see all the outputs.
@@ -26,17 +18,24 @@ Our file is called runTests.sh, located in the 'test' folder. It takes a folder 
 
 The operation options available are :
 
-a : Parsing, scanning and AST generation.
-s : SAST generation.
-g : Code generation.
-c : Generated code is compiled.
-e : Generated executable is run, to generate the program's outputs. 
+a : Parsing, scanning and AST generation. \\
+s : SAST generation.\\
+g : Code generation.\\
+c : Generated code is compiled.\\
+e : Generated executable is run, to generate the program's outputs.\\ 
+
+\includegraphics[scale=0.60]{Test_diagrams/2.png}
 
 The operations mentioned above are each inclusive of the operations mentioned above them. That means, if you enter the 'g' option, runTests.sh will perform the tasks under 'a','s' and then the operations specific to 'g' as well.
 
 The second argument is the folder that has the input program files. We have acronyms for two folder that are standard to our implementation, the SemanticSuccess and the SemanticFailures. So to run the sast generation on the files in SemanticSuccess folder, we would write :
-
+\\
+\begin{lstlisting}
 sh runTests.sh s ss.
+\end{lstlisting}
+
+\includegraphics[scale=0.60]{Test_diagrams/1.png}
+
 
 The entire code of this script can be seen in the appendix.
 

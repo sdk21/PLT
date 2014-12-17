@@ -1,0 +1,3442 @@
+program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: ret_val  
+x = [(a,b)(c,d)]
+ret_val = [(a,c)(d,b)]
+ret_val = ret_val * x
+ret_val = ret_val + x
+ret_val = ret_val - x
+ret_val = ret_val / 2
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  svdecl: styp: mat, name: k  svdecl: styp: mat, name: ret_val  
+a = 4. + 5.i
+b = 6. + 6.i
+c = 7. + 8.i
+d = 9. + 10.i
+ret_val = Calling test_func on a
+b
+c
+d
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: float, name: a  svdecl: styp: float, name: b  svdecl: styp: float, name: c  svdecl: styp: float, name: d  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: ret_val  
+x = [(a,b)(c,d)]
+ret_val = [(a,c)(d,b)]
+ret_val = ret_val * x
+ret_val = ret_val + x
+ret_val = ret_val - x
+ret_val = ret_val / 2
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: compute
+()
+{
+svdecl: styp: float, name: a  svdecl: styp: float, name: b  svdecl: styp: float, name: c  svdecl: styp: float, name: d  svdecl: styp: mat, name: ret_val  
+a = 3.4
+b = 6.
+c = 5.6
+d = 100.
+ret_val = Calling test_func on a
+b
+c
+d
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: b  svdecl: styp: int, name: d  svdecl: styp: int, name: ret_name  
+a = z
+b = 10
+d = a + b * a + b / a - b
+ret_name = d
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 34
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name_test
+sfunc_name: compute
+()
+{
+svdecl: styp: int, name: test_int  svdecl: styp: float, name: test_float  svdecl: styp: int, name: ret_name_test  
+1 + 2
+3 * 4
+45 / 6
+23 ^ 2
+2 < 3
+45 < 67
+ret_name_test = 68 % 3
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: out
+sfunc_name: compute
+()
+{
+svdecl: styp: mat, name: a  svdecl: styp: mat, name: b  svdecl: styp: mat, name: c  svdecl: styp: mat, name: out  
+a = [(1)(0)]
+b = [(0)(1)]
+c = a @ b
+Calling print on c
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: i  svdecl: styp: int, name: ret_name  
+For args : i 0 2 1
+statement :
+a = a + 5
+For args : i 2 0  -1
+statement :
+{
+a = a * 10
+
+Calling print on a
+
+break
+}For args : i 1 5 1
+statement :
+{
+Calling print on a
+
+continue
+a = a * 10
+
+}ret_name = a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 20
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: int, name: num_rows  svdecl: styp: int, name: num_cols  svdecl: styp: comp, name: val  svdecl: styp: mat, name: m  svdecl: styp: comp, name: trial  
+m = [(1,2,3)(4,5,6)(7,8,9)]
+num_rows = Calling rows on m
+num_cols = Calling cols on m
+val = Calling elem on m
+1
+2
+Calling print on num_rows
+Calling print on num_cols
+trial = val
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: comp, name: val1  svdecl: styp: comp, name: val2  )
+{
+svdecl: styp: comp, name: val3  svdecl: styp: comp, name: ret_name  
+val3 = 1.1 + 0.i
+ret_name = val1 + val2 * val3
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: ret_name
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: comp1  svdecl: styp: comp, name: comp2  svdecl: styp: comp, name: ret_name  
+if (1)
+{
+1
+
+2 + 3
+
+}else
+{
+3 + 6
+
+}comp1 = 0. + 7.5i
+comp2 = 3.2 + 1.i
+ret_name = Calling func_test on comp1
+comp2
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: z  svdecl: styp: mat, name: y  svdecl: styp: mat, name: w  svdecl: styp: mat, name: ret_val  
+x = X
+z = H
+y = Y
+w = IDT
+Calling print on x
+Calling print on z
+Calling print on y
+Calling print on w
+ret_val = x * z * y * w
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: compute
+()
+{
+svdecl: styp: mat, name: ret_val  
+ret_val = Calling test_func on 0
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+()
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: ret_val  
+x = [(1,2)(3,4)]
+ret_val = x
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: compute
+()
+{
+svdecl: styp: mat, name: ret_val  
+ret_val = Calling test_func on 
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  float 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: float, name: b  )
+{
+svdecl: styp: float, name: a  svdecl: styp: float, name: c  svdecl: styp: float, name: ret_name  
+a = 5.
+c = a * b
+ret_name = c
+}
+
+sfdecl:
+sret_typ:  float 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: float, name: trial  
+trial = Calling func_test on 3.7
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: i  svdecl: styp: int, name: a  svdecl: styp: int, name: ret_name  
+For args : i 0 2 1
+statement :
+a = a + 5
+For args : i 2 0  -1
+statement :
+{
+a = a * 10
+
+Calling print on a
+
+}For args : i 1 10 1
+statement :
+{
+a = a - 3
+
+}For args : i 1 100 1
+statement :
+{
+Calling print on a * 100
+
+}ret_name = 5
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 20
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: b  svdecl: styp: int, name: d  svdecl: styp: int, name: ret_name  
+a = z
+ret_name = z
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 4
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: b  svdecl: styp: int, name: ret_name  
+a = 10
+if (z == 5)
+a = 0
+else
+noexpr
+a = a - 2
+if (z <= 5)
+{
+a = 0
+
+}else
+{
+a = 10
+
+b = 24
+
+}if (a > 100)
+{
+Calling print on b
+
+}else
+{
+Calling print on a
+
+}ret_name = 8
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 20
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: ret_name  
+a = 5
+a = z
+ret_name = a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 20
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: ret_val  
+x = [(a,b)(c,d)]
+ret_val = x
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  svdecl: styp: mat, name: k  svdecl: styp: mat, name: trial  
+a = 2. + 0.i
+b = 2. + 0.i
+c = 2. + 0.i
+d = 2. + 0.i
+trial = Calling test_func on a
+b
+c
+d + Calling test_func on a
+b
+c
+d
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: ret_val  
+x = [(a,b)(c,d)]
+ret_val = x
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  svdecl: styp: mat, name: k  svdecl: styp: mat, name: trial  
+a = 2. + 0.i
+b = 2. + 0.i
+c = 2. + 0.i
+d = 2. + 0.i
+trial = Calling test_func on a
+b
+c
+d * Calling test_func on a
+b
+c
+d
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: mat, name: a  svdecl: styp: mat, name: b  )
+{
+svdecl: styp: mat, name: ret_name  
+ret_name = a * b
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: mat, name: zero  svdecl: styp: mat, name: one  svdecl: styp: mat, name: trial  
+zero = 0
+one = 1
+trial = Calling func_test on H
+zero
+Calling printq on trial
+trial = Calling func_test on H
+one
+Calling printq on trial
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: ret_val  
+x = [(a,b)(c,d)]
+ret_val = x
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  svdecl: styp: mat, name: k  svdecl: styp: mat, name: trial  
+a = 2. + 0.i
+b = 2. + 0.i
+c = 2. + 0.i
+d = 2. + 0.i
+trial = Calling test_func on a
+b
+c
+d - Calling test_func on a
+b
+c
+d
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: ret_val  
+x = [(a,b)(c,d)]
+ret_val = x
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  svdecl: styp: mat, name: k  svdecl: styp: mat, name: ret_val  
+a = 4. + 5.i
+b = 6. + 6.i
+c = 7. + 8.i
+d = 9. + 10.i
+ret_val = Calling test_func on a
+b
+c
+d
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: comp, name: z  )
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: ret_name  
+a = 0. + 4.5i
+z =  -a
+ret_name = z
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: trial  
+trial = Calling func_test on 0. + 3.4i
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: ret_name  
+a = 5
+a = z
+ret_name = a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: trial  
+a = 5
+Calling print on a
+trial = 8
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: y  svdecl: styp: mat, name: ret_val  
+x = 01
+y = 10
+ret_val = x + y
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  svdecl: styp: mat, name: trial  
+a = 2. + 0.i
+b = 2. + 0.i
+c = 2. + 0.i
+d = 2. + 0.i
+trial = Calling test_func on 0
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_val
+sfunc_name: test_func
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: y  svdecl: styp: mat, name: ret_val  
+x = 01
+y = 10
+ret_val = x + y
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: c  svdecl: styp: comp, name: d  svdecl: styp: mat, name: trial  
+a = 2. + 0.i
+b = 2. + 0.i
+c = 2. + 0.i
+d = 2. + 0.i
+Calling printq on Calling test_func on 0
+trial = Calling test_func on 0
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: mat, name: z  )
+{
+svdecl: styp: mat, name: a  svdecl: styp: mat, name: b  svdecl: styp: mat, name: ret_name  
+a = [(1,9,9)(4,5,5)]
+b =  Adj a
+ret_name = b
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: trial  
+x = [(1,2)(3,4)]
+trial = Calling func_test on x
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: mat, name: z  )
+{
+svdecl: styp: mat, name: a  svdecl: styp: mat, name: b  svdecl: styp: mat, name: ret_name  
+a = [(1,9,9)(4,5,5)]
+b =  Conj a
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: trial  
+x = [(1,2)(3,4)]
+trial = Calling func_test on x
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: b  svdecl: styp: int, name: ret_name  
+a = 0
+b =  Cos a
+ret_name = b
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 5
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: mat, name: z  )
+{
+svdecl: styp: mat, name: a  svdecl: styp: comp, name: b  svdecl: styp: mat, name: ret_name  
+a = [(1,9)(4,5)]
+b =  Det a
+ret_name = a
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: mat, name: x  svdecl: styp: mat, name: trial  
+x = [(1,2)(3,4)]
+trial = Calling func_test on x
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: comp, name: z  )
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: ret_name  
+a = z
+b =  Im a
+Calling print on b
+ret_name = a
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: comp, name: trial  
+trial = Calling func_test on 0. + 4.5i
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: ret_name  
+a =  -z
+ret_name = a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 5
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  float 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: mat, name: z  )
+{
+svdecl: styp: float, name: b  svdecl: styp: float, name: ret_name  
+b =  Norm z
+ret_name = b
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: mat, name: m  svdecl: styp: int, name: trial  
+m = [(1,9,9)(4,5,5)]
+Calling func_test on m
+trial = 8
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: ret_name  
+a =  ! z
+ret_name = a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial =  ! Calling func_test on 20
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: comp, name: z  )
+{
+svdecl: styp: comp, name: a  svdecl: styp: comp, name: b  svdecl: styp: comp, name: ret_name  
+a = 4. + 5.i
+b =  Re a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = 8
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: b  svdecl: styp: int, name: ret_name  
+a = 90
+b =  Sin a
+ret_name = b
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = 8
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  mat 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: mat, name: z  )
+{
+svdecl: styp: mat, name: a  svdecl: styp: mat, name: b  svdecl: styp: mat, name: ret_name  
+a = [(1,9,9)(4,5,5)]
+b =  Trans a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+(svdecl: styp: int, name: a  )
+{
+svdecl: styp: int, name: trial  
+trial = 8
+}program:
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: col
+(svdecl: styp: mat, name: col_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: row
+(svdecl: styp: mat, name: row_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  comp 
+sret_name: null
+sfunc_name: elem
+(svdecl: styp: mat, name: elem_mat  svdecl: styp: int, name: elem_row  svdecl: styp: int, name: elem_col  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: cols
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: null
+sfunc_name: rows
+(svdecl: styp: mat, name: rows_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: printq
+(svdecl: styp: mat, name: printq_val  )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ: 
+sret_name: null
+sfunc_name: print
+(svdecl: styp: )
+{
+
+noexpr
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: ret_name
+sfunc_name: func_test
+(svdecl: styp: int, name: z  )
+{
+svdecl: styp: int, name: a  svdecl: styp: int, name: ret_name  
+a = 5
+While condition : a <= 10
+statement : a = a + 1
+While condition : a != 1
+statement : {
+a = a + 1 % 42
+
+}ret_name = a
+}
+
+sfdecl:
+sret_typ:  int 
+sret_name: trial
+sfunc_name: compute
+()
+{
+svdecl: styp: int, name: trial  
+trial = Calling func_test on 5
+}
