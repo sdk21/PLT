@@ -19,7 +19,13 @@ int main() {
 	Vector4cf v;
 	v << 1, 0, 0, 0;
 
-	cout << tensor(H,X) * v << endl;
+	//cout << tensor(H,X) * v << endl;
+
+	complex<float> com(1,1);
+	MatrixXcf a = (Matrix<complex<float>, Dynamic, Dynamic>(2,2) << com, com, com, com).finished();
+	//a << com,com,com,com;
+	//a = genMatrix("1,2\n3,4");
+	cout << a << endl;
   	
 }
 

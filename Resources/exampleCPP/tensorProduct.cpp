@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 #include "tensorProduct.h"
 #include "constants.h"
 
@@ -43,6 +44,53 @@ Matrix4cf control(Matrix2cf mat) {
 	output.bottomRightCorner(2,2) = mat;
 
 	return output;
+}
+
+MatrixXcf genMatrix(string s) {
+
+	//MatrixXcf output;
+
+	std::istringstream iss(s);
+	std::string token1, token2;
+	int y = 0;
+	int x = 0;
+	while(std::getline(iss, token1, '\n')) {
+		std::istringstream iss2(token1);
+		while(y == 0 && std::getline(iss2, token2, ',')) {
+			x++;
+		//	cout << "x = " << x << endl;
+		}
+		y++;
+		//cout << "y = " << y << endl;
+	}
+
+	string ttttt = "0,0,0,0";
+	//output = Matrix<complex<float>, y,y>();
+	MatrixXcf output = (Matrix<complex<float>, Dynamic,
+	Dynamic>(x,y)<< ttttt).finished();
+	//cout << x << " " << y << endl;
+	//output = Zero();
+	/*
+	complex<float> cf;
+	std::istringstream parse(s);
+	y = 0;
+	while(std::getline(parse, token1, '\n')) {
+		x = 0;
+	//	cout << token1 << endl;
+		std::istringstream iss2(token1);
+		while(std::getline(iss2, token2, ',')) {
+	//		cout << token2 << " " << x << " " << y<< endl;
+			std::istringstream temp('('+ token2 + ')');
+			temp >> cf;
+			output(x,y) = cf;
+			x++;
+		}
+		y++;
+	}
+	*/
+
+	return output;
+
 }
 
 /*
