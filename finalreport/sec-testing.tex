@@ -53,7 +53,7 @@ Though the test suite is too large to be included in this section, here are a fe
 
 For instance, break\_continue.ql is a QLang program as follows :
 
-\begin{verbatim}
+\begin{lstlisting}
 
 def func_test(int a) : int ret_name { 
         
@@ -84,10 +84,10 @@ def compute(): int trial {
 
    trial = func_test(20);
 } 
-\end{verbatim}
+\end{lstlisting}
 
 It generates break\_continue.cpp as below upon passing it through the code generation code
-\begin{verbatim}
+\begin{lstlisting}
 
 #include <iostream>
 #include <complex>
@@ -142,24 +142,24 @@ int main ()
 
 	return 0;
 }
-\end{verbatim}
+\end{lstlisting}
 
 
 and the generated output of this is :
 
-\begin{verbatim} 
+\begin{lstlisting}
 30
 30
 30
 30
 30
-\end{verbatim}
+\end{lstlisting}
 
 
 Another example we consider is  mat\_qubit.ql
 
 
-\begin{verbatim}
+\begin{lstlisting}
 def func_test(mat a, mat b) : mat ret_name { 
         
         ret_name = a*b;
@@ -182,12 +182,12 @@ def compute(int a):mat trial {
      printq(trial);
 
 }
-\end{verbatim}
+\end{lstlisting}
 
 It generates mat\_qubit.cpp as below :
 
 
-\begin{verbatim}
+\begin{lstlisting}
 #include <iostream>
 #include <complex>
 #include <cmath>
@@ -221,22 +221,215 @@ int main ()
 
 	return 0;
 }
-\end{verbatim}
+\end{lstlisting}
 
 and it generates the qubits in the output as well, like :
 
-\begin{verbatim}
+\begin{lstlisting}
 (0.707107)|0> + (0.707107)|1>
 (0.707107)|0> + (-0.707107)|1>
 (0.707107,0)
 (-0.707107,0)
-\end{verbatim}
+\end{lstlisting}
 
-One more program we can show here is a demonstration of the capacity of the semantic analyzer to catch incorrect programs. For instance,
+One more program we can show here is a demonstration of the capacity of QLang to emulate Quantum algorithms. The following program runs the Deutsch-Jozsa algorithm.
 
-The program:
 
-\begin{verbatim}
+\begin{lstlisting}
+def measure (mat top) : mat outcome{
+        
+        mat ad;
+
+        ad = adj(top);
+        outcome = top * ad;
+}
+
+def hadamard (int n) : mat gate{
+        
+        int i;
+        gate = H;
+
+        for (i from 0 to n-1 by 1){
+            gate = gate @ H; 
+        }
+}
+
+def topqubit (int n) : mat input{
+
+        int i;
+        input = |0>;
+
+        for (i from 0 to n-1 by 1){
+                input = input @ |0>;
+        }          
+}
+
+def deutsch (int n, mat U) : float outcomeZero{
+
+        mat bottom; mat top; mat input;
+        mat hadtop; mat meas;
+
+        bottom = |1>;
+        top = topqubit(n);
+        input = top @ bottom;
+        
+        hadtop = hadamard(n);
+        input = (hadtop @ H)*input;
+        input = U * input;
+        input = (hadtop @ IDT)*input;
+        meas = measure(top);
+
+        input = (meas @ IDT)* input;
+        outcomeZero = norm(input);
+}
+
+
+def compute () : float outcome{
+
+        int n; mat Ub; mat Uc;
+
+        n = 1;
+        Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
+        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)];
+
+        outcome = deutsch(n, Ub);
+        print(outcome);
+        
+        outcome = deutsch(n, Uc);
+        print(outcome);
+
+        n = 2;
+        Ub = [(1,0,0,0,0,0,0,0) 
+              (0,1,0,0,0,0,0,0)
+              (0,0,1,0,0,0,0,0)
+              (0,0,0,1,0,0,0,0) 
+              (0,0,0,0,0,1,0,0) 
+              (0,0,0,0,1,0,0,0)
+              (0,0,0,0,0,0,0,1)
+              (0,0,0,0,0,0,1,0)];
+
+        outcome = deutsch(n, Ub);
+}
+\end{lstlisting}
+
+It creates the C++ code as follows :
+
+\begin{lstlisting}
+
+#include <iostream>
+#include <complex>
+#include <cmath>
+#include <Eigen/Dense>
+#include <qlang>
+using namespace Eigen;
+using namespace std;
+        
+MatrixXcf measure (MatrixXcf top )
+{
+	MatrixXcf ad;
+	MatrixXcf outcome;
+ 
+	ad =   top.adjoint();
+	outcome = top * ad;
+
+	return outcome;
+}
+MatrixXcf hadamard (int n )
+{
+	int i;
+	MatrixXcf gate;
+ 
+	gate = H;
+
+    for (int i = 0; i < n - 1; i = i + 1){
+        
+	{
+	gate = tensor(gate, H);
+
+	}
+
+        }
+	return gate;
+}
+MatrixXcf topqubit (int n )
+{
+	int i;
+	MatrixXcf input;
+ 
+	input = genQubit("0",0);
+
+    for (int i = 0; i < n - 1; i = i + 1){
+        
+	{
+	input = tensor(input, genQubit("0",0));
+
+	}
+
+        }
+	return input;
+}
+float deutsch (int n,MatrixXcf U )
+{
+	MatrixXcf bottom;
+	MatrixXcf top;
+	MatrixXcf input;
+	MatrixXcf hadtop;
+	MatrixXcf meas;
+	float outcomeZero;
+ 
+	bottom = genQubit("1",0);
+	top = topqubit(n);
+	input = tensor(top, bottom);
+	hadtop = hadamard(n);
+	input = tensor(hadtop, H) * input;
+	input = U * input;
+	input = tensor(hadtop, IDT) * input;
+	meas = measure(top);
+	input = tensor(meas, IDT) * input;
+	outcomeZero =   input.norm();
+
+	return outcomeZero;
+}
+int main ()
+{
+	int n;
+	MatrixXcf Ub;
+	MatrixXcf Uc;
+	float outcome;
+ 
+	n = 1;
+	Ub = (Matrix<complex<float>, Dynamic, Dynamic>(4,4)<<1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0).finished();
+	Uc = (Matrix<complex<float>, Dynamic, Dynamic>(4,4)<<1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1).finished();
+	outcome = deutsch(n,Ub);
+	cout << outcome << endl << endl;
+	outcome = deutsch(n,Uc);
+	cout << outcome << endl << endl;
+	n = 2;
+	Ub = (Matrix<complex<float>, Dynamic, Dynamic> (8,8)       <<1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0)
+	.finished();
+	outcome = deutsch(n,Ub);
+
+	std::cout << outcome << endl;
+
+	return 0;
+}
+\end{lstlisting}
+
+The output of this exceution is :
+
+\begin{lstlisting}
+0
+
+1
+
+0
+\end{lstlisting}
+
+
+
+Following programs show the ability of the semantic analyzer to catch incorrect programs. For instance, the program:
+
+\begin{lstlisting}
 def func_test1(int z) : int ret_name { 
         int a;
         int b;
@@ -255,18 +448,18 @@ def compute( int a):int trial {
       trial = func_test1(4);
 }
 
-\end{verbatim}
+\end{lstlisting}
 
 
 gives the error :
-\begin{verbatim}
+\begin{lstlisting}
 Fatal error: exception Analyzer.Except("Invalid function declaration: func_test1 was already declared")
-\end{verbatim}
+\end{lstlisting}
 
 
 whereas the sample program
 
-\begin{verbatim}
+\begin{lstlisting}
 def func_test(float z) : float ret_name { 
         
         float a; 
@@ -274,13 +467,13 @@ def func_test(float z) : float ret_name {
        
         ret_name = z;  
 }
-\end{verbatim}
+\end{lstlisting}
 
 
 would give the error :
-\begin{verbatim}
+\begin{lstlisting}
 Fatal error: exception Analyzer.Except("Missing 'compute' function")
-\end{verbatim}
+\end{lstlisting}
 
 More such pass and fail test cases can be found in the appendix and in our project folder.
 
