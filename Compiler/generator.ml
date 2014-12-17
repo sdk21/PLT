@@ -2,11 +2,7 @@ open Sast
 open Printf
 open String
 
-<<<<<<< HEAD
-let builtin_funcs = ["print";"printq";"row";"col";"element"]
-=======
 let builtin_funcs = ["print";"printq";"rows";"cols";"elem"]
->>>>>>> 48c00e357dd1dbea008027fe3b77dbc186b21c3c
 
 let is_builtin_func name =
   List.exists (fun func_name -> func_name = name) builtin_funcs
@@ -137,30 +133,8 @@ and writeBuiltinFuncCall name l =
   match name with
     "print" -> writePrintStmt l
   | "printq" -> writePrintqStmt l
-<<<<<<< HEAD
   | "row" -> writeRowStmt l
   | "col" -> writeColStmt l
-  | _ -> ""
-
-
-(* generate row *)
-and writeRowStmt l =
-    let expr_wrap = List.hd l
-       in
-    let expr = cppExpr (expr_of expr_wrap)
-    in sprintf "%s.rows()" expr
-    
-(* generate col *)
-and writeColStmt l =
-    let expr_wrap = List.hd l
-       in
-    let expr = cppExpr (expr_of expr_wrap)
-    in sprintf "%s.cols()" expr
-
-=======
-  | "rows" -> writeRowStmt l
-  | "cols" -> writeColStmt l
-  | "elem" -> writeElemStmt l
   | _ -> ""
 
 (* generate row statement *)
@@ -185,7 +159,6 @@ and writeElemStmt l =
   let e3 = cppExpr (expr_of ew3) in
   sprintf "%s(%s,%s)" e1 e2 e3
  
->>>>>>> 48c00e357dd1dbea008027fe3b77dbc186b21c3c
 (* generate print statement *)
 and writePrintStmt l =
   let expr_wrap = List.hd l in
