@@ -76,6 +76,8 @@ CompilationCheck()
 ExecutionCheck()
 {
     output=$(eval "./a.out")
+    echo " " >> exec_output
+    echo "Output: " >> exec_output
     echo "$output" >> exec_output
     echo "$output"
 }
