@@ -9,7 +9,7 @@ OBJS = ast.cmo sast.cmo parser.cmo scanner.cmo analyzer.cmo generator.cmo qlc.cm
 
 .PHONY: default
 
-default: qlc cpp/qlang.hpp
+default: qlc cpp/qlang.o
 
 
 qlc : $(OBJS) 
@@ -27,7 +27,7 @@ parser.ml parser.mli : parser.mly
 %.cmi : %.mli
 	ocamlc -g -c $<
 
-cpp/qlang.hpp:
+cpp/qlang.o:
 	$(MAKE) -C $(CPPDIR)
 
 
