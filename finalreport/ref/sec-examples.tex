@@ -5,52 +5,17 @@ We present some examples that illustrates the use of Qlang in solving quantum co
 Evaluate the following expressions: a. $(H \otimes X) \ket{00}$ b. $\dotproduct[101,000]$ c. $\bra{01} H \otimes H \ket{01} $
 \begin{lstlisting}
 	
-def pseudo = evaluate (){
-		
-	# a quit type declaration follows dirac notation
-	qub mat0 = |00>;
-		
-	# Both X and H are constant with type mat and
-	# @ corresponds to tensor product.
-	mat HX = H @ X;
-		
-	pseudo = HX * mat0;
+def compute() : mat evaluate (){
+	mat a;
+	a = |00>;
+	evaluate = (H @ X) * a;	
+	printq(evaluate);
+				
 }
 	
 \end{lstlisting}
 
 \subsubsection{Problem 2}
-Find the matrix corresponding to the quantum circuit:
-\begin{figure}[h!]
-\begin{center}
-\includegraphics{ref/circuit1}
-\end{center}
-\caption{ Quantum Circuit implementing series of control gates\label{cir1}}
-\end{figure}
-
-\begin{lstlisting}
-def circuitMat = findMatrix (){
-	
-	# all basis qubit in 2 dimension
-	qub mat0=|00>;
-	qub mat1=|01>;
-	qub mat2=|10>;
-	qub mat3=|11>;
-	
-	# controlled not matrix	
-	mat CNOT = [1,0,0,0:0,1,0,0:0,0,0,1:0,0,1,0]
-	
-	#controlled hadmard matrix
-	mat HNOT = [1/sqrt(2),0,0,1/sqrt(2):0,1,0,0:1/sqrt(2),0,1,-1/sqrt(2):0,0,0,0]
-	#composition of control gates
-	mat allGates = CNOT * HNOT * CNOT
-	
-	# Matrix corresponding to the circuit	
-	circuitMat =[allGates*mat0:allGates*mat1:allGates*mat2:allGates*mat3]
-		
-}
-\end{lstlisting}
-\subsubsection{Problem 3}
 Consider the circuit and show the probabilities of outcome 0 where $\ket{\Psi_{in}} = \ket{1}$
 \begin{figure}[h!]
 \begin{center}
@@ -60,32 +25,49 @@ Consider the circuit and show the probabilities of outcome 0 where $\ket{\Psi_{i
 \end{figure}
 
 \begin{lstlisting}
-def probability = outcomeZero(){
-	
-	# top and bottom qubits
-	qub top = |0>;
-	qub bottom = |1>;
-	
-	# Applying H on top qubit 
-	mat output = (H @ I) * (top @ bottom);
-	
-	# Controlled Not operator
-	mat CNOT = [I, [0,0:0,0]: [0,0:0,0], X];
-	
-	# Controlled Y operator
-	mat CY = [Y,[0,0:0,0]:[0,0:0,0], I];
-	
-	# Applying Control Operators
-	output = (CY)*(CNOT)*output
-	
-	# Applying measurement operator on top qubit |0> <0|
-	mat M = (|0>*<0| @ I)
-	
-	# state after applying measurement operator on top qubit
-	outcome = M * output;
-	
-	#probability of outcome
-	probability = norm(outcome);
+def measure(mat top): mat outcome{
+        mat ad;
+        
+        ad = adj(top);
+        outcome = top*ad;
+}
+
+def outcomezero(mat bottom) : float probability{
+        
+        mat top; mat input;
+        mat had; mat cnot; mat ynot;
+        mat output;  mat meas;
+        
+        top = |0>;
+        input = top @ bottom;
+        
+        had = H @ IDT;
+        cnot = [(1,0,0,0)
+                (0,1,0,0)
+                (0,0,0,1)
+                (0,0,1,0)];
+      
+        
+        ynot = [(1,0,0,0)
+                (0,0,0,-1)
+                (0,0,1,0)
+                (0,-1,0,0)];
+    
+        output = (ynot*(cnot*(had*input)));
+        
+        printq(output);
+        
+        probability = norm(output);
+   
+}
+
+def compute() : float outcome{
+        
+        mat bottom;
+        
+        bottom = |1>;
+        outcome = outcomezero(bottom);
+        print(outcome);
 	
 }
 \end{lstlisting}
@@ -94,86 +76,80 @@ def probability = outcomeZero(){
 
 \subsubsection{Deutsch Jozsa Algorithm}
 \begin{lstlisting}
+def measure (mat top) : mat outcome{
+        
+        mat ad;
 
-def outcome = deutschJozsa(qub top, mat U){
-		
-	# in corresponds to the qubit in top register
-	# input is the tensor product of top register and bottom register
-	mat input=  top @ |1>;
-		
-	# application of Hadamard gate on both top and bottom inputs
-	input = (H @ H)*input;
-		
-	# application of U gate on the above result
-	input = U * input;
-		
-	# application of Hadamard gate on the top register
-	input = (H @ I)*input;
-		
-	# application of measurement operator on the top register
-	# top * Adj (top) corresponds to the Measurement operator
-		
-	input=(top*Adj(top)@ I)*input;
-		
-	#after the measurement is applied, check if the input is 0 or not
-	if (input == 0){
-		#probability of outcome 0 is 0
-		outcome = 0;
-	}
-	else{
-		# probability of outcome 0 is 1
-		outcome = 1;
-	}
+        ad = adj(top);
+        outcome = top * ad;
 }
-	
-\end{lstlisting}
 
-\subsubsection {Grover's Search Algorithm}
+def hadamard (int n) : mat gate{
+        
+        int i;
+        gate = H;
 
-\begin{figure}[h!]
-\begin{center}
-\includegraphics{ref/grover}
-\end{center}
-\caption{ Grover Algorithm Circuit 
-\label{fig:grover}}
-\end{figure}
+        for (i from 0 to n-1 by 1){
+            gate = gate @ H; 
+        }
+}
 
-\begin{lstlisting}
+def topqubit (int n) : mat input{
 
-def result = grover (quit top, int x0){
-	# returns the probability to find x0 for a function f such that f(x0)=1
-	# x0 can be x0=0,1,?,2^n-1
-	# this is a special case where n=1
-	
-	# qubit in the bottom register
-	qub bottom = |1>;
-	
-	# tensor product of top and bottom qubit
-	mat input = top @ bottom;
-	
-	#application of Hadamard
-	input = (H @ H) * input;
-	
-	#define S
-	mat S = [1,0:0-1]
-	
-	# k : number of time grover operator is applied
-	# for n > 1 k=ceil((pi*2^(n/2))/4);
-	int k = 1;
-	
-	# define O operator  such that O|x>|q>=|x>|q mod f(x)> or O|x>=(-1)f(x)|x> 
-	# for n > 1 O = I(2^(n1+1));
-	mat O = I;
-	O(x0+1, x0+1) = -1;
-	
-	# Grover iteration matrix
-	mat GO = (G*O)^k;
-	
-	# After application of Grover iteration matrix
-	mat output = GO * input;
-	
-	result = (H @ H)* output;
-	
+        int i;
+        input = |0>;
+
+        for (i from 0 to n-1 by 1){
+                input = input @ |0>;
+        }          
+}
+
+def deutsch (int n, mat U) : float outcomeZero{
+
+        mat bottom; mat top; mat input;
+        mat hadtop; mat meas;
+
+        bottom = |1>;
+        top = topqubit(n);
+        input = top @ bottom;
+        
+        hadtop = hadamard(n);
+        input = (hadtop @ H)*input;
+        input = U * input;
+        input = (hadtop @ IDT)*input;
+        meas = measure(top);
+
+        input = (meas @ IDT)* input;
+        outcomeZero = norm(input);
+}
+
+
+def compute () : float outcome{
+
+        int n; mat Ub; mat Uc;
+
+        n = 1;
+        Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
+        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)];
+
+        outcome = deutsch(n, Ub);
+        print(outcome);
+        
+        outcome = deutsch(n, Uc);
+        print(outcome);
+
+        n = 2;
+        Ub = [(1,0,0,0,0,0,0,0) 
+              (0,1,0,0,0,0,0,0)
+              (0,0,1,0,0,0,0,0)
+              (0,0,0,1,0,0,0,0) 
+              (0,0,0,0,0,1,0,0) 
+              (0,0,0,0,1,0,0,0)
+              (0,0,0,0,0,0,0,1)
+              (0,0,0,0,0,0,1,0)];
+
+        outcome = deutsch(n, Ub);
 }
 
 \end{lstlisting}
+
