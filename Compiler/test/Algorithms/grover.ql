@@ -17,6 +17,7 @@ def ntensor (int n, mat k) : mat gate{
 }
 
 def prepareU (int n) : mat gate {
+        # prepare the oracle for grover, Uw
         mat i;
         mat u;
 
@@ -28,6 +29,7 @@ def prepareU (int n) : mat gate {
 }
 
 def prepareG (int n) : mat gate{
+        # grover diffusive operator
         mat s; mat sa; mat i; mat h;
 
         s = ntensor(n,|0>);
@@ -54,6 +56,7 @@ def grover (int n) : float outcomeZero{
         u = prepareU(n);
         g = prepareG(n);
         
+        # grover operator
         go = g*u;
         
         for (i from 0 to n by 1){
