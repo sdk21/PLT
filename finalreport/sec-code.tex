@@ -2016,8 +2016,9 @@ def compute() : float outcome{
 demo3.ql
 \begin{lstlisting}
 # Sankalpa Khadka
+# simulation of Deutsch's Algorithm
 def measure (mat top) : mat outcome{
-        
+        # returns the measurement matrix for top qubit
         mat ad;
 
         ad = adj(top);
@@ -2025,7 +2026,7 @@ def measure (mat top) : mat outcome{
 }
 
 def hadamard (int n) : mat gate{
-        
+        # returns Hadamard gate for n qubit system
         int i;
         gate = H;
 
@@ -2035,7 +2036,7 @@ def hadamard (int n) : mat gate{
 }
 
 def topqubit (int n) : mat input{
-
+	# return zero qubit for n qubit system
         int i;
         input = |0>;
 
@@ -2049,26 +2050,28 @@ def deutsch (int n, mat U) : float outcomeZero{
         mat bottom; mat top; mat input;
         mat hadtop; mat meas;
 
-        bottom = |1>;
+        bottom = |1>;					
         top = topqubit(n);
-        input = top @ bottom;
+        input = top @ bottom;			# input qubit, tensor of top and bottom
         
-        hadtop = hadamard(n);
-        input = (hadtop @ H)*input;
-        input = U * input;
-        input = (hadtop @ IDT)*input;
+        hadtop = hadamard(n);		
+        input = (hadtop @ H)*input;		# application of Hadamard gate
+        input = U * input;				# application of the Oracle U
+        input = (hadtop @ IDT)*input;		# application of Hadamard on top only, IDT-Identity
         meas = measure(top);
 
-        input = (meas @ IDT)* input;
-        outcomeZero = norm(input);
+        input = (meas @ IDT)* input;		# measure zero on top register
+        outcomeZero = norm(input);		# likelihood of getting zero on top register
 }
 
 
 def compute () : float outcome{
 
         int n; mat Ub; mat Uc;
-
+	
+	# test for n =1
         n = 1;
+        # Ub - balanced, Uc - Constant Oracles
         Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
         Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)];
 
@@ -2078,6 +2081,7 @@ def compute () : float outcome{
         outcome = deutsch(n, Uc);
         print(outcome);
 
+	#test for n=2
         n = 2;
         Ub = [(1,0,0,0,0,0,0,0) 
               (0,1,0,0,0,0,0,0)
@@ -2095,8 +2099,9 @@ def compute () : float outcome{
 demo4.ql
 \begin{lstlisting}
 # Sankalpa Khadka
+# Simulation of Grover's Algorithm for f(0) =1
 def measure (mat top) : mat outcome{
-        
+        # measurement matrix for top qubit
         mat ad;
 
         ad = adj(top);
@@ -2104,7 +2109,7 @@ def measure (mat top) : mat outcome{
 }
 
 def ntensor (int n, mat k) : mat gate{
-        
+        # return k@k@...@k n times
         int i;
         gate = k;
 
@@ -2114,6 +2119,7 @@ def ntensor (int n, mat k) : mat gate{
 }
 
 def prepareU (int n) : mat gate {
+	# Prepare the Uw of grover oracle 
         mat i;
         mat u;
 
@@ -2125,6 +2131,7 @@ def prepareU (int n) : mat gate {
 }
 
 def prepareG (int n) : mat gate{
+	# Prepare grover defusive operator
         mat s; mat sa; mat i; mat h;
 
         s = ntensor(n,|0>);
@@ -2144,22 +2151,22 @@ def grover (int n) : float outcomeZero{
 
         bottom = |1>;
         top = ntensor(n, |0>);
-        input = top @ bottom;
+        input = top @ bottom;	# input is tensor of top and bottom registers
         
         hadtop = ntensor(n, H);
-        input = (hadtop @ H)*input;
+        input = (hadtop @ H)*input;	# apply Hadamard gate
         u = prepareU(n);
         g = prepareG(n);
         
-        go = g*u;
+        go = g*u;					# Grover Operator
         
-        for (i from 0 to n by 1){
+        for (i from 0 to n by 1){		# Apply grover operator over iteration
                 input = go*input; 
         }
 
-        meas = measure(top);
-        input = (meas @ IDT)* input;
-        outcomeZero = norm(input);
+        meas = measure(top);		
+        input = (meas @ IDT)* input;	# measure on top register
+        outcomeZero = norm(input);	# likelihood to find 0 on top register
 }
 
 
