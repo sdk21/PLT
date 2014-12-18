@@ -1,0 +1,3340 @@
+\section{ Scanner }
+scanner.mll
+\begin{lstlisting}
+(* Christopher Campbell, Winnie Narang*)
+{ open Parser }
+
+let whitespace = [' ' '\t' '\r' '\n'] 
+let name = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*
+let integers = ['0'-'9']+
+let floats = ['0'-'9']+ '.' ['0'-'9']*
+
+rule token = parse
+  whitespace { token lexbuf }
+| '#'        { comment lexbuf }
+
+| "int"      { INT }    (* Integer type *)
+| "float"    { FLOAT }  (* Float type *)
+| "comp"     { COMP }   (* Complex type *)
+| "mat"      { MAT }    (* Matrix *)
+
+| "C"        { C }      (* Start of complex number *)
+| "I"        { I }      (*  Imaginary component *)
+
+| "def"      { DEF }    (* Define function *)
+
+| '='        { ASSIGN } (* Assignment *)
+| ','        { COMMA }  (* Separate list elements *)
+| ':'        { COLON }  (* Separate matrix rows *)
+| ';'        { SEMI }   (* Separate matrix columns *)
+| '('        { LPAREN } (* Surround expression *)
+| ')'        { RPAREN } 
+| '['        { LBRACK } (* Surround vectors/matricies *)
+| ']'        { RBRACK }
+| '{'        { LBRACE } (* Surround blocks *)
+| '}'        { RBRACE }  
+| '<'        { LCAR }   (* Open bra- *)
+| '>'        { RCAR }   (* Close -ket *)
+| '|'        { BAR }    (* Close bra- and Open -ket *)
+
+| '+'        { PLUS }   (* Addition *)
+| '-'        { MINUS }  (* Subtraction *)
+| '*'        { TIMES }  (* Multiplication *)
+| '/'        { DIV }    (* Division *)
+| '%'        { MOD }    (* Modulus *)
+| '^'        { EXPN }   (* Exponentiation *)
+
+| "eq"       { EQ }     (* Equal to (structural) *)
+| "neq"      { NEQ }    (* Not equal to (structural) *) 
+| "lt"       { LT }     (* Less than *)
+| "gt"       { GT }     (* Greater than *)
+| "leq"      { LEQ }    (* Less than or equal to *)
+| "geq"      { GEQ }    (* Greater than or equal to *)
+
+| "not"      { NOT }    (* Boolean not *)
+| "and"      { AND }    (* Boolean and *)
+| "or"       { OR }     (* Boolean or *)
+| "xor"      { XOR }    (* Boolean xor *)
+
+| "norm"     { NORM }   (* Get norm *)
+| "trans"    { TRANS }  (* Get transpose *)
+| "det"      { DET }    (* Get determinant *) 
+| "adj"      { ADJ }    (* Get adjoint *)
+| "conj"     { CONJ }   (* Get complex conjugate *)
+| "unit"     { UNIT }   (* Is unit matrix? *)
+| '@'        { TENS }   (* Tensor product *)
+| "im"       { IM }     (* Is imaginary number? *)
+| "re"       { RE }     (* Is real number *)
+| "sin"      { SIN }    (* Sine *)
+| "cos"      { COS }    (* Cosine *)
+| "tan"      { TAN }    (* Tangent *)
+
+| "if"       { IF }     (* If statement *)
+| "else"	 { ELSE }	(* Else statement *)
+| "for"      { FOR }    (* For loop - for(i from x to y by z) *)
+| "from"     { FROM }
+| "to"       { TO }
+| "by"       { BY }
+| "while"    { WHILE }  (* While loop *)
+| "break"    { BREAK }  (* Break For or While loop *)
+| "continue" { CONT }   (* Continue to For or While loop *)
+
+| name     as lxm  { ID(lxm) } 
+| integers as lxm  { INT_LIT(lxm) }
+| floats   as lxm  { FLOAT_LIT(float_of_string lxm) }
+
+| eof              { EOF }
+| _ as char        { raise (Failure("illegal character " ^ Char.escaped char)) }
+
+and comment = parse
+  ['\r' '\n']       { token lexbuf }
+| _                
+\end{lstlisting}
+
+\section{Parser}
+parser.mly
+
+\begin{lstlisting}
+(* Christopher Campbell, Sankalpa Khadka*)
+%{ open Ast %}
+
+%token C I
+%token INT FLOAT COMP MAT
+%token DEF
+%token ASSIGN
+%token COMMA COLON SEMI LPAREN RPAREN LBRACK RBRACK LBRACE RBRACE LCAR RCAR BAR
+%token PLUS MINUS TIMES DIV MOD EXPN
+%token EQ NEQ LT GT LEQ GEQ
+%token NOT AND OR XOR
+%token TENS UNIT NORM TRANS DET ADJ CONJ IM RE SIN COS TAN
+%token IF ELIF ELSE FOR FROM TO BY WHILE BREAK CONT
+%token EOF
+
+%token <string> ID
+%token <string> INT_LIT
+%token <float> FLOAT_LIT
+%token <string> COMP_LIT
+
+%nonassoc NOELSE
+%nonassoc ELSE
+%right ASSIGN
+%left OR XOR
+%left AND
+%right NOT
+%left EQ NEQ
+%left LT GT LEQ GEQ
+%left PLUS MINUS
+%left TIMES DIV MOD TENS
+%right EXPN
+%nonassoc RE IM NORM TRANS DET ADJ CONJ UNIT SIN COS TAN
+
+%start program
+%type <Ast.program> program
+
+%%
+
+vtype:
+  INT     { Int }
+  | FLOAT { Float }
+  | COMP  { Comp }
+  | MAT   { Mat }
+
+vdecl:
+  vtype ID SEMI { { typ = $1;
+                    name = $2 } } 
+vdecl_list:
+    /* nothing */    { [] }
+  | vdecl_list vdecl { $2 :: $1 }
+
+formal_params:
+    /* nothing */      { [] }
+  | formal_params_list { List.rev $1 }
+
+formal_params_list:
+  vtype ID                            { [{ typ = $1; 
+                                           name = $2; }] }
+  | formal_params_list COMMA vtype ID { {  typ = $3;
+                                           name = $4; } :: $1 }
+actual_params:
+    /* nothing */      { [] }
+  | actual_params_list { List.rev $1 }
+
+actual_params_list:
+    expr                          { [$1] }
+  | actual_params_list COMMA expr { $3 :: $1 }
+
+fdecl:
+   DEF ID LPAREN formal_params RPAREN COLON vtype ID LBRACE vdecl_list stmt_list RBRACE
+     { { func_name = $2;
+         formal_params = $4;
+         ret_typ = $7;
+         ret_name = $8;
+         locals = List.rev $10;
+         body = List.rev $11; } }
+
+mat_row:
+    expr               { [$1] }
+  | mat_row COMMA expr { $3 :: $1 }
+
+mat_row_list:
+    LPAREN mat_row RPAREN              { [List.rev($2)] }
+  | mat_row_list LPAREN mat_row RPAREN { List.rev($3) :: $1 }
+
+inner_comp:
+    FLOAT_LIT                  { [$1; 0.] }
+  | FLOAT_LIT I                { [0.; $1] }
+  | FLOAT_LIT PLUS FLOAT_LIT I { [$1; $3] }
+
+expr:
+    ID                             { Id($1) }
+  | INT_LIT                        { Lit_int(int_of_string $1) }
+  | FLOAT_LIT                      { Lit_float($1) }
+  | C LPAREN inner_comp RPAREN     { Lit_comp(List.hd $3, List.hd (List.rev $3)) } 
+  | LCAR INT_LIT BAR               { Lit_qub($2, 0) }
+  | BAR INT_LIT RCAR               { Lit_qub($2, 1) }
+  | LBRACK mat_row_list RBRACK     { Mat(List.rev($2)) }
+  | LPAREN expr RPAREN             { $2 }
+  | ID ASSIGN expr                 { Assign($1, $3) }
+  | ID LPAREN actual_params RPAREN { Call($1, $3) }
+  | MINUS expr                     { Unop(Neg, $2)}
+  | NOT LPAREN expr RPAREN         { Unop(Not, $3) }
+  | RE LPAREN expr RPAREN          { Unop(Re, $3) }
+  | IM LPAREN expr RPAREN          { Unop(Im, $3) }
+  | NORM LPAREN expr RPAREN        { Unop(Norm, $3) }
+  | TRANS LPAREN expr RPAREN       { Unop(Trans, $3) }
+  | DET LPAREN expr RPAREN         { Unop(Det, $3) }
+  | ADJ LPAREN expr RPAREN         { Unop(Adj, $3) }
+  | CONJ LPAREN expr RPAREN        { Unop(Conj, $3) }
+  | UNIT LPAREN expr RPAREN        { Unop(Unit, $3) }
+  | SIN LPAREN expr RPAREN         { Unop(Sin, $3) }
+  | COS LPAREN expr RPAREN         { Unop(Cos, $3) }
+  | TAN LPAREN expr RPAREN         { Unop(Tan, $3) }
+  | expr PLUS   expr               { Binop($1, Add,  $3) }
+  | expr MINUS  expr               { Binop($1, Sub,  $3) }
+  | expr TIMES  expr               { Binop($1, Mult, $3) }
+  | expr DIV    expr               { Binop($1, Div,  $3) }
+  | expr MOD    expr               { Binop($1, Mod,  $3) }
+  | expr EXPN   expr               { Binop($1, Expn, $3) }
+  | expr TENS   expr               { Binop($1, Tens, $3) }
+  | expr EQ     expr               { Binop($1, Eq,   $3) }
+  | expr NEQ    expr               { Binop($1, Neq,  $3) }
+  | expr LT     expr               { Binop($1, Lt,   $3) }
+  | expr GT     expr               { Binop($1, Gt,   $3) }
+  | expr LEQ    expr               { Binop($1, Leq,  $3) }
+  | expr GEQ    expr               { Binop($1, Geq,  $3) }
+  | expr OR     expr               { Binop($1, Or,   $3) }
+  | expr AND    expr               { Binop($1, And,  $3) }
+  | expr XOR    expr               { Binop($1, Xor,  $3) }
+
+ by:
+   /* nothing */ { Noexpr }
+ | BY expr       { $2 }
+
+stmt:  
+    expr SEMI                                        { Expr($1) }
+  | LBRACE stmt_list RBRACE                          { Block(List.rev $2) }
+  | FOR LPAREN expr FROM expr TO expr by RPAREN stmt { For($3, $5, $7, $8, $10) }
+  | WHILE LPAREN expr RPAREN stmt                    { While($3, $5) }
+  | IF LPAREN expr RPAREN stmt %prec NOELSE          { If($3, $5, Ast.Expr(Ast.Noexpr)) }
+  | IF LPAREN expr RPAREN stmt ELSE stmt             { If($3, $5, $7) }
+  | BREAK SEMI                                       { BreakCont(0) }
+  | CONT  SEMI                                       { BreakCont(1) }
+
+stmt_list:
+    /* nothing  */ { [] }
+  | stmt_list stmt { $2 :: $1 }
+
+ rev_program:
+   /* nothing */     { [] }
+ | rev_program fdecl { $2 :: $1 }
+
+program:
+  rev_program { List.rev $1 }
+\end{lstlisting}
+
+\section{AST}
+ast.ml
+\begin{lstlisting}
+(* Christopher Campbell, Winnie Narang *)
+(* Elementary Data Types *)
+type data_type =
+    Int
+  | Float
+  | Comp
+  | Mat
+
+(* Unary Operators *) 
+type un_op =
+    Neg
+  | Not
+  | Re
+  | Im
+  | Norm
+  | Trans
+  | Det
+  | Adj
+  | Conj
+  | Unit
+  | Sin
+  | Cos
+  | Tan
+
+(* Binary Operators *)
+type bi_op =
+    Add
+  | Sub
+  | Mult
+  | Div
+  | Mod
+  | Expn
+  | Tens
+  | Eq
+  | Neq
+  | Lt
+  | Gt
+  | Leq
+  | Geq
+  | Or
+  | And
+  | Xor
+
+(* Expressions *)
+type expr =
+    Lit_int of int
+  | Lit_float of float
+  | Lit_comp of float * float
+  | Lit_qub of string * int
+  | Mat of expr list list
+  | Id of string
+  | Unop of un_op * expr
+  | Binop of expr * bi_op * expr
+  | Assign of string * expr
+  | Call of string * expr list
+  | Noexpr 
+
+(* Statements *)
+type stmt =
+    Expr of expr
+  | Block of stmt list
+  | If of expr * stmt * stmt
+  | For of expr * expr * expr * expr * stmt
+  | While of expr * stmt
+  | BreakCont of int
+
+(* Statement Lists *)
+type stmt_list =
+  stmt list
+ 
+(* Variables Declaration *)
+type var_decl = 
+  { 
+    typ : data_type;
+    name : string;
+  }
+
+(* Function Declaration *)
+type func_decl = 
+  {
+    ret_typ : data_type;
+    ret_name : string;
+    func_name : string;
+    formal_params : var_decl list;
+    locals : var_decl list;
+    body : stmt list;
+  }
+
+(* Program *)
+type program =
+  func_decl list
+
+(* Pretty Printer *)
+let rec string_of_expr = function
+    Lit_int(n) -> string_of_int n
+  | Lit_float(n) -> string_of_float n
+  | Lit_comp(f1,f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
+  | Lit_qub(s,t) -> let typ = string_of_int t in (match typ with
+                      "0" -> "Qub-bra of "^ s 
+                    | _ -> "Qub-ket of "^ s)
+  | Mat(l) ->  string_of_mat l
+  | Id(s) -> s
+  | Unop(un1,exp1) -> 
+    (match un1 with
+      Neg -> " -"
+    | Not -> " ! "
+    | Re -> " Re "
+    | Im -> " Im "
+    | Norm -> " Norm "
+    | Trans -> " Trans "
+    | Det -> " Det "
+    | Adj -> " Adj "
+    | Conj -> " Conj "
+    | Unit -> " Unit "
+    | Sin -> " Sin "
+    | Cos -> " Cos "
+    | Tan -> " Tan ") ^ string_of_expr exp1 
+
+  | Binop(ex1,binop,ex2) -> string_of_expr ex1 ^ 
+    (match binop with 
+      Add -> " + "    | Sub -> " - "     | Mult -> " * " 
+    | Div -> " / "    | Mod -> " % "     | Expn -> " ^ " | Tens -> " @ "
+    | Eq-> " == "     | Neq -> " != "    | Lt -> " < "
+    | Leq -> " <= "   | Gt -> " > "      | Geq -> " >= "
+    | Xor -> " XOR "  | And -> " && "    | Or -> " || ") ^ string_of_expr ex2
+  | Assign(str,expr) -> str ^ " = " ^ string_of_expr expr
+  | Call(str,expr_list) -> "Calling " ^ str ^ " on " ^string_of_exprs expr_list
+  | Noexpr -> ""
+
+and string_of_mat l =
+  let row_strs = 
+    List.map string_of_row l
+  in
+    "[" ^ String.concat "" row_strs ^ "]"
+
+and string_of_row r =
+  let row_str = 
+    String.concat "," (List.map string_of_expr r)
+  in
+    "(" ^ row_str ^ ")"
+  
+and string_of_exprs exprs = 
+  String.concat "\n" (List.map string_of_expr exprs)
+
+and string_of_stmt = function
+    Expr(exp) -> string_of_expr exp ^ "\n"
+  | Block(stmt_list) -> "{\n" ^ string_of_stmts stmt_list ^ "\n}"
+  | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
+  | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
+  | For(ex1,ex2,ex3,ex4,stmt) -> "For args : " ^ string_of_expr ex1 ^ " " ^ string_of_expr ex2 ^ " "^ string_of_expr ex3 ^ 
+                                 " "^ string_of_expr ex4 ^ "\nstatement :\n" ^ string_of_stmt stmt 
+  | While(expr,stmt) -> "While condition : " ^ string_of_expr expr ^ "\nstatement : " ^ string_of_stmt stmt
+  | BreakCont(t) -> string_of_breakcont t
+
+and string_of_breakcont t =
+  if (t = 0) then
+  "break"
+  else
+  "continue"
+
+and string_of_stmts stmts = 
+  String.concat "\n" (List.map string_of_stmt stmts) 
+
+and string_of_var_decl var_decl = 
+  "vdecl: typ: " ^ 
+    (match var_decl.typ with
+      Int -> "int," ^ " name: " ^ var_decl.name^ "  "
+    | Float -> "float," ^ " name: " ^ var_decl.name^ "  "
+    | Comp -> "comp," ^ " name: " ^ var_decl.name^ "  "
+    | Mat -> "mat," ^ " name: " ^ var_decl.name^ "  ")
+  
+and string_of_fdecl fdecl =
+  "\nfdecl:\nret_typ: " ^ 
+    (match fdecl.ret_typ with
+      Int -> " int "
+    | Float -> " float "
+    | Comp -> " comp "
+    | Mat -> " mat ") ^
+      "\nret_name: " ^ fdecl.ret_name ^ "\nfunc_name: "  ^ fdecl.func_name ^  "\n(" ^
+        String.concat "" (List.map string_of_var_decl fdecl.formal_params) ^ ")\n{\n" ^
+          String.concat "" (List.map string_of_var_decl fdecl.locals) ^ "\n" ^
+            String.concat "" (List.map string_of_stmt fdecl.body) ^ "}"
+
+and string_of_program (funcs) = 
+  "program:\n" ^ String.concat "\n" (List.map string_of_fdecl funcs)
+\end{lstlisting}
+
+\section{Analyzer}
+analyzer.ml
+\begin{lstlisting}
+(* Christopher Campbell *)
+open Ast
+open Sast
+
+(***************
+ * Environment *
+***************)
+
+type symbol_table =
+  { ret_typ : Sast.sdata_type;
+    ret_nam : string;
+    func_nam : string;
+    mutable formal_param : svar_decl list;
+    mutable local : svar_decl list; 
+    builtin : svar_decl list; }
+
+type environment =
+  { scope : symbol_table;
+    mutable functions : Sast.sfunc_decl list; }
+
+let builtin_vars =
+  [ { styp = Sast.Float; sname = "e"; builtinv = true; };
+    { styp = Sast.Float; sname = "pi"; builtinv = true; };
+    { styp = Sast.Mat; sname = "X"; builtinv = true; };
+    { styp = Sast.Mat; sname = "Y"; builtinv = true; };
+    { styp = Sast.Mat; sname = "Z"; builtinv = true; };   
+    { styp = Sast.Mat; sname = "H"; builtinv = true; };
+    { styp = Sast.Mat; sname = "IDT"; builtinv = true; }; ]
+
+let builtin_funcs = 
+  [ { sret_typ = Sast.Void;
+      sret_name = "null";
+      sfunc_name = "print";
+      sformal_params = [{ styp = Sast.Poly; sname = "print_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; };
+
+    { sret_typ = Sast.Void;
+      sret_name = "null";
+      sfunc_name = "printq";
+      sformal_params = [{ styp = Sast.Mat; sname = "printq_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; }; 
+
+    { sret_typ = Sast.Int;
+      sret_name = "null";
+      sfunc_name = "rows";
+      sformal_params = [{ styp = Sast.Mat; sname = "rows_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; };
+
+    { sret_typ = Sast.Int;
+      sret_name = "null";
+      sfunc_name = "cols";
+      sformal_params = [{ styp = Sast.Mat; sname = "rows_val"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; };
+
+    { sret_typ = Sast.Comp;
+      sret_name = "null";
+      sfunc_name = "elem";
+      sformal_params = [{ styp = Sast.Mat; sname = "elem_mat"; builtinv = true; };
+                        { styp = Sast.Int; sname = "elem_row"; builtinv = true; };
+                        { styp = Sast.Int; sname = "elem_col"; builtinv = true; };];
+      slocals  = [];
+      sbody = [Sast.Sexpr(Sast.Expr(Sast.Noexpr, Sast.Void))];
+      builtinf = true; }; ]
+
+let root_symbol_table =
+  { ret_typ = Sast.Void;
+    ret_nam = "";
+    func_nam = "";
+    formal_param = [];
+    local = []; 
+    builtin = builtin_vars; }
+
+let root_environment = 
+  { scope = root_symbol_table;
+    functions = builtin_funcs; }
+
+(**************
+ * Exceptions *
+**************)
+
+exception Except of string
+
+let matrix_error t = match t with
+    0 -> raise (Except("Invalid matrix: incorrect type"))
+  | _ -> raise (Except("Invalid matrix"))
+
+let qub_error t = match t with
+    0 -> raise (Except("Invalid qubit: incorrect use of |expr>"))
+  | 1 -> raise (Except("Invalid qubit: incorrect use of <expr|"))
+  | _ -> raise (Except("Invalid qubit"))
+
+let assignment_error s =
+  raise (Except("Invalid assignment to variable: " ^ s))
+
+let var_error s =
+  raise (Except("Invalid use of a variable: " ^ s ^ " was not declared" ))
+
+let func_error s =
+  raise (Except("Invalid function call: " ^ s ^ " was not declared" ))
+
+let var_decl_error s =
+  raise (Except("Invalid variable declaration: " ^ s ^ " was already declared" ))
+
+let func_decl_error s =
+  raise (Except("Invalid function declaration: " ^ s ^ " was already declared" ))
+
+let unop_error t = match t with
+    Ast.Neg -> raise (Except("Invalid use of unop: '-expr'"))
+  | Ast.Not -> raise (Except("Invalid use of unop: 'Not(expr)'"))
+  | Ast.Re -> raise (Except("Invalid use of unop: 'Re(expr)'"))
+  | Ast.Im -> raise (Except("Invalid use of unop: 'Im(expr)'"))
+  | Ast.Norm -> raise (Except("Invalid use of unop: 'Norm(expr)'"))
+  | Ast.Trans -> raise (Except("Invalid use of unop: 'Trans(expr)'"))
+  | Ast.Det -> raise (Except("Invalid use of unop: 'Det(expr)'"))
+  | Ast.Adj -> raise (Except("Invalid use of unop: 'Adj(expr)'"))
+  | Ast.Conj -> raise (Except("Invalid use of unop: 'Conjexpr)'"))
+  | Ast.Unit -> raise (Except("Invalid use of unop: 'Unit(expr)'"))
+  | Ast.Sin -> raise (Except("Invalid use of unop: 'Sin(expr)'"))
+  | Ast.Cos -> raise (Except("Invalid use of unop: 'Cos(expr)'"))
+  | Ast.Tan -> raise (Except("Invalid use of unop: 'Tan(expr)'"))
+
+let binop_error t = match t with
+    Ast.Add -> raise (Except("Invalid use of binop: 'expr + expr'"))
+  | Ast.Sub -> raise (Except("Invalid use of binop: 'expr - expr'"))
+  | Ast.Mult -> raise (Except("Invalid use of binop: expr * expr'"))
+  | Ast.Div -> raise (Except("Invalid use of binop: 'expr / expr'"))
+  | Ast.Mod -> raise (Except("Invalid use of binop: 'expr % expr'"))
+  | Ast.Expn -> raise (Except("Invalid use of binop: 'expr ^ expr'"))
+  | Ast.Or -> raise (Except("Invalid use of binop: 'expr or expr'"))
+  | Ast.And -> raise (Except("Invalid use of binop: 'expr and expr'"))
+  | Ast.Xor -> raise (Except("Invalid use of binop: 'expr xor expr'"))
+  | Ast.Tens -> raise (Except("Invalid use of binop: 'expr @ expr'"))
+  | Ast.Eq -> raise (Except("Invalid use of binop: 'expr eq expr'"))
+  | Ast.Neq -> raise (Except("Invalid use of binop: 'expr neq expr'"))
+  | Ast.Lt -> raise (Except("Invalid use of binop: 'expr lt expr'"))
+  | Ast.Gt -> raise (Except("Invalid use of binop: 'expr gt expr'"))
+  | Ast.Leq -> raise (Except("Invalid use of binop: 'expr leq expr'"))
+  | Ast.Geq -> raise (Except("Invalid use of binop: 'expr geq expr'"))
+
+let expr_error t = match t with
+  _ -> raise (Except("Invalid expression"))
+
+let call_error t = match t with
+    0 -> raise (Except("Invalid function call: function undeclared"))
+  | 1 -> raise (Except("Invalid function call: incorrect number of parameters"))
+  | 2 -> raise (Except("Invalid function call: incorrect type for parameter"))
+  | _ -> raise (Except("Invalid function call"))
+
+let stmt_error t = match t with
+    0 -> raise (Except("Invalid use of statment: 'if'"))
+  | 1 -> raise (Except("Invalid use of statment: 'for'"))
+  | 2 -> raise (Except("Invalid use of statment: 'while'"))
+  | _ -> raise (Except("Invalid statement"))
+
+let program_error t = match t with
+    0 -> raise (Except("Missing 'compute' function"))
+  | 1 -> raise (Except("'compute' function must be of type int"))
+  | _ -> raise (Except("Invalid program"))
+
+(*********************
+ * Utility Functions *
+*********************)
+
+let var_exists name scope =
+  if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then true
+  else if (List.exists (fun vdecl -> name = vdecl.sname) scope.formal_param) then true
+  else List.exists (fun vdecl -> name = vdecl.sname) scope.builtin
+
+let func_exists name env =
+  List.exists (fun fdecl -> name = fdecl.sfunc_name) env.functions
+
+let lookup_var name scope =
+  let vdecl_found = 
+  try List.find (fun vdecl -> name = vdecl.sname) scope.formal_param
+  with Not_found ->
+    try List.find (fun vdecl -> name = vdecl.sname) scope.local
+    with Not_found ->
+      try List.find (fun vdecl -> name = vdecl.sname) scope.builtin
+      with Not_found -> var_error name in
+  vdecl_found
+
+let lookup_func name env =
+  let fdecl_found = 
+    try
+      List.find (fun fdecl -> name = fdecl.sfunc_name) env.functions
+    with Not_found -> func_error name
+  in
+    fdecl_found
+
+(**********
+ * Checks *
+**********)
+
+let rec check_qub_expr i =
+  let r = i mod 10 in
+   if (r = 0 || r = 1) then
+     let i = i / 10 in
+       if (i != 0)
+        then
+         check_qub_expr i
+       else 1
+    else 0
+
+and check_qub i t =
+  let int_expr =
+    int_of_string i
+  in
+    if (check_qub_expr int_expr = 1) then
+        (match t with
+            0 -> Sast.Expr(Sast.Lit_qub(i, 1), Sast.Mat)
+          | 1 -> Sast.Expr(Sast.Lit_qub(i, 0), Sast.Mat)
+          | _ -> qub_error 2)
+    else
+      qub_error t
+
+and check_mat l env =
+  let mat = 
+    List.map (fun row -> check_mat_rows row env) l
+  in
+    Sast.Expr(Sast.Mat(mat), Sast.Mat)
+
+and check_mat_rows l env =
+  let row =
+    List.map (fun e -> check_mat_row e env) l
+  in row
+
+and check_mat_row e env =
+  let se =
+    check_expr env e
+  in
+    match se with
+       Sast.Expr(_, t) ->
+        match t with
+            Sast.Int -> se
+          | Sast.Float -> se
+          | Sast.Comp -> se 
+          | _ -> matrix_error 0
+
+and check_id name env =
+  let vdecl =
+    lookup_var name env.scope
+  in
+    let typ = vdecl.styp in
+      Sast.Expr(Sast.Id(name), typ)
+
+and check_unop op e env =
+  let e = check_expr env e in 
+    match e with
+      Sast.Expr(q, t) ->
+        (match op with
+            Ast.Neg ->
+            (match t with
+                Sast.Int -> Sast.Expr(Sast.Unop(op, e), Sast.Int)
+              | Sast.Float -> Sast.Expr(Sast.Unop(op, e), Sast.Float)
+              | Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | _ -> unop_error op)
+          | Ast.Not ->
+            (match t with
+                Sast.Int -> Sast.Expr(Sast.Unop(op, e), Sast.Int)
+              | _ ->  unop_error op)
+          | Ast.Re ->
+            (match t with
+                Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Im -> 
+            (match t with
+                Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Unit ->
+            (match t with
+                Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Int)
+              | _ ->  unop_error op)
+          | Ast.Norm ->
+            (match t with
+                Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Float)
+              | _ ->  unop_error op)
+          | Ast.Det ->
+            (match t with
+                Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Trans | Ast.Adj ->
+            (match t with
+                Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              | _ ->  unop_error op)
+          | Ast.Conj ->
+            (match t with
+                Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | Sast.Mat -> Sast.Expr(Sast.Unop(op, e), Sast.Mat)
+              | _ ->  unop_error op)
+          | Ast.Sin -> 
+            (match t with
+                Sast.Int -> Sast.Expr(Sast.Unop(op, e), Sast.Int)
+              | Sast.Float -> Sast.Expr(Sast.Unop(op, e), Sast.Float)
+              | Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Cos -> 
+            (match t with
+                Sast.Int -> Sast.Expr(Sast.Unop(op, e), Sast.Int)
+              | Sast.Float -> Sast.Expr(Sast.Unop(op, e), Sast.Float)
+              | Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | _ ->  unop_error op)
+          | Ast.Tan -> 
+            (match t with
+                Sast.Int -> Sast.Expr(Sast.Unop(op, e), Sast.Int)
+              | Sast.Float -> Sast.Expr(Sast.Unop(op, e), Sast.Float)
+              | Sast.Comp -> Sast.Expr(Sast.Unop(op, e), Sast.Comp)
+              | _ ->  unop_error op))
+
+and check_binop e1 op e2 env =
+    let e1 = check_expr env e1 and e2 = check_expr env e2 in
+      match e1 with
+          Sast.Expr(_, t1) ->
+          (match e2 with
+              Sast.Expr(_, t2) ->
+              (match op with
+                  Ast.Add | Ast.Sub ->
+                  (match t1 with
+                      Sast.Int -> 
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Float)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | _ -> binop_error op)
+                    | Sast.Float -> 
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Float)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | _ -> binop_error op)
+                    | Sast.Comp -> 
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Float)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | _ -> binop_error op)
+                    | Sast.Mat ->
+                      (match t2 with
+                          Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        | _ -> binop_error op)
+                    | _ -> binop_error op)
+                | Ast.Mult | Ast.Div ->
+                  (match t1 with
+                    Sast.Int -> 
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Float)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        | _ -> binop_error op)
+                    | Sast.Float -> 
+                      (match t2 with
+                          Sast.Int | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Float)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        | _ -> binop_error op)
+                    | Sast.Comp -> 
+                      (match t2 with
+                          Sast.Int | Sast.Float | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        | _ -> binop_error op)
+                    | Sast.Mat ->
+                      (match t2 with
+                          Sast.Int | Sast.Float | Sast.Comp | Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        | _ -> binop_error op)
+                    | _ -> binop_error op)
+                | Ast.Mod | Ast.Expn ->
+                  (match t1 with
+                    Sast.Int -> 
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Float)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | _ -> binop_error op)
+                    | Sast.Float -> 
+                      (match t2 with
+                          Sast.Int | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Float)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | _ -> binop_error op)
+                    | Sast.Comp -> 
+                      (match t2 with
+                          Sast.Int | Sast.Float | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Comp)
+                        | _ -> binop_error op)
+                    | _ -> binop_error op)
+                | Ast.Tens ->
+                  (match t1 with
+                    Sast.Mat ->
+                      (match t2 with
+                          Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Mat)
+                        | _ -> binop_error op)
+                    | _ -> binop_error op)
+                | Ast.Eq | Ast.Neq ->
+                  (match t1 with
+                    Sast.Int ->
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | _ -> binop_error op)
+                    | Sast.Float ->
+                        (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                          | _ -> binop_error op)
+                    | Sast.Comp ->
+                      (match t2 with 
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                       | _ -> binop_error op)  
+                    | Sast.Mat ->
+                        (match t2 with
+                            Sast.Mat -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                          | _ -> binop_error op)
+                    | _ -> binop_error op)
+                | Ast.Lt | Ast.Gt | Ast.Leq | Ast.Geq ->
+                  (match t1 with
+                    Sast.Int ->
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | _ -> binop_error op)
+                    | Sast.Float ->
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | _ -> binop_error op)
+                    | _ -> binop_error op)
+                | Ast.Or | Ast.And | Ast.Xor -> 
+                  (match t1 with
+                    Sast.Int ->
+                      (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | _ -> binop_error op)
+                    | Sast.Float ->
+                        (match t2 with
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                          | _ -> binop_error op)
+                    | Sast.Comp ->
+                      (match t2 with 
+                          Sast.Int -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Float -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | Sast.Comp -> Sast.Expr(Sast.Binop(e1, op, e2), Sast.Int)
+                        | _ -> binop_error op)
+                    | _ -> binop_error op)))
+
+and check_assign name e env =
+  let vdecl = lookup_var name env.scope in
+  let e = check_expr env e in
+  match e with
+    Sast.Expr(_, t1) -> 
+      let t2 = vdecl.styp in
+        if (t1 = t2) then
+          Sast.Expr(Sast.Assign(name, e), t1)
+        else
+          assignment_error name
+
+and check_call_params formal_params params =
+  if ((List.length formal_params) = 0)
+    then true
+  else
+    let fdecl_arg = List.hd formal_params in
+    let param = match (List.hd params) with
+      Sast.Expr(_, t) -> t in
+      if (fdecl_arg.styp = Sast.Poly || (fdecl_arg.styp = param))
+        then check_call_params (List.tl formal_params) (List.tl params)
+      else false
+
+and check_call name params env = 
+  let fdecl =
+    try
+      lookup_func name env
+    with Not_found -> call_error 0 in
+    let params = List.map (check_expr env) params in
+      if ((List.length fdecl.sformal_params) != (List.length params))
+        then call_error 1
+      else
+        if ((check_call_params fdecl.sformal_params params) = true)
+          then Sast.Expr(Sast.Call(name, params), fdecl.sret_typ)
+        else
+          call_error 2
+
+and check_expr env = function
+    Ast.Lit_int(i) -> Sast.Expr(Sast.Lit_int(i), Sast.Int)
+  | Ast.Lit_float(f) -> Sast.Expr(Sast.Lit_float(f), Sast.Float)
+  | Ast.Lit_comp(f1, f2) -> Sast.Expr(Sast.Lit_comp(f1, f2), Sast.Comp)
+  | Ast.Lit_qub(i, t) -> check_qub i t
+  | Ast.Mat(l) -> check_mat l env
+  | Ast.Id(s) -> check_id s env
+  | Ast.Unop(op, e) -> check_unop op e env
+  | Ast.Binop(e1, op, e2) -> check_binop e1 op e2 env
+  | Ast.Assign(s, e) -> check_assign s e env
+  | Ast.Call(s, l) -> check_call s l env
+  | Ast.Noexpr -> Sast.Expr(Sast.Noexpr, Sast.Void)
+
+and check_block stmts env =
+  let sstmts = List.map (fun stmt -> check_stmt env stmt) stmts in
+  Sast.Block(sstmts)
+
+and check_if e s1 s2 env =
+    let se = check_expr env e in
+      match se with
+        Sast.Expr(_,t) ->
+          (match t with
+            Sast.Int ->
+              let ss1 = check_stmt env s1 in
+              let ss2 = check_stmt env s2 in
+              Sast.If(se, ss1, ss2)
+            | _ -> stmt_error 0)
+
+and check_for e1 e2 e3 e4 s env =
+  let se1 = check_expr env e1 in
+  match se1 with
+    Sast.Expr(Sast.Id(_), Sast.Int) ->
+      let se2 = check_expr env e2 in
+      (match se2 with
+         Sast.Expr(_, Sast.Int) ->
+           let se3 = check_expr env e3 in
+           (match se3 with
+              Sast.Expr(_, Sast.Int) ->
+              let se4 = check_expr env e4 in
+              (match se4 with
+                 Sast.Expr(_, t) ->
+                 (match t with
+                    Sast.Int ->
+                      let ss = check_stmt env s in
+                      Sast.For(se1, se2, se3, se4, ss)
+                  | Sast.Void ->
+                      let ss = check_stmt env s in
+                      Sast.For(se1, se2, se3, Sast.Expr(Sast.Lit_int(1), Sast.Int), ss)
+                | _ -> stmt_error 1))
+            | _ -> stmt_error 1)
+        | _ -> stmt_error 1)
+    | _ -> stmt_error 1
+
+and check_while e s env =
+  let se = check_expr env e in
+    match se with
+      Sast.Expr(Sast.Binop(_, op, _), Sast.Int) ->
+        (match op with
+          Ast.Eq | Ast.Neq | Ast.Lt | Ast.Gt | Ast.Leq | Ast.Geq ->
+            let ss = check_stmt env s in
+              Sast.While(se, ss)
+          | _ -> stmt_error 2)
+    | _ -> stmt_error 2
+
+and check_stmt env = function
+    Ast.Expr(e) -> Sast.Sexpr(check_expr env e)
+  | Ast.Block(l) -> check_block l env
+  | Ast.If(e, s1, s2) -> check_if e s1 s2 env
+  | Ast.For(e1, e2, e3, e4, s) -> check_for e1 e2 e3 e4 s env
+  | Ast.While(e, s) -> check_while e s env
+  | Ast.BreakCont(t) -> Sast.BreakCont(t)
+
+and vdecl_to_sdecl vdecl =
+  match vdecl.typ with
+      Ast.Int -> { styp = Sast.Int; sname = vdecl.name; builtinv = false; }
+    | Ast.Float -> { styp = Sast.Float; sname = vdecl.name; builtinv = false; }
+    | Ast.Comp -> { styp = Sast.Comp; sname = vdecl.name; builtinv = false; }
+    | Ast.Mat -> { styp = Sast.Mat; sname = vdecl.name; builtinv = false; }
+
+and formal_to_sformal scope formal_param  =
+  let found = var_exists formal_param.name scope in
+  if found then var_decl_error formal_param.name
+  else let sdecl =  vdecl_to_sdecl formal_param in
+  let new_formals = sdecl :: scope.formal_param in
+  let new_scope =
+    { ret_typ = scope.ret_typ;
+      ret_nam = scope.ret_nam;
+      func_nam = scope.func_nam;
+      formal_param = new_formals;
+      local = scope.local; 
+      builtin = scope.builtin; } in
+  new_scope
+
+and formals_to_sformals scope formal_params =
+  let new_scope =
+    if (formal_params = []) then scope
+    else List.fold_left formal_to_sformal scope (List.rev formal_params) in
+    new_scope
+
+and local_to_slocal scope local =
+  let found = var_exists local.name scope in
+  if found then var_decl_error local.name
+  else let sdecl = vdecl_to_sdecl local in
+  let new_locals = sdecl :: scope.local in
+  let new_scope =
+    { ret_typ = scope.ret_typ;
+      ret_nam = scope.ret_nam;
+      func_nam = scope.func_nam;
+      formal_param = scope.formal_param;
+      local = new_locals; 
+      builtin = scope.builtin; } in
+  new_scope
+
+and locals_to_slocals scope locals =
+  let new_scope =  List.fold_left local_to_slocal scope (List.rev locals) in
+  new_scope
+
+and ret_to_sret scope ret_typ =
+  let sret_typ = 
+    match ret_typ with
+        Ast.Int -> Sast.Int
+      | Ast.Float -> Sast.Float
+      | Ast.Comp -> Sast.Comp
+      | Ast.Mat -> Sast.Mat
+    in
+    let new_scope =
+      { ret_typ = sret_typ;
+        ret_nam = scope.ret_nam;
+        func_nam = scope.func_nam;
+        formal_param = scope.formal_param;
+        local = scope.local;
+        builtin = scope.builtin; } in
+    new_scope
+
+and rname_to_srname scope ret_name =
+  let new_scope = { ret_typ = scope.ret_typ;
+                    ret_nam = ret_name;
+                    func_nam = scope.func_nam;
+                    formal_param = scope.formal_param;
+                    local = scope.local; builtin = scope.builtin; } in
+  new_scope
+
+and fname_to_sfname scope func_name =
+  let new_scope = { ret_typ = scope.ret_typ;
+                    ret_nam = scope.ret_nam;
+                    func_nam = func_name;
+                    formal_param = scope.formal_param;
+                    local = scope.local;
+                    builtin = scope.builtin; } in
+  new_scope
+
+and ret_to_slocal scope name typ =
+  let vdecl = { typ = typ; name = name; } in
+  let sdecl =  vdecl_to_sdecl vdecl in
+  let new_locals =  sdecl :: scope.local in
+  let new_scope ={ ret_typ = scope.ret_typ; 
+                   ret_nam = scope.ret_nam;
+                   func_nam = scope.func_nam;
+                   formal_param = scope.formal_param;
+                   local = new_locals;
+                   builtin = scope.builtin; } in
+  new_scope
+
+and fdecl_to_sdecl fdecl env = 
+  let new_scope = ret_to_slocal env.scope fdecl.ret_name fdecl.ret_typ in
+  let new_scope = formals_to_sformals new_scope fdecl.formal_params in
+  let new_scope = locals_to_slocals new_scope fdecl.locals in
+  let new_scope = ret_to_sret new_scope fdecl.ret_typ in
+  let new_scope = rname_to_srname new_scope fdecl.ret_name in
+  let new_scope = fname_to_sfname new_scope fdecl.func_name in
+  let new_env = { scope = new_scope; functions = env.functions; } in
+  let stmts = List.map (fun stmt -> check_stmt new_env stmt) fdecl.body in
+  { sret_typ = new_scope.ret_typ;
+    sret_name = new_scope.ret_nam;
+    sfunc_name = new_scope.func_nam;
+    sformal_params = new_scope.formal_param;
+    slocals = new_scope.local;
+    sbody = stmts;
+    builtinf = false; }
+
+and check_function env fdecl =
+  let found = func_exists fdecl.func_name env in
+  if found then func_decl_error fdecl.func_name
+  else let sfdecl = fdecl_to_sdecl fdecl env in
+  let new_env = { scope = env.scope; functions = sfdecl :: env.functions; } in
+  new_env
+
+and check_compute_fdecl fdecls =
+  let fdecl = List.hd (List.rev fdecls) in 
+  let name = fdecl.func_name in
+  if (name = "compute") then fdecls
+  else program_error 0
+
+and check_program fdecls =
+  let fdecls = check_compute_fdecl fdecls in
+  let env = List.fold_left check_function root_environment fdecls in
+  let sfdecls = List.rev env.functions in
+  sfdecls
+\end{lstlisting}
+
+
+\section{SAST}
+sast.ml
+\begin{lstlisting}
+(* Sankalpa Khadka *)
+open Ast
+
+type sdata_type =
+    Int
+  | Float
+  | Comp
+  | Mat
+  | Poly
+  | Void
+
+type expr_wrapper = 
+    Expr of sexpr * sdata_type
+
+and  sexpr =
+    Lit_int of int
+  | Lit_float of float
+  | Lit_comp of float * float
+  | Lit_qub of string * int
+  | Mat of expr_wrapper list list
+  | Id of string
+  | Unop of Ast.un_op * expr_wrapper
+  | Binop of expr_wrapper * Ast.bi_op * expr_wrapper
+  | Assign of string * expr_wrapper
+  | Call of string * expr_wrapper list
+  | Noexpr
+
+and sstmt =
+    Sexpr of expr_wrapper
+  | Block of sstmt list
+  | If of expr_wrapper * sstmt * sstmt
+  | For of expr_wrapper * expr_wrapper * expr_wrapper * expr_wrapper * sstmt
+  | While of expr_wrapper * sstmt
+  | BreakCont of int
+ 
+and svar_decl = 
+  { 
+    styp : sdata_type;
+    sname : string;
+    builtinv : bool;
+  }
+
+and sfunc_decl = 
+  {
+    sret_typ : sdata_type;
+    sret_name : string;
+    sfunc_name : string;
+    sformal_params : svar_decl list;
+    slocals : svar_decl list;
+    sbody : sstmt list;
+    builtinf : bool;
+  }
+
+type sprogram =
+  sfunc_decl list
+
+(* Prety Printer *)
+let rec string_of_unop op e =
+  (match op with
+  Neg -> " -"
+  | Not -> " ! "
+  | Re -> " Re "
+  | Im -> " Im "
+  | Norm -> " Norm "
+  | Trans -> " Trans "
+  | Det -> " Det "
+  | Adj -> " Adj "
+  | Conj -> " Conj "
+  | Unit -> " Unit "
+  | Sin -> " Sin "
+  | Cos -> " Cos "
+  | Tan -> " Tan ") ^ string_of_expr_wrapper e
+
+and string_of_binop e1 op e2 =
+  string_of_expr_wrapper e1 ^ 
+    (match op with 
+      Add -> " + "    | Sub -> " - "     | Mult -> " * " 
+      | Div -> " / "    | Mod -> " % "     | Expn -> " ^ " | Tens -> " @ "
+      | Eq-> " == "     | Neq -> " != "    | Lt -> " < "
+      | Leq -> " <= "   | Gt -> " > "      | Geq -> " >= "
+      | Xor -> " XOR "  | And -> " && "    | Or -> " || ") ^ string_of_expr_wrapper e2
+
+and string_of_mat l =
+  let row_strs = 
+    List.map string_of_row l
+  in
+    "[" ^ String.concat "" row_strs ^ "]"
+
+and string_of_row r =
+  let row_str = 
+    String.concat "," (List.map string_of_expr_wrapper r)
+  in
+    "(" ^ row_str ^ ")"
+
+and string_of_sexpr = function
+    Lit_int(i) -> string_of_int i
+    | Lit_float(f) -> string_of_float f
+    | Lit_comp(f1, f2) -> string_of_float f1 ^ " + " ^ string_of_float f2 ^ "i"
+    | Lit_qub(i, t) -> i
+    | Mat(l) ->  string_of_mat l
+    | Id(s) -> s
+    | Unop(op, e) -> string_of_unop op e
+    | Binop(e1, op, e2) -> string_of_binop e1 op e2
+    | Assign(name, e) -> name ^ " = " ^ string_of_expr_wrapper e
+    | Call(name, params) -> "Calling " ^ name ^ " on " ^ string_of_sexprs params
+    | Noexpr -> "noexpr"
+
+and string_of_expr_wrapper w =
+  let sexpr =
+    match w with
+        Expr(Lit_int(i), Int) -> Lit_int(i)
+      | Expr(Lit_float(f), Float) -> Lit_float(f)
+      | Expr(Lit_comp(f1, f2), Comp) -> Lit_comp(f1, f2)
+      | Expr(Mat(l), Mat) -> Mat(l)
+      | Expr(Id(name), typ) -> Id(name)
+      | Expr(Unop(op, e), _) -> Unop(op, e) 
+      | Expr(Binop(e1, op, e2), _) -> Binop(e1, op, e2)
+      | Expr(Assign(name, e), t1) -> Assign(name, e)
+      | Expr(Call(name, params), _) -> Call(name, params)
+      | Expr(Lit_qub(i, t), _) -> Lit_qub(i, t)
+      | _ -> Noexpr
+    in
+      string_of_sexpr sexpr
+
+and string_of_svar_decl svar_decl = 
+  "svdecl: styp: " ^ 
+    (match svar_decl.styp with
+      Int -> "int," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Float -> "float," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Comp -> "comp," ^ " name: " ^ svar_decl.sname ^ "  "
+    | Mat -> "mat," ^ " name: " ^ svar_decl.sname ^ "  "
+    | _ -> "")
+
+and string_of_sexprs e = 
+  String.concat "\n" (List.map string_of_expr_wrapper e)
+
+and string_of_sstmt = function
+    Sexpr(e) -> string_of_expr_wrapper e ^ "\n"
+  | Block(l) -> "{\n" ^ string_of_sstmts l ^ "\n}"
+  | If(e, s, Block([])) -> "if (" ^ string_of_expr_wrapper e ^ ")\n" ^ string_of_sstmt s
+  | If(e, s1, s2) ->  "if (" ^ string_of_expr_wrapper e ^ ")\n" ^string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
+  | For(e1, e2, e3, e4, s) -> "For args : " ^ string_of_expr_wrapper e1 ^ " " ^ string_of_expr_wrapper e2 ^ " "^ string_of_expr_wrapper e3 ^ 
+                                 " "^ string_of_expr_wrapper e4 ^ "\nstatement :\n" ^ string_of_sstmt s 
+  | While(e,s) -> "While condition : " ^ string_of_expr_wrapper e ^ "\nstatement : " ^ string_of_sstmt s
+  | BreakCont(t) -> string_of_breakcont t
+
+and string_of_breakcont t =
+  if (t = 0) then
+  "break"
+  else
+  "continue"
+
+and string_of_sstmts sstmts = 
+  String.concat "\n" (List.map string_of_sstmt sstmts) 
+
+and string_of_sfdecl sfdecl =
+  "\nsfdecl:\nsret_typ: " ^ 
+    (match sfdecl.sret_typ with
+      Int -> " int "
+    | Float -> " float "
+    | Comp -> " comp "
+    | Mat -> " mat "
+    | _ -> "") ^
+      "\nsret_name: " ^ sfdecl.sret_name ^ "\nsfunc_name: "  ^ sfdecl.sfunc_name ^  "\n(" ^
+        String.concat "" (List.map string_of_svar_decl sfdecl.sformal_params) ^ ")\n{\n" ^
+          String.concat "" (List.map string_of_svar_decl sfdecl.slocals) ^ "\n" ^
+            String.concat "" (List.map string_of_sstmt sfdecl.sbody) ^ "}"
+ 
+and string_of_sprogram (l) = 
+  "program:\n" ^ String.concat "\n" (List.map string_of_sfdecl l)
+\end{lstlisting}
+
+\section{Generator}
+generator.ml
+\begin{lstlisting}
+(* Winnie Narang, Jonathan Wong, Sankalpa Khadka *)
+open Sast
+open Printf
+open String
+
+let builtin_funcs = ["print";"printq";"rows";"cols";"elem"]
+
+let is_builtin_func name =
+  List.exists (fun func_name -> func_name = name) builtin_funcs
+
+(* get type *)
+let type_of (a : Sast.expr_wrapper) : Sast.sdata_type =
+    match a with
+    | Expr(_,t)-> t
+
+(* get expression from expression wrapper *)
+let expr_of (a : Sast.expr_wrapper) : Sast.sexpr =
+    match a with
+    | Expr(e,_)-> e
+
+(* generate type *)
+let rec cpp_from_type (ty: Sast.sdata_type) : string =
+    match ty with
+    | Int -> "int"
+    | Float -> "float"
+    | Comp -> "complex<float>"
+    | Mat -> "MatrixXcf"
+    | Poly | Void -> " "
+
+(* write program to .cpp file *)
+and writeToFile fileName progString =
+    let file = open_out (fileName ^ ".cpp") in
+        fprintf file "%s" progString 
+
+(* entry point for code generation*)        
+and gen_program fileName prog =
+    let cppString = writeCpp prog in
+    let out = sprintf "
+        #include <iostream>
+        #include <complex>
+        #include <cmath>
+        #include <Eigen/Dense>
+        #include <qlang>
+        using namespace Eigen;
+        using namespace std;
+        %s" cppString in 
+    writeToFile fileName out;
+
+(* list of function declaration*)    
+and writeCpp funcList =
+    let outStr =
+      List.fold_left (fun a b -> a ^ (cpp_funcList b)) "" funcList
+    in
+      sprintf "%s" outStr
+
+(* generate functions *)    
+and cpp_funcList func =
+    if func.builtinf then
+      ""
+    else
+      let cppFName = func.sfunc_name
+      and cppRtnType = cpp_from_type func.sret_typ
+      and cppRtnValue = func.sret_name
+      and cppFParam = if (func.sformal_params = []) then "" else cppVarDecl func.sformal_params ","
+      and cppFBody = cppStmtList func.sbody 
+      and cppLocals = cppVarDecl func.slocals ";\n\t"
+        in
+      if cppFName = "compute" then
+                  sprintf "\nint main ()\n{\n\t%s\n\t%s\n\tstd::cout << %s << endl;\n\n\treturn 0;\n}" cppLocals cppFBody cppRtnValue
+      else 
+        if (cppFParam = "") then
+        sprintf "\n%s %s ()\n{\n\t%s\n%s\n\treturn %s;\n}" cppRtnType cppFName cppLocals cppFBody cppRtnValue
+        else
+        sprintf "\n%s %s (%s)\n{\n\t%s\n%s\n\treturn %s;\n}" cppRtnType cppFName cppFParam cppLocals cppFBody cppRtnValue
+
+(* generate variable declarations *)
+and cppVarDecl vardeclist delim =
+   let varDecStr =
+    List.fold_left (fun a b -> a ^ (cppVar b delim)) "" vardeclist
+  in
+    let varDectrun = String.sub varDecStr 0 ((String.length varDecStr)-1)
+  in
+    sprintf "%s " varDectrun
+
+(* generate variable declaration *)   
+and cppVar var delim =
+    if not var.builtinv then
+        let vartype =
+          cpp_from_type var.styp
+        in 
+          sprintf "%s %s%s" vartype var.sname delim
+    else ""
+
+(* generate list of statements *)
+and cppStmtList astmtlist =    
+    let outStr =
+      List.fold_left (fun a b -> a ^ (cppStmt b)) "" astmtlist
+    in
+      sprintf "%s" outStr
+
+(* generate statement *)
+and cppStmt stmts = match stmts with
+    Sast.Sexpr(expr_wrap) -> "\t" ^ cppExpr (expr_of expr_wrap) ^ ";\n"  
+  | Sast.Block(sstmt) -> cppStmtBlock sstmt
+  | Sast.If(expr_wrap , sstmt1, sstmt2) -> writeIfStmt (expr_of expr_wrap) sstmt1 sstmt2
+  | Sast.For(var,init, final, increment, stmt) -> writeForStmt var init final increment stmt
+  | Sast.While(expr_wrap , sstmt) -> writeWhileStmt (expr_of expr_wrap) sstmt
+  | Sast.BreakCont(t) -> writeBreakCont t
+
+(* generate break/continue statement *)
+and writeBreakCont t =
+  if (t =0) then
+  sprintf "break;"
+  else
+  sprintf "continue;"
+
+(* generate expression *)
+and cppExpr expr = match expr with
+    Lit_int(lit) -> string_of_int lit
+  | Lit_float(flit) -> string_of_float flit
+  | Lit_comp(re,im) -> " complex<float>(" ^ string_of_float re ^ "," ^ string_of_float im  ^ ") " (* Not sure how to do this *)
+  | Unop(op, expr) ->  writeUnop op expr
+  | Binop(expr1, op, expr2) -> writeBinop expr1 op expr2
+  | Lit_qub(vec, t) -> writeQubit vec t
+  | Mat (expr_wrap) -> writeMatrix expr_wrap
+  | Id(str) -> str 
+  | Assign(name, expr) ->  name  ^ " = " ^ cppExpr (expr_of expr)
+  | Call(name,l) ->
+      if is_builtin_func name then
+        writeBuiltinFuncCall name l
+      else
+        name ^ "(" ^ writeFunCall l ^ ")"    
+  | Noexpr -> ""
+
+(* generate built-in function call *)
+and writeBuiltinFuncCall name l =
+  match name with
+    "print" -> writePrintStmt l
+  | "printq" -> writePrintqStmt l
+  | "rows" -> writeRowStmt l
+  | "cols" -> writeColStmt l
+  | "elem" -> writeElemStmt l
+  | _ -> ""
+
+(* generate row statement *)
+and writeRowStmt l =
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
+  sprintf "%s.rows()" expr
+
+(* generate col statement *)
+and writeColStmt l =
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
+  sprintf "%s.cols()" expr
+
+(* generate elem statement *)
+and writeElemStmt l =
+  let ew1 = List.hd l in
+  let e1 = cppExpr (expr_of ew1)
+  and ew2 = List.hd (List.tl l) in
+  let e2 = cppExpr (expr_of ew2)
+  and ew3 = List.hd (List.tl (List.tl l)) in
+  let e3 = cppExpr (expr_of ew3) in
+  sprintf "%s(%s,%s)" e1 e2 e3
+ 
+(* generate print statement *)
+and writePrintStmt l =
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
+    match expr_wrap with
+      Sast.Expr(_,t) -> 
+        (match t with 
+            Sast.Mat -> sprintf "cout << %s << endl" expr
+          | _ -> sprintf "cout << %s << endl" expr)
+
+(* generate qubit print statement *)
+and writePrintqStmt l =
+  let expr_wrap = List.hd l in
+  let expr = cppExpr (expr_of expr_wrap) in 
+    match expr_wrap with
+        Sast.Expr(_,t) -> 
+          (match t with 
+            Sast.Mat -> sprintf "cout << vectorToBraket(%s) << endl" expr
+          | _ -> sprintf "cout << %s << endl" expr)
+
+(* generate block *)  
+and cppStmtBlock sstmtl = 
+let slist = List.fold_left (fun output element ->
+    let stmt = cppStmt  element in
+    output ^ stmt ^ "\n") "" sstmtl in
+    "\n\t{\n" ^ slist ^ "\t}\n"
+
+(* generate if statement *)
+and writeIfStmt expr stmt1 stmt2 = 
+  let cond = cppExpr expr in
+    let body = cppStmt stmt1 in
+    let ebody = writeElseStmt stmt2 in
+    sprintf " if(%s)%s%s" cond body ebody  
+
+(* generate else statements *)
+and writeElseStmt stmt =
+    let body =
+        cppStmt stmt
+    in
+        if ((String.compare body "\t;\n") = 0) then
+            sprintf "\n"
+        else
+            sprintf "\telse%s" body
+
+(* generate while statement *)
+and writeWhileStmt expr stmt = 
+let condString = cppExpr expr  
+  and stmtString = cppStmt stmt in 
+    sprintf "while (%s)\n%s\n" condString stmtString
+
+(* generate for statements *)
+and writeForStmt var init final increment stmt =
+    let varname = cppExpr (expr_of var) 
+    and initvalue = cppExpr (expr_of init)
+    and finalvalue = cppExpr (expr_of final)
+    and incrementval = cppExpr (expr_of increment)
+    and stmtbody = cppStmt stmt
+    in
+    sprintf "
+    for (int %s = %s; %s < %s; %s = %s + %s){
+        %s
+        }" varname initvalue varname finalvalue varname varname incrementval stmtbody
+
+(* generate unary operators *)
+and writeUnop op expr = 
+    let exp = cppExpr (expr_of expr) in 
+        let unopFunc op exp = match op with
+          Ast.Neg   -> sprintf "  -%s" exp
+        | Ast.Not   -> sprintf "  !(%s)" exp
+        | Ast.Re    -> sprintf "  real(%s)" exp   (* assumes exp is matrix*)
+        | Ast.Im    -> sprintf "  imag(%s)" exp
+        | Ast.Norm  -> sprintf "  %s.norm()" exp
+        | Ast.Trans -> sprintf "  %s.transpose()" exp
+        | Ast.Det   -> sprintf "  %s.determinant()" exp
+        | Ast.Adj   -> sprintf "  %s.adjoint()" exp
+        | Ast.Conj  -> sprintf "  %s.conjugate()" exp
+        | Ast.Unit  -> sprintf "  (%s.conjugate()*%s).isIdentity()" exp exp     (* till here *)
+        | Ast.Sin   -> sprintf "  sin((double)%s)" exp
+        | Ast.Cos   -> sprintf "  cos((double)%s)" exp
+        | Ast.Tan   -> sprintf "  tan((double)%s)" exp
+    in unopFunc op exp
+
+(* generate binary operations *)
+and writeBinop expr1 op expr2 = 
+    let e1 = cppExpr (expr_of expr1) 
+    and t1 = type_of expr1  
+    and e2 = cppExpr (expr_of expr2) in 
+      let binopFunc e1 t1 op e2 = match op with 
+     Ast.Add  -> sprintf "%s + %s" e1 e2
+    | Ast.Sub   -> sprintf "%s - %s" e1 e2
+    | Ast.Mult  -> sprintf "%s * %s" e1 e2
+    | Ast.Div   -> sprintf "%s / %s" e1 e2
+    | Ast.Mod   -> sprintf "%s %% %s" e1 e2
+    | Ast.Expn  -> sprintf "pow(%s,%s)" e1 e2
+    | Ast.Tens  -> sprintf "tensor(%s, %s)" e1 e2
+    | Ast.Eq  -> equalCaseWise e1 t1 e2
+    | Ast.Neq   -> sprintf "%s != %s" e1 e2
+    | Ast.Lt  -> sprintf "%s < %s" e1 e2
+    | Ast.Gt  -> sprintf "%s > %s" e1 e2
+    | Ast.Leq   -> sprintf "%s <= %s" e1 e2
+    | Ast.Geq   -> sprintf "%s >= %s" e1 e2
+    | Ast.Or  -> sprintf "%s || %s" e1 e2
+    | Ast.And   -> sprintf "%s && %s" e1 e2
+    | Ast.Xor   -> sprintf "%s ^ %s" e1 e2
+  in binopFunc e1 t1 op e2 
+
+(* generate equality expressions (structural equality is used) *)
+and equalCaseWise e1 t1 e2 = match t1 with
+       Sast.Mat -> sprintf "%s.isApprox(%s)" e1 e2
+      | _ -> sprintf "%s == %s" e1 e2        
+
+(* generate matrix *)
+and writeMatrix expr_wrap = 
+    let matrixStr = List.fold_left (fun a b -> a ^ (writeRow b)) "" expr_wrap in
+    let submatrix = String.sub matrixStr 0 ((String.length matrixStr)-1) in
+    sprintf "(Matrix<complex<float>, Dynamic, Dynamic>(%d,%d)<<%s).finished()" (rowMatrix expr_wrap) (colMatrix expr_wrap) submatrix
+
+(* generate matrix row *)
+and writeRow row_expr =
+    let rowStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ "," ) "" row_expr in
+    sprintf "%s" rowStr
+
+(* generate column matrix *)
+and colMatrix expr_wrap =
+  List.length (List.hd expr_wrap)
+
+(* generate row matrix *)
+and rowMatrix expr_wrap =
+  List.length expr_wrap
+
+(* generate function call *)
+and writeFunCall expr_wrap =
+    if expr_wrap = [] then
+    sprintf ""
+    else
+    let argvStr = List.fold_left (fun a b -> a ^ (cppExpr (expr_of b)) ^ ",") "" expr_wrap in
+    let argvStrCom = String.sub argvStr 0 ((String.length argvStr)-1) in
+    sprintf "%s" argvStrCom
+
+(* generate qubits *)
+and writeQubit expr bra=
+   (* let exp = string_of_int expr in *)
+    sprintf "genQubit(\"%s\",%d)" expr bra
+\end{lstlisting}
+
+
+\section{Scripts}
+
+
+\subsection{Makefile}
+Makefile    
+\begin{lstlisting}
+#Christopher Campbell, Jonathan Wong
+#stuff for compiling cpp files
+CXX = g++
+CPPDIR = ./cpp
+INC = $(CPPDIR) ./includes/headers
+INCLUDES =$(INC:%=-I%)
+CXXFLAGS = -g -Wall $(INCLUDES)
+
+OBJS = ast.cmo sast.cmo parser.cmo scanner.cmo analyzer.cmo generator.cmo qlc.cmo
+
+.PHONY: default
+
+default: qlc cpp/qlang.o
+
+
+qlc : $(OBJS) 
+	ocamlc -g -o qlc $(OBJS)
+
+scanner.ml : scanner.mll
+	ocamllex scanner.mll
+
+parser.ml parser.mli : parser.mly
+	ocamlyacc parser.mly
+
+%.cmo : %.ml
+	ocamlc -g -c $<
+
+%.cmi : %.mli
+	ocamlc -g -c $<
+
+cpp/qlang.o:
+	$(MAKE) -C $(CPPDIR)
+
+
+.PHONY : clean
+clean :
+	rm -f qlc parser.ml parser.mli scanner.ml *.cmo *.cmi
+	$(MAKE) -C $(CPPDIR) clean
+
+# Generated by ocamldep *.ml *.mli
+analyzer.cmo: sast.cmo ast.cmo
+analyzer.cmx: sast.cmx ast.cmx
+generator.cmo: sast.cmo
+generator.cmx: sast.cmx
+parser.cmo: ast.cmo parser.cmi 
+parser.cmx: ast.cm parser.cmi 
+qlc.cmo: scanner.cmo sast.cmo parser.cmi ast.cmo analyzer.cmo
+qlc.cmx: scanner.cmx sast.cmo parser.cmx ast.cmx analyzer.cmx
+sast.cmo: ast.cmo
+sast.cmx: ast.cmx
+scanner.cmo: parser.cmi 
+scanner.cmx: parser.cmx 
+parser.cmi: ast.cmo
+\end{lstlisting}
+
+     \subsection{Compilation script}
+qlc.ml
+
+\begin{lstlisting}
+(* Christopher Campbell, Winnie Narang *)
+type action = Ast | Sast | Gen | Debug
+
+let _ =
+  let action =
+    List.assoc Sys.argv.(1) [("-a", Ast); ("-s", Sast); ("-g", Gen); ("-d", Debug);]
+  in
+    let lexbuf = Lex
+    ing.from_channel (open_in Sys.argv.(2)) (*stdin *) and
+    output_file = String.sub Sys.argv.(2) 0 (String.length(Sys.argv.(2))-3) in
+      let program = Parser.program Scanner.token  lexbuf in
+        match action with 
+          Ast ->  print_string (Ast.string_of_program program)
+          | Sast -> 
+            let sprogram =
+              Analyzer.check_program program
+            in
+              print_string (Sast.string_of_sprogram sprogram)
+          | Gen -> Generator.gen_program output_file (Analyzer.check_program program)
+          | Debug -> print_string "debug"
+
+\end{lstlisting}
+
+
+\subsection{Testing script}
+runTests.sh
+\begin{lstlisting}
+#Christopher Campbell, Winnie Narang
+#!/bin/bash
+
+AST=0
+SAST=0
+GEN=0
+COMP=0
+EXEC=0
+
+
+if [ $1 == "clean" ]
+then
+rm -f ast_error_log sast_error_log gen_error_log comp_error_log ast_log sast_log ast_output sast_output exec_output
+rm -f SemanticSuccess/*.cpp SemanticSuccess/*.o
+rm -f SemanticFailure/*.cpp SemanticFailure/*.o
+rm -f Analyzer/*.cpp Analyzer/*.o
+else
+
+if [ $1 == "a" ]
+then
+AST=1
+fi
+if [ $1 == "s" ]
+then
+SAST=1
+fi
+if [ $1 == "g" ] || [ $1 == "c" ] || [ $1 == "e" ]
+then
+GEN=1
+fi
+if [ $1 == "c" ]
+then
+COMP=1
+fi
+if [ $1 == "e" ]
+then
+EXEC=1
+fi
+
+if [ $2 == "ss" ]
+then
+files="SemanticSuccess/*.ql"
+cfiles="SemanticSuccess/*.cpp"
+elif [ $2 = "sf" ]
+then
+files="SemanticFailures/*.ql"
+cfiles="SemanticFailures/*.cpp"
+elif [ $2 = "al" ]
+then
+files="Algorithms/*.ql"
+cfiles="Algorithms/*.cpp"
+fi
+
+ASTCheck()
+{
+    eval "../qlc -a $1" 1>> ast_output 2>> ast_error_log
+    wc ast_error_log | awk '{print $1}'
+}
+
+SASTCheck()
+{
+    eval "../qlc -s $1" 1>> sast_output 2>> sast_error_log
+    wc sast_error_log | awk '{print $1}'
+}
+
+GenerationCheck()
+{
+    eval "../qlc -g $1" 2>> gen_error_log
+    wc gen_error_log | awk '{print $1}'
+}
+
+CompilationCheck()
+{
+    eval "g++ -w $1 -I../includes/headers -L../includes/libs -lqlang" 2>> comp_error_log
+    wc comp_error_log | awk '{print $1}'
+}
+
+ExecutionCheck()
+{
+    output=$(eval "./a.out")
+    echo " " >> exec_output
+    echo "Output: " >> exec_output
+    echo "$output" >> exec_output
+    echo "$output"
+}
+
+#Check AST
+if [ $AST == 1 ]
+then
+echo "* AST Generation *"
+rm -f ast_error_log ast_output
+errors=0
+prev_errors=0
+for file in $files
+do
+errors=0
+errors=$(ASTCheck $file)
+if [ "$errors" -le "$prev_errors" ]
+then
+count=1
+echo "Pass " $file
+else
+echo "Fail " $file
+fi
+prev_errors=$errors
+done
+echo ""
+fi
+
+#Check SAST
+if [ $SAST == 1 ]
+then
+echo "* SAST Generation *"
+rm -f sast_error_log sast_output
+errors=0
+prev_errors=0
+for file in $files
+do
+errors=$(SASTCheck $file)
+if [ "$errors" -le "$prev_errors" ]
+then
+echo "Pass: " $file
+else
+echo "Fail: " $file
+fi
+prev_errors=$errors
+done
+echo ""
+fi
+
+#Check Generation
+if [ $GEN == 1 ]
+then
+cd ../cpp
+make
+cd ../test
+echo "* Code Generation *"
+rm -f gen_error_log
+errors=0
+prev_errors=0
+for file in $files
+do
+errors=$(GenerationCheck $file)
+if [ "$errors" -le "$prev_errors" ]
+then
+echo "Pass: " $file
+else
+echo "Fail: " $file
+fi
+prev_errors=$errors
+done
+echo ""
+fi
+
+#Check Compilation
+if [ $COMP == 1 ]
+then
+echo "* Compilation *"
+rm -f comp_error_log
+errors=0
+prev_errors=0
+for file in $cfiles
+do
+errors=$(CompilationCheck $file)
+if [ "$errors" -le "$prev_errors" ]
+then
+echo "Pass: " $file
+else
+echo "Fail: " $file
+fi
+prev_errors=$errors
+done
+echo ""
+fi
+
+# Execution check
+if [ $EXEC == 1 ]
+then
+echo "* Compilation and Execution *"
+rm -f comp_error_log exec_output
+errors=0
+prev_errors=0
+exec_output=0
+for file in $cfiles
+do
+errors=$(CompilationCheck $file)
+if [ "$errors" -le "$prev_errors" ]
+then
+echo "Pass (compilation): " $file
+exec_output=$(ExecutionCheck)
+if [ "$exec_output" != "0" ]
+then
+echo "Pass (execution): " $file
+echo $exec_output
+else
+echo "Fail (execution): " $file
+fi
+else
+echo "Fail (compilation): " $file
+fi
+prev_errors=$errors
+done
+fi
+
+fi
+\end{lstlisting}
+
+\section{Programs}
+
+\subsection{Demo}
+demo1.ql
+
+\begin{lstlisting}
+# Sankalpa Khadka
+def compute() : mat output{
+        
+        mat a;
+        mat b;
+        mat c;
+        mat k;
+
+        a = |11>;
+        b = |0>;
+        k = <0|;
+        
+        c = a @ b;
+        printq(c);
+        
+        c = H*b;
+        printq(c);
+
+        output = b*k;
+}
+\end{lstlisting}
+
+demo2.ql
+\begin{lstlisting}
+# Sankalpa Khadka
+def measure(mat top): mat outcome{
+        mat ad;
+        
+        ad = adj(top);
+        outcome = top*ad;
+}
+
+def outcomezero(mat bottom) : float probability{
+        
+        mat top;
+        mat input;
+        mat had;
+        mat cnot;
+        mat ynot;
+        mat output;
+        mat meas;
+        
+        top = |0>;
+        input = top @ bottom;
+        
+        had = H @ IDT;
+        cnot = [(1,0,0,0)
+                (0,1,0,0)
+                (0,0,0,1)
+                (0,0,1,0)];
+      
+        
+        ynot = [(1,0,0,0)
+                (0,0,0,C(1.0I))
+                (0,0,1,0)
+                (0,C(-1.I),0,0)];
+    
+        output = (ynot*(cnot*(had*input)));
+        
+        printq(output);
+        
+        probability = norm(output);
+   
+}
+
+def compute() : float outcome{
+        
+        mat bottom;
+        
+        bottom = |1>;
+        outcome = outcomezero(bottom);
+        print(outcome);
+        
+        bottom = |0>;
+        outcome = outcomezero(bottom);
+}
+
+\end{lstlisting}
+demo3.ql
+\begin{lstlisting}
+# Sankalpa Khadka
+def measure (mat top) : mat outcome{
+        
+        mat ad;
+
+        ad = adj(top);
+        outcome = top * ad;
+}
+
+def hadamard (int n) : mat gate{
+        
+        int i;
+        gate = H;
+
+        for (i from 0 to n-1 by 1){
+            gate = gate @ H; 
+        }
+}
+
+def topqubit (int n) : mat input{
+
+        int i;
+        input = |0>;
+
+        for (i from 0 to n-1 by 1){
+                input = input @ |0>;
+        }          
+}
+
+def deutsch (int n, mat U) : float outcomeZero{
+
+        mat bottom; mat top; mat input;
+        mat hadtop; mat meas;
+
+        bottom = |1>;
+        top = topqubit(n);
+        input = top @ bottom;
+        
+        hadtop = hadamard(n);
+        input = (hadtop @ H)*input;
+        input = U * input;
+        input = (hadtop @ IDT)*input;
+        meas = measure(top);
+
+        input = (meas @ IDT)* input;
+        outcomeZero = norm(input);
+}
+
+
+def compute () : float outcome{
+
+        int n; mat Ub; mat Uc;
+
+        n = 1;
+        Ub = [(1,0,0,0)(0,1,0,0)(0,0,0,1)(0,0,1,0)];
+        Uc = [(1,0,0,0)(0,1,0,0)(0,0,1,0)(0,0,0,1)];
+
+        outcome = deutsch(n, Ub);
+        print(outcome);
+        
+        outcome = deutsch(n, Uc);
+        print(outcome);
+
+        n = 2;
+        Ub = [(1,0,0,0,0,0,0,0) 
+              (0,1,0,0,0,0,0,0)
+              (0,0,1,0,0,0,0,0)
+              (0,0,0,1,0,0,0,0) 
+              (0,0,0,0,0,1,0,0) 
+              (0,0,0,0,1,0,0,0)
+              (0,0,0,0,0,0,0,1)
+              (0,0,0,0,0,0,1,0)];
+
+        outcome = deutsch(n, Ub);
+}
+
+\end{lstlisting}
+demo4.ql
+\begin{lstlisting}
+# Sankalpa Khadka
+def measure (mat top) : mat outcome{
+        
+        mat ad;
+
+        ad = adj(top);
+        outcome = top * ad;
+}
+
+def ntensor (int n, mat k) : mat gate{
+        
+        int i;
+        gate = k;
+
+        for (i from 0 to n-1 by 1){
+            gate = gate @ k; 
+        }
+}
+
+def prepareU (int n) : mat gate {
+        mat i;
+        mat u;
+
+        i = [(1,0)
+             (0,0)];
+
+        u = ntensor(n+1, i);
+        gate = ntensor(n+1,IDT)-2*u;
+}
+
+def prepareG (int n) : mat gate{
+        mat s; mat sa; mat i; mat h;
+
+        s = ntensor(n,|0>);
+        sa = adj(s);
+        i = ntensor(n,IDT);
+        gate = 2*s*sa - i;
+        h = ntensor(n, H);
+        gate = h*gate*h;
+        gate = gate @ IDT;         
+}
+
+def grover (int n) : float outcomeZero{
+
+        mat bottom; mat top; mat input;
+        mat hadtop; mat u; mat g; mat go; mat meas;
+        int i;
+
+        bottom = |1>;
+        top = ntensor(n, |0>);
+        input = top @ bottom;
+        
+        hadtop = ntensor(n, H);
+        input = (hadtop @ H)*input;
+        u = prepareU(n);
+        g = prepareG(n);
+        
+        go = g*u;
+        
+        for (i from 0 to n by 1){
+                input = go*input; 
+        }
+
+        meas = measure(top);
+        input = (meas @ IDT)* input;
+        outcomeZero = norm(input);
+}
+
+
+def compute () : float outcome{
+        #simulate the grover for f(0)=1
+        
+        int n; mat Ub; mat Uc;
+        n = 1;
+        
+        outcome = grover(n);
+        print(outcome);
+        
+        n = 2;
+        outcome = grover(n);
+}
+
+\end{lstlisting}
+
+\subsection{Successful Test cases}
+binop\_comp\_matrix.ql
+\begin{lstlisting}
+#Winnie Narang
+def test_func(comp a, comp b, comp c, comp d) : mat ret_val { 
+
+  mat x;
+
+  x = [(a,b)(c,d)];
+
+  ret_val = [(a,c)(d,b)];
+
+  ret_val = ret_val * x;
+  ret_val = ret_val + x;
+  ret_val = ret_val - x;
+  ret_val = ret_val / 2;
+}
+
+def compute() : mat ret_val {
+
+
+  comp a;
+  comp b;
+  comp c;
+  comp d;
+    mat  k;
+
+  a = C(4.+5.I);
+  b = C(6.+6.I);
+  c = C(7.+8.I);
+  d = C(9.+10.I);
+
+  ret_val = test_func(a, b, c, d);
+}
+\end{lstlisting}
+binop\_float\_matrix.ql
+\begin{lstlisting}
+#Winnie Narang
+def test_func(float a, float b, float c, float d) : mat ret_val { 
+
+  mat x;
+
+  x = [(a,b)(c,d)];
+
+  ret_val = [(a,c)(d,b)];
+
+  ret_val = ret_val * x;
+  ret_val = ret_val + x;
+  ret_val = ret_val - x;
+  ret_val = ret_val / 2;
+  
+}
+
+def compute() : mat ret_val {
+
+
+  float a;
+  float b;
+  float c;
+  float d;
+
+  a = 3.4;
+  b = 6.;
+  c = 5.6;
+  d = 100.0;
+
+  ret_val = test_func(a, b, c, d);
+}
+\end{lstlisting}
+binop\_int\_arith.ql
+\begin{lstlisting}
+#Winnie Narang
+def func_test(int z) : int ret_name { 
+        int a;
+        int b;
+        int d;
+        a = z;
+        b = 10;
+        d = a+b*a+b/a-b;
+        ret_name=d;
+}
+def compute( int a ): int trial {
+      trial = func_test(34);
+}
+\end{lstlisting}
+binop\_tensor.ql
+\begin{lstlisting}
+#Jonathan Wong
+def compute():mat out {
+        
+        mat a;
+        mat b;
+        mat c;
+
+        a = [(1)(0)];
+        b = [(0)(1)];
+        c= a@b; 
+        print(c); 
+}
+\end{lstlisting}
+break\_continue.ql
+\begin{lstlisting}
+#Winnie Narang
+def func_test(int a) : int ret_name { 
+        
+        int i;
+
+        for(i from 0 to 2 by 1)
+        a=a+5;
+
+        for(i from 2 to 0 by -1)
+        {
+            a=a*10;
+            print(a);
+            break;
+        }
+
+        for(i from 1 to 5)
+        {
+            print(a);
+            continue;
+            a=a*10;
+
+        }
+
+    ret_name = a;
+}
+
+def compute(): int trial {
+
+   trial = func_test(20);
+}
+\end{lstlisting}
+
+builtin\_matrix\_ops.ql
+\begin{lstlisting}
+#Sankalpa Khadka
+def compute(): comp trial {
+      
+  int num_rows;
+  int num_cols;
+  comp val;
+  mat m;
+
+  m = [(1,2,3)(4,5,6)(7,8,9)];
+  num_rows = rows(m);
+  num_cols = cols(m);
+  val = elem(m, 1,2);
+
+  print(num_rows);
+  print(num_cols);
+
+  trial = val;
+}
+\end{lstlisting}
+comp\_type.ql
+\begin{lstlisting}
+#Sankalpa Khadka
+def compute(): comp trial {
+      
+  int num_rows;
+  int num_cols;
+  comp val;
+  mat m;
+
+  m = [(1,2,3)(4,5,6)(7,8,9)];
+  num_rows = rows(m);
+  num_cols = cols(m);
+  val = elem(m, 1,2);
+
+  print(num_rows);
+  print(num_cols);
+
+  trial = val;
+}
+\end{lstlisting}
+constants.ql
+\begin{lstlisting}
+#Jonathan Wong
+def test_func(int a) : mat ret_val { 
+
+  mat x;
+  mat z;
+  mat y;
+  mat w;
+  
+  x = X;
+  z = H;
+  y = Y;
+  w = IDT;
+
+  print(x);
+  print(z);
+  print(y);
+  print(w);
+
+  ret_val = x * z * y * w;
+}
+
+def compute() : mat ret_val {
+
+  ret_val = test_func(0);
+}
+\end{lstlisting}
+empty.ql
+\begin{lstlisting}
+#Christopher Campbell
+def test_func() : mat ret_val { 
+
+        mat x;
+
+  x = [(1,2)(3,4)];
+
+  ret_val = x;
+}
+
+def compute() : mat ret_val {
+
+  ret_val = test_func();
+}
+
+\end{lstlisting}
+float\_type.ql
+\begin{lstlisting}
+#Christopher Campbell
+def func_test(float b) : float ret_name { 
+        
+        float a; 
+  float c;
+
+        a = 5.0;
+  c = a * b;
+
+        ret_name = c;  
+}
+
+def compute() : float trial {
+
+  trial = func_test(3.7);
+
+}
+\end{lstlisting}
+for\_stmt.ql
+\begin{lstlisting}
+#Jonathan Wong
+def func_test(int z) : int ret_name { 
+        
+        int i;
+        int a;
+
+        for(i from 0 to 2 by 1)
+        a=a+5;
+
+        for(i from 2 to 0 by -1)
+        {
+            a=a*10;
+            print(a);
+        }
+        
+        for(i from 1 to 10 by 1)
+        {
+            a=a-3;
+        }
+
+  for(i from 1 to 100){
+    print (a*100);
+  }
+
+    ret_name = 5;
+}
+
+def compute(int a): int trial {
+
+   trial = func_test(20);
+}
+\end{lstlisting}
+if\_stmt.ql
+\begin{lstlisting}
+#Winnie Narang
+def func_test(int z) : int ret_name { 
+      
+       int a;
+
+      # comment before b; just checking for end of comment being correct
+
+       int b;
+       a = 10;
+       
+       if(z eq 5) a = 0;
+       
+       a = a - 2;
+       if( z leq 5 )
+       {
+          a = 0;
+       }
+       else
+       {
+           a = 10;
+           b = 24;
+       }
+       
+       if( a gt 100 )
+       {
+           print(b); # a > 100
+       }
+       else 
+       {
+          print(a);
+       }
+
+       ret_name = 8;
+}
+\end{lstlisting}
+mat\_add.ql
+\begin{lstlisting}
+#Sankalpa Khadka
+def test_func(comp a, comp b, comp c, comp d) : mat ret_val { 
+
+  mat x;
+
+  x = [(a,b)(c,d)];
+
+  ret_val = x;
+}
+
+def compute():mat trial {
+  comp a;
+  comp b;
+  comp c;
+  comp d;
+        mat k;
+
+  a = C(2.);
+  b = C(2.);
+  c = C(2.);
+  d = C(2.);
+
+  trial = test_func(a, b, c, d)+test_func(a,b,c,d);
+
+}
+\end{lstlisting}
+mat\_mult.ql
+\begin{lstlisting}
+#Winnie Narang
+def test_func(comp a, comp b, comp c, comp d) : mat ret_val { 
+
+  mat x;
+
+  x = [(a,b)(c,d)];
+
+  ret_val = x;
+}
+
+def compute():mat trial {
+  comp a;
+  comp b;
+  comp c;
+  comp d;
+        mat k;
+
+  a = C(2.);
+  b = C(2.);
+  c = C(2.);
+  d = C(2.);
+
+  trial = test_func(a, b, c, d)*test_func(a,b,c,d);
+
+}
+\end{lstlisting}
+mat\_qubit.ql
+\begin{lstlisting}
+#Winnie Narang
+def func_test(mat a, mat b) : mat ret_name { 
+        
+        ret_name = a*b;
+
+}
+
+
+def compute(int a):mat trial {
+  
+   mat zero;
+   mat one;
+
+   zero = |0>;
+   one = |1>;
+
+     trial = func_test(H,zero);
+     printq(trial);
+
+     trial = func_test(H,one);
+     printq(trial);
+
+}
+\end{lstlisting}
+
+un\_op\_det.ql
+\begin{lstlisting}
+#Winnie Narang
+def func_test(mat z) : mat ret_name { 
+        mat a;
+        comp b;
+        a = [(1,9)(4,5)];
+        b = det(a);
+        ret_name = a;
+}
+def compute(int a):mat trial {
+  mat x;
+  x = [(1,2)(3,4)];
+  trial = func_test(x);
+}
+\end{lstlisting}
+un\_op\_trans.ql
+\begin{lstlisting}
+def func_test(mat z) : mat ret_name { 
+        mat a;
+        mat b;
+        a=[(1,9,9)(4,5,5)];
+        b = trans(a);
+}
+def compute(int a):int trial {
+  trial = 8;
+}
+\end{lstlisting}
+while\_stmt.ql
+\begin{lstlisting}
+#Winnie Narang
+def func_test(int z) : int ret_name { 
+        int a; 
+        a = 5; 
+        
+
+        #now checking while with comment
+        while(a leq 10)
+        a=a+1;
+        
+        while(a neq 1)
+        {
+            # Comment, inside
+            a = (a+1) % 42;
+        }
+
+        ret_name = a;
+
+
+}
+def compute():int trial{
+
+trial = func_test(5);
+}
+\end{lstlisting}
+\subsection{Execution output of successful cases}
+exec\_output 
+\begin{lstlisting}
+Output: 
+(-12,76) (-11.5,98)
+(-10,87.5)   (-6,114)
+ 
+Output: 
+(21.46,0) (290.2,0)
+(186.8,0)   (600,0)
+ 
+Output: 
+364
+ 
+Output: 
+2
+ 
+Output: 
+(0,0)
+(1,0)
+(0,0)
+(0,0)
+ 
+Output: 
+30
+30
+30
+30
+30
+ 
+Output: 
+3
+3
+(6,0)
+ 
+Output: 
+(3.52,8.6)
+ 
+Output: 
+(0,0) (1,0)
+(1,0) (0,0)
+ (0.707107,0)  (0.707107,0)
+ (0.707107,0) (-0.707107,0)
+  (0,0) (-0,-1)
+  (0,1)   (0,0)
+(1,0) (0,0)
+(0,0) (1,0)
+(0,-0.707107) (0,-0.707107)
+ (0,0.707107) (0,-0.707107)
+ 
+Output: 
+0
+1
+0
+ 
+Output: 
+(1,0) (2,0)
+(3,0) (4,0)
+ 
+Output: 
+18.5
+ 
+Output: 
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+3275000
+5
+ 
+Output: 
+4
+ 
+Output: 
+10
+8
+ 
+Output: 
+20
+ 
+Output: 
+(4,0) (4,0)
+(4,0) (4,0)
+ 
+Output: 
+(8,0) (8,0)
+(8,0) (8,0)
+ 
+Output: 
+(0.707107)|0> + (0.707107)|1>
+(0.707107)|0> + (-0.707107)|1>
+ (0.707107,0)
+(-0.707107,0)
+ 
+Output: 
+(0,0) (0,0)
+(0,0) (0,0)
+ 
+Output: 
+ (4,5)  (6,6)
+ (7,8) (9,10)
+ 
+Output: 
+(-0,-4.5)
+ 
+Output: 
+5
+8
+ 
+Output: 
+(0,0) (1,0) (1,0) (0,0)
+ 
+Output: 
+<01| + <10|
+(0,0) (1,0) (1,0) (0,0)
+ 
+Output: 
+(1,-0) (4,-0)
+(9,-0) (5,-0)
+(9,-0) (5,-0)
+ 
+Output: 
+
+ 
+Output: 
+1
+ 
+Output: 
+(1,0) (9,0)
+(4,0) (5,0)
+ 
+Output: 
+(4.5,0)
+(0,4.5)
+ 
+Output: 
+-5
+ 
+Output: 
+8
+ 
+Output: 
+1
+ 
+Output: 
+8
+ 
+Output: 
+8
+ 
+Output: 
+8
+ 
+Output: 
+1
+
+\end{lstlisting}
+\subsection{Failed cases}
+comp\_wrong\_decl.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(comp val1, comp val2) : comp ret_name { 
+
+  comp val3;
+    val3 = 1;
+
+  ret_name = val1 + val2 * val3;
+}
+def compute() : comp  ret_name {
+
+  comp comp1;
+  comp comp2;
+
+  if (1) {1; 2+3;} else {3+6;}
+
+  comp1 = C(7.5I);
+  comp2 = C(3.2 + 1.I);
+
+  ret_name = func_test(comp1, comp2);
+}
+\end{lstlisting}
+
+func\_decl\_twice.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test1(int z) : int ret_name { 
+        int a;
+        int b;
+        int d;
+        a = z;
+        ret_name = z;
+
+}
+def func_test1(int z) : int ret_name2 { 
+
+        ret_name2 = z;
+
+}
+def compute( int a):int trial {
+      
+      trial = func_test1(4);
+}
+
+\end{lstlisting}
+if\_stmt.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(int z) : int ret_name { 
+       
+       int a;
+       int b;
+       a = 10;
+
+       else
+       {
+       a = 10;
+       b = 24;
+       }
+}
+
+
+def compute(int a):int trial {
+
+}
+
+\end{lstlisting}
+
+invalid\_use\_binop.ql
+\begin{lstlisting}
+# Winnie Narang
+def compute() : int ret_name_test
+      {
+        int test_int;
+        ret_name_test = test_int - + test_int;
+        
+      }
+\end{lstlisting}
+mat\_type.ql
+\begin{lstlisting}
+# Winnie Narang
+def test_func(comp a, comp b, comp c, comp d) : mat ret_val { 
+
+  mat x;
+  mat f;
+  x = [(a,b)(c,f)];
+  ret_val = x;
+}
+
+def compute() : mat ret_val {
+
+
+  comp a;
+  comp b;
+  comp c;
+  comp d;
+
+  a = C(4.+5.I);
+  b = C(6.+6.I);
+  c = C(7.+8.I);
+  d = C(9.+10.I);
+
+  ret_val = test_func(a, b, c, d);
+}
+\end{lstlisting}
+mixed\_datatypes.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(int z) : int ret_name { 
+        int a;
+        comp b;
+        int d;
+        a = z;
+        b = C(7.5I);
+        
+        d = a+b*a+b/a-b;
+
+        ret_name=d;
+}
+def compute( int a ): int trial {
+      
+      trial = func_test(35);
+}
+\end{lstlisting}
+no\_compute.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(float z) : float ret_name { 
+        
+        float a; 
+        a = 5.8;
+       
+        ret_name = z;  
+}
+\end{lstlisting}
+print\_stmt.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(int z) : int ret_name { 
+        int a; 
+        a = 5; 
+        a = z;
+        ret_name = a;        
+}
+def compute(int a):int trial {
+   
+        printq(a);
+}
+\end{lstlisting}
+
+un\_op\_adj.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(mat z) : mat ret_name { 
+        mat a;
+        comp b;
+        
+        a =[(1,9,9)(4,5,5)];
+        z = adj(b);
+
+}
+
+
+def compute(int a):int trial {
+
+}
+\end{lstlisting}
+un\_op\_conj.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(mat z) : mat ret_name { 
+        mat a;
+        float b;
+
+        a =[(1,9,9)(4,5,5)];
+        
+        b = conj(a);
+}
+def compute(int a):int trial {
+
+}
+\end{lstlisting}
+un\_op\_cos.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test(int z) : int ret_name { 
+        int a;
+        int b;
+        a = 90;
+        b = cos(a);
+
+        comp d;
+        d = C(7.5I);
+        
+        z = cos(d);
+        ret_name=b;
+}
+def compute(int a):int trial {
+
+}
+\end{lstlisting}
+undec\_func\_call.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test1(int z) : int ret_name { 
+        int a;
+        int b;
+        int d;
+        a = z;
+        
+        ret_name = z;
+
+}
+def compute( int a):int trial {
+      
+        trial = func_test(4);
+}
+\end{lstlisting}
+unmatched\_args.ql
+\begin{lstlisting}
+# Winnie Narang
+def func_test1(int z, int c) : int ret_name { 
+        int a;
+        int b;
+        int d;
+        a = z;
+        
+        ret_name = z;
+
+}
+
+def compute( int a):int trial {
+      
+      trial = func_test1(4);
+}
+\end{lstlisting}
+var\_undeclared.ql
+\begin{lstlisting}
+# Winnie Narang
+def compute() : int ret_name_test
+      {
+        int test_int;
+        ret_name_test = test_float;
+        
+      }
+\end{lstlisting}
+\subsection{Output for failed cases}
+test.out
+\begin{lstlisting}
+#generated for test cases under SemanticFailures
+Fatal error: exception Analyzer.Except("Invalid assignment to variable: val3")
+Fatal error: exception Analyzer.Except("Invalid function declaration: func_test1 was already declared")
+Fatal error: exception Parsing.Parse_error
+Fatal error: exception Parsing.Parse_error
+Fatal error: exception Analyzer.Except("Invalid matrix: incorrect type")
+Fatal error: exception Analyzer.Except("Invalid assignment to variable: d")
+Fatal error: exception Analyzer.Except("Missing 'compute' function")
+Fatal error: exception Analyzer.Except("Invalid function call: incorrect type for parameter")
+Fatal error: exception Analyzer.Except("Invalid use of unop: 'Adj(expr)'")
+Fatal error: exception Analyzer.Except("Invalid assignment to variable: b")
+Fatal error: exception Parsing.Parse_error
+Fatal error: exception Analyzer.Except("Invalid function call: func_test was not declared")
+Fatal error: exception Analyzer.Except("Invalid function call: incorrect number of parameters")
+Fatal error: exception Analyzer.Except("Invalid use of a variable: test_float was not declared")
+\end{lstlisting}
+\section{C++ Helper files}
+\subsection{qlang.cpp}
+\begin{lstlisting}
+//Jonathan Wong
+#include <Eigen/Dense>
+#include <iostream>
+#include <complex>
+#include <string>
+#include <cmath>
+#include "qlang.hpp"
+
+using namespace Eigen;
+using namespace std;
+
+
+MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2) {
+
+	int mat1rows = mat1.rows();
+	int mat1cols = mat1.cols();
+	int mat2rows = mat2.rows();
+	int mat2cols = mat2.cols();
+
+	MatrixXcf output(mat1rows * mat2rows, mat1cols * mat2cols);
+
+	//iterates through one matrix, multiplying each element with the whole
+	//2nd matrix
+	for(int m = 0; m < mat1rows; m++) {
+		for(int n = 0; n < mat1cols; n++) {
+			output.block(m*mat2rows,n*mat2cols,mat2rows,mat2cols) = 
+				mat1(m,n) * mat2;
+		}
+	}
+
+	return output;
+	
+}
+
+Matrix4cf control(Matrix2cf mat) {
+	Matrix4cf output;
+	output.topLeftCorner(2,2) = IDT;
+	output.topRightCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
+	output.bottomLeftCorner(2,2) = Matrix<complex<float>,2,2>::Zero();
+	output.bottomRightCorner(2,2) = mat;
+
+	return output;
+}
+
+MatrixXcf genQubit(string s, int bra) {
+	
+	int slen = s.length();
+	int qlen = pow(2,slen); //length of vector
+
+	int base10num = 0;
+
+	//iterates through qstr. Whenever digit is a 1, it adds the associated 
+	//power of 2 for that position to base10num
+	const char * cq = s.c_str();
+	char * c = new char();
+	for(int i = 0; i < slen; i++) {
+		strncpy(c,cq+i,1);
+		base10num += strtol(c,NULL,10) * pow(2,(slen-1-i));  
+	}
+	delete c;
+
+	//creates the vector and sets correct bit to 1
+	MatrixXcf qub;
+	if(bra) {
+		qub = MatrixXcf::Zero(1,qlen);
+		qub(0,qlen-1-base10num) = 1;
+	} else if(!bra){
+		qub = MatrixXcf::Zero(qlen,1);
+		qub(base10num,0) = 1;
+	}
+
+	return qub;
+}
+
+string vectorToBraket(MatrixXcf qub) {
+	int bra;
+	int qlen;
+
+	//determines whether bra or ket
+	if(qub.rows() == 1) { qlen = qub.cols(); bra = 1; }
+	else if(qub.cols() == 1) { qlen = qub.rows(); bra = 0;}
+	else { //prints reg matrix if not row or column vector
+		//cerr << "Incorrect matrix size for vectorToBraket" << endl;
+		//exit(1);
+		ostringstream  test;
+		test << qub << endl;
+		return test.str();
+	}
+
+	//gets position of 1 in the qubit
+	complex<float> zero(0,0);
+	int xi = 0;
+	int yi = 0;
+	int number;
+	int index;
+	string result;
+	int count = 0;
+	for(index = 0; index < qlen; index++) {
+		if(bra) { xi = index; }
+		else { yi = index; }
+
+		if(qub(yi,xi) != zero) {
+			//if(bra) { number = qlen-1-index; }
+			//else { number = index; }
+			number = index;
+
+			//converts position to binary number reversed
+			string bin = "";
+			do {
+				if ( (number & 1) == 0 )
+					bin += "0";
+				else
+					bin += "1";
+
+				number >>= 1;
+			} while ( number );
+
+			int outQubLen = sqrt(qlen);
+
+			//adds necessary 0s
+			for(int i = bin.length(); i < outQubLen; i++) {
+				bin += "0";
+			}
+
+			reverse(bin.begin(), bin.end()); //reverses
+
+			ostringstream convert;
+			float re = qub(yi,xi).real();
+			float im = qub(yi,xi).imag();
+			string oper = "";
+			string rstr = "";
+			string istr = "";
+
+			//adds constant expression
+			convert << "(";
+			if(re != 0) { convert << re; }
+			if(re != 0 && im != 0) { convert << "+"; }
+			if(im != 0) { convert << im << "i"; }
+			convert << ")";
+
+			//cleans up (1) and (1i) cases
+			string constant = convert.str();
+			if(constant.compare("(1)") == 0) { constant = ""; }
+			else if(constant.compare("(1i)") == 0) { constant = "i"; }
+
+			//generates appropriate bra or ket representation
+			string qubstr;
+			if(bra) { qubstr = constant + "<" + bin + "|"; }
+			else { qubstr = constant + "|" + bin + ">"; }
+
+			if(count > 0) {
+				result += " + " + qubstr;
+			} else { result = qubstr; }
+			count++;
+		}
+	}
+	return result;
+}
+\end{lstlisting}
+\subsection{qlang.hpp}
+
+\begin{lstlisting}
+//Jonathan Wong
+#ifndef QLANG_HPP_ 
+#define QLANG_HPP_
+
+using namespace Eigen;
+using namespace std;
+
+//CONSTANTS
+const Matrix2cf H = (Matrix2cf() << 1/sqrt(2), 1/sqrt(2),
+				1/sqrt(2), -1/sqrt(2)).finished();
+const Matrix2cf IDT = Matrix2cf::Identity();
+const Matrix2cf X = (Matrix2cf() << 0, 1, 1, 0).finished();
+const Matrix2cf Y = (Matrix2cf() << 0, -std::complex<float>(0,1),
+				std::complex<float>(0,1), 0).finished();
+const Matrix2cf Z = (Matrix2cf() << 1, 0, 0, -1).finished();
+
+//METHODS
+MatrixXcf tensor(MatrixXcf mat1, MatrixXcf mat2);
+Matrix4cf control(Matrix2cf mat);
+MatrixXcf genQubit(string s, int bra);
+MatrixXcf genQubits(string s);
+string vectorToBraket(MatrixXcf qub);
+
+
+#endif
+\end{lstlisting}
