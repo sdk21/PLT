@@ -71,7 +71,11 @@ def compute() : float outcome{
 	
 }
 \end{lstlisting}
-
+Output
+\begin{lstlisting}
+(0.707107)|10> + (-0.707107)|11>
+1
+\end{lstlisting}
 \subsection{ Simulation of Quantum Algorithm}
 
 \subsubsection{Deutsch Jozsa Algorithm}
@@ -153,3 +157,109 @@ def compute () : float outcome{
 
 \end{lstlisting}
 
+Output
+\begin{lstlisting}
+0
+1
+0
+\end{lstlisting}
+
+\subsubsection {Grover's Search Algorithm}
+
+The following program implements special case of Grover's Search Algorithm for f(0) =1.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics{ref/grover}
+\end{center}
+\caption{ Grover Algorithm Circuit 
+\label{cir1}}
+\end{figure}
+
+\begin{lstlisting}
+def measure (mat top) : mat outcome{
+        
+        mat ad;
+
+        ad = adj(top);
+        outcome = top * ad;
+}
+
+def ntensor (int n, mat k) : mat gate{
+        
+        int i;
+        gate = k;
+
+        for (i from 0 to n-1 by 1){
+            gate = gate @ k; 
+        }
+}
+
+def prepareU (int n) : mat gate {
+        mat i;
+        mat u;
+
+        i = [(1,0)
+             (0,0)];
+
+        u = ntensor(n+1, i);
+        gate = ntensor(n+1,IDT)-2*u;
+}
+
+def prepareG (int n) : mat gate{
+        mat s; mat sa; mat i; mat h;
+
+        s = ntensor(n,|0>);
+        sa = adj(s);
+        i = ntensor(n,IDT);
+        gate = 2*s*sa - i;
+        h = ntensor(n, H);
+        gate = h*gate*h;
+        gate = gate @ IDT;         
+}
+
+def grover (int n) : float outcomeZero{
+
+        mat bottom; mat top; mat input;
+        mat hadtop; mat u; mat g; mat go; mat meas;
+        int i;
+
+        bottom = |1>;
+        top = ntensor(n, |0>);
+        input = top @ bottom;
+        
+        hadtop = ntensor(n, H);
+        input = (hadtop @ H)*input;
+        u = prepareU(n);
+        g = prepareG(n);
+        
+        go = g*u;
+        
+        for (i from 0 to n by 1){
+                input = go*input; 
+        }
+
+        meas = measure(top);
+        input = (meas @ IDT)* input;
+        outcomeZero = norm(input);
+}
+
+
+def compute () : float outcome{
+        #simulate the grover for f(0)=1
+        
+        int n; mat Ub; mat Uc;
+        n = 1;
+        
+        outcome = grover(n);
+        print(outcome);
+        
+        n = 2;
+        outcome = grover(n);
+}
+\end{lstlisting}
+Output
+\begin{lstlisting}
+0.707107
+0.5
+\end{lstlisting}

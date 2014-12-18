@@ -26,9 +26,9 @@ def outcomezero(mat bottom) : float probability{
       
         
         ynot = [(1,0,0,0)
-                (0,0,0,C(1.0I))
+                (0,0,0,-1)
                 (0,0,1,0)
-                (0,C(-1.I),0,0)];
+                (0,-1,0,0)];
     
         output = (ynot*(cnot*(had*input)));
         
@@ -45,7 +45,4 @@ def compute() : float outcome{
         bottom = |1>;
         outcome = outcomezero(bottom);
         print(outcome);
-        
-        bottom = |0>;
-        outcome = outcomezero(bottom);
 }
