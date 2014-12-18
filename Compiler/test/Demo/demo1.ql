@@ -9,11 +9,11 @@ def compute() : mat output{
         b = |0>;
         k = <0|;
         
-        c = a @ b;
+        c = a @ b;      # illustration of dirac notation for qubits
         printq(c);
         
-        c = H*b;
-        printq(c);
-
-        output = b*k;
+        c = H*b;        # application of gates on qubits
+        printq(c);      # output in qubit form
+        
+        output = b*k;   # simple matrix multiplication
 }

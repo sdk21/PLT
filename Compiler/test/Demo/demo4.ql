@@ -1,5 +1,5 @@
 def measure (mat top) : mat outcome{
-        
+        # measurement matrix for top qubit 
         mat ad;
 
         ad = adj(top);
@@ -7,7 +7,7 @@ def measure (mat top) : mat outcome{
 }
 
 def ntensor (int n, mat k) : mat gate{
-        
+        # return n qubit k 
         int i;
         gate = k;
 
@@ -17,6 +17,7 @@ def ntensor (int n, mat k) : mat gate{
 }
 
 def prepareU (int n) : mat gate {
+        # prepare the Uw or grover oracle        
         mat i;
         mat u;
 
@@ -28,6 +29,7 @@ def prepareU (int n) : mat gate {
 }
 
 def prepareG (int n) : mat gate{
+        # prepare grover defusive operator
         mat s; mat sa; mat i; mat h;
 
         s = ntensor(n,|0>);
@@ -54,14 +56,18 @@ def grover (int n) : float outcomeZero{
         u = prepareU(n);
         g = prepareG(n);
         
+        # grover operator
         go = g*u;
         
+        # apply grover operator over iteration
         for (i from 0 to n by 1){
                 input = go*input; 
         }
-
+        
+        # measure on top qubit
         meas = measure(top);
         input = (meas @ IDT)* input;
+        # likelihood to get 0 on top register
         outcomeZero = norm(input);
 }
 
