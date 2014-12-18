@@ -1,7 +1,7 @@
 \documentclass[11pt]{report}
 
 \def\withcolors{1}
-\def\withnotes{1}
+\def\withnotes{0}
 \def\withindex{1}
 \def\withbiblioconversion{1} % long names for the journals
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9,7 +9,7 @@
 \input{preamble}
 \input{package-qcircuit} % To draw quantum circuits in LaTeX
 
-\newcommand{\complex}{\textsf{com}\xspace}
+\newcommand{\complex}{\textsf{comp}\xspace}
 \newcommand{\integ}{\textsf{int}\xspace}
 \newcommand{\float}{\textsf{float}\xspace}
 \newcommand{\mat}{\textsf{mat}\xspace}
@@ -40,14 +40,10 @@
 \chapter{Reference Manual}\label{sec:reference}
   \input{sec-reference}
 \chapter{Project Plan and Organization}
-\input{sec-projectPlan}
 \chapter{Architectural Design}
-  \input{sec-architecture}
+\input{sec-architecture}
 \chapter{Test Plan}
-  \input{sec-testing}
-\chapter{Lesson Learned}
-  \input{sec-lessons}
-\chapter{Appendix}
+\input{sec-testing}
 \appendix
 \chapter{More on Quantum Computing}\label{app:quantum:more}
   \input{app-moreqc}
