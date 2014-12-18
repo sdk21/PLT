@@ -22,9 +22,11 @@ s : SAST generation.\\
 g : Code generation.\\
 c : Generated code is compiled.\\
 e : Generated executable is run, to generate the program's outputs.\\ 
+\begin{center}
+
 
 \includegraphics[scale=0.60]{Test_diagrams/2.png}
-
+\end{center}
 The operations mentioned above are each inclusive of the operations mentioned above them. That means, if you enter the 'g' option, runTests.sh will perform the tasks under 'a','s' and then the operations specific to 'g' as well.
 
 The second argument is the folder that has the input program files. We have acronyms for two folder that are standard to our implementation, the SemanticSuccess and the SemanticFailures. So to run the sast generation on the files in SemanticSuccess folder, we would write :
@@ -32,9 +34,9 @@ The second argument is the folder that has the input program files. We have acro
 \begin{lstlisting}
 sh runTests.sh s ss.
 \end{lstlisting}
-
+\begin{center}
 \includegraphics[scale=0.60]{Test_diagrams/1.png}
-
+\end{center}
 
 The entire code of this script can be seen in the appendix. The Test Suites were chiefly created by Winnie Narang, and everyone else also contributed test cases. The script runTests.sh was created by Winnie Narang and Christopher Campbell.
 
